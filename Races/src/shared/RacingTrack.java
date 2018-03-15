@@ -9,6 +9,6 @@ package shared;
  *
  * @author Daniela
  */
-public interface ITrack {
+public class RacingTrack {
     
 }

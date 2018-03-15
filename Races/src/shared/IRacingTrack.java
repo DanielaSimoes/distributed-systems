@@ -9,6 +9,9 @@ package shared;
  *
  * @author Daniela
  */
-public class Track {
-    
+public interface IRacingTrack {
+    public void startTheRace();
+    public void proceedToStartLine();
+    public boolean hasFinishLineBeenCrossed();
+    public void makeAMove();
 }
