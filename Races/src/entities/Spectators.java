@@ -7,6 +7,7 @@ package entities;
 public class Spectators extends Thread{
     
     private SpectatorsState state;
+    private double moneyToBet;
     
     /*
         Shared zones in which Spectators has actions
@@ -16,11 +17,12 @@ public class Spectators extends Thread{
     private final shared.IBettingCentre bc;
     private final shared.IPaddock paddock;
     
-    public Spectators(shared.IControlCentre cc, shared.IBettingCentre bc, shared.IPaddock paddock){
+    public Spectators(shared.IControlCentre cc, shared.IBettingCentre bc, shared.IPaddock paddock, double moneyToBet){
     
         this.cc = cc;
         this.bc = bc;
         this.paddock = paddock;
+        this.moneyToBet = moneyToBet;
     }
     
     @Override
@@ -64,5 +66,9 @@ public class Spectators extends Thread{
     
     public SpectatorsState getSpectatorsState(){
         return this.state;
+    }
+    
+    public double getMoneyToBet(){
+        return this.moneyToBet;
     }
 }
