@@ -10,5 +10,18 @@ package shared;
  * @author Daniela
  */
 public class ControlCentre implements IControlCentre {
-    
+    public void summonHorsesToPaddock(){};
+    public void startTheRace(){};
+    public void entertainTheGuests(){};
+    public void reportResults(){};
+    public void proceedToPaddock(){};
+    public void waitingForARaceToStart(){};
+    public void goWatchTheRace(){};
+    public boolean haveIWon(){
+        return false;
+    };
+    public boolean waitingForNextRace(){
+        return false;
+    };
+    public void relaxABit(){};
 }

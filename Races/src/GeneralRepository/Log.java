@@ -5,6 +5,7 @@ package GeneralRepository;
  * @author Daniela
  */
 public class Log {
+    
     entities.BrokerState BrokerState;
     entities.SpectatorsState SpectatorsState[] = new entities.SpectatorsState[4];
     int SpectatorAmmount[] = new int[4];

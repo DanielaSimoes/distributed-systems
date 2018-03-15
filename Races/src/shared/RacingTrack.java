@@ -11,4 +11,9 @@ package shared;
  */
 public class RacingTrack implements IRacingTrack {
     
+    public void startTheRace(){};
+    public void proceedToStartLine(){};
+    public boolean hasFinishLineBeenCrossed(){return false;};
+    public void makeAMove(){};
+    
 }
