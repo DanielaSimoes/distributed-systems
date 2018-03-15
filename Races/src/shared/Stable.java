@@ -4,6 +4,6 @@ package shared;
  *
  * @author Daniela
  */
-public class Stable {
+public class Stable implements IStable {
     
 }

@@ -48,4 +48,12 @@ public class HorseJockey extends Thread{
         
         }
     }
+    
+    public void setHorseJockeyState(HorseJockeyState state){
+        this.state = state;
+    } 
+    
+    public HorseJockeyState getHorseJockeyState(){
+        return this.state;
+    }
 }

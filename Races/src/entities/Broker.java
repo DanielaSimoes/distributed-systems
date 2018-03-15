@@ -8,9 +8,9 @@ public class Broker extends Thread{
     
     private BrokerState state;
     
-    /*
-        Shared zones in which broker has actions
-    */
+    /**
+     *   Shared zones in which broker has actions
+     */
     private final shared.IStable stable;
     private final shared.IControlCentre cc;
     private final shared.IBettingCentre bc;
@@ -49,7 +49,8 @@ public class Broker extends Thread{
                         break;
 
                     case SETTLING_ACCOUNTS:
-                        // do not know what to do yet
+                        stable.summonHorsesToPaddock();
+                        cc.summonHorsesToPaddock();
                         break;
 
                     case PLAYING_HOST_AT_THE_BAR:
@@ -59,8 +60,14 @@ public class Broker extends Thread{
                 }
             }
             cc.entertainTheGuests();
-
-      
+    }
+    
+    public void setBrokerState(BrokerState state){
+        this.state = state;
+    } 
+    
+    public BrokerState getBrokerState(){
+        return this.state;
     }
     
 }

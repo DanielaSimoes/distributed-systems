@@ -9,6 +9,6 @@ package shared;
  *
  * @author Daniela
  */
-public class RacingTrack {
+public class RacingTrack implements IRacingTrack {
     
 }

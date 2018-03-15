@@ -57,4 +57,12 @@ public class Spectators extends Thread{
             cc.relaxABit();
         }
     }
+    
+    public void setSpectatorsState(SpectatorsState state){
+        this.state = state;
+    } 
+    
+    public SpectatorsState getSpectatorsState(){
+        return this.state;
+    }
 }

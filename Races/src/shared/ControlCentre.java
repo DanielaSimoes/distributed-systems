@@ -9,6 +9,6 @@ package shared;
  *
  * @author Daniela
  */
-public class ControlCentre {
+public class ControlCentre implements IControlCentre {
     
 }
