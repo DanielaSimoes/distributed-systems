@@ -10,9 +10,14 @@ public interface IControlCentre {
     public void entertainTheGuests();
     public void reportResults();
     public void proceedToPaddock();
-    public void waitingForARaceToStart();
+    public boolean waitForNextRace();
     public void goWatchTheRace();
     public boolean haveIWon();
-    public boolean waitingForNextRace();
     public void relaxABit();
+    public void waitForSummonHorsesToPaddock();
+    public void waitForStartTheRace();
+    public void waitForProceedToPaddock();
+    public void waitForGoWatchTheRace();
+    public void goCheckHorses();
+    public void waitForGoCheckHorses();
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package shared;
 
 /**
@@ -10,18 +5,123 @@ package shared;
  * @author Daniela
  */
 public class ControlCentre implements IControlCentre {
-    public void summonHorsesToPaddock(){};
-    public void startTheRace(){};
-    public void entertainTheGuests(){};
-    public void reportResults(){};
-    public void proceedToPaddock(){};
-    public void waitingForARaceToStart(){};
-    public void goWatchTheRace(){};
-    public boolean haveIWon(){
+    
+    private boolean wakeHorsesToPaddock = false, startTheRace = false, entertainTheGuests=false, reportResults=false, proceedToPaddock = false, goWatchTheRace=false, goCheckHorses = false;
+    
+    @Override
+    public synchronized void goCheckHorses(){
+        this.goCheckHorses = true;
+        notifyAll();
+    };
+    
+    @Override
+    public synchronized void waitForGoCheckHorses(){
+        while(!this.goCheckHorses){
+            try{
+                wait();
+            }catch (InterruptedException ex){
+                // do something in the future
+            }
+        }
+        this.goCheckHorses = false;  
+    };
+    
+    @Override
+    public synchronized void summonHorsesToPaddock(){
+        this.wakeHorsesToPaddock = true;
+        notifyAll();
+    };
+    
+    @Override
+    public synchronized void waitForSummonHorsesToPaddock(){
+        while(!this.wakeHorsesToPaddock){
+            try{
+                wait();
+            }catch (InterruptedException ex){
+                // do something in the future
+            }
+        }
+        this.wakeHorsesToPaddock = false;  
+    };
+    
+    @Override
+    public synchronized void startTheRace(){
+        this.startTheRace = true;
+        notifyAll();
+    };
+    
+    @Override
+    public synchronized void waitForStartTheRace(){
+        while(!this.startTheRace){
+            try{
+                wait();
+            }catch (InterruptedException ex){
+                // do something in the future
+            }
+        }
+        this.startTheRace = false;
+    };
+    
+    @Override
+    public synchronized void entertainTheGuests(){
+        this.entertainTheGuests = true;
+        notifyAll();
+    };
+    
+    @Override
+    public synchronized void reportResults(){
+        this.reportResults = true;
+        notifyAll();
+    };
+    
+    @Override
+    public synchronized void proceedToPaddock(){
+        this.proceedToPaddock = true;
+        notifyAll();
+    };
+    
+    @Override
+    public synchronized void waitForProceedToPaddock(){
+        while(!this.proceedToPaddock){
+            try{
+                wait();
+            }catch (InterruptedException ex){
+                // do something in the future
+            }
+        }
+        this.proceedToPaddock = false;
+    };
+    
+    @Override
+    public synchronized boolean waitForNextRace(){
+       return this.proceedToPaddock;
+    };
+    
+    @Override
+    public synchronized void goWatchTheRace(){
+        this.goWatchTheRace = true;
+    };
+    
+    @Override
+    public synchronized void waitForGoWatchTheRace(){
+         while(!this.goWatchTheRace){
+            try{
+                wait();
+            }catch (InterruptedException ex){
+                // do something in the future
+            }
+        }
+        this.goWatchTheRace = false;
+    };
+    
+    @Override
+    public synchronized boolean haveIWon(){
         return false;
     };
-    public boolean waitingForNextRace(){
-        return false;
+   
+    
+    @Override
+    public synchronized void relaxABit(){
+    
     };
-    public void relaxABit(){};
 }

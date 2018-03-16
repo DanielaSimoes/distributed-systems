@@ -27,12 +27,12 @@ public class Spectators extends Thread{
     
     @Override
     public void run(){ 
-        while(cc.waitingForNextRace()){
+        while(cc.waitForNextRace()){
             switch(this.state){
 
                 case WAITING_FOR_A_RACE_TO_START:
-                    paddock.waitingForARaceToStart();
-                    cc.waitingForARaceToStart();
+                    paddock.goCheckHorses();
+                    cc.goCheckHorses();
                     break;
 
                 case APPRAISING_THE_HORSES:
