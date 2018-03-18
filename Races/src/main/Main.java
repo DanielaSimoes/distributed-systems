@@ -46,12 +46,12 @@ public class Main {
         
         horseJockey = new HorseJockey[nHorses];
         for(int i = 0; i < nHorses; i++){
-            horseJockey[i] = new HorseJockey((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IPaddock) paddock, (shared.IRacingTrack) racingTrack);
+            horseJockey[i] = new HorseJockey((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IPaddock) paddock, (shared.IRacingTrack) racingTrack, (int) (Math.random() * (5 - 1)) + 1, i);
         }
         
         spectators = new Spectators[nSpectators];
         for(int i = 0; i < nSpectators; i++){
-            spectators[i] = new Spectators((shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre , (shared.IPaddock) paddock, 15);
+            spectators[i] = new Spectators((shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre , (shared.IPaddock) paddock, 15, i);
         }
         
         broker = new Broker((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre, (shared.IRacingTrack) racingTrack);

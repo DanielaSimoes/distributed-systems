@@ -16,9 +16,10 @@ public class Spectators extends Thread{
     private final shared.IControlCentre cc;
     private final shared.IBettingCentre bc;
     private final shared.IPaddock paddock;
+    private final int id;
     
-    public Spectators(shared.IControlCentre cc, shared.IBettingCentre bc, shared.IPaddock paddock, double moneyToBet){
-    
+    public Spectators(shared.IControlCentre cc, shared.IBettingCentre bc, shared.IPaddock paddock, double moneyToBet, int id){
+        this.id = id;
         this.cc = cc;
         this.bc = bc;
         this.paddock = paddock;
@@ -32,7 +33,6 @@ public class Spectators extends Thread{
 
                 case WAITING_FOR_A_RACE_TO_START:
                     paddock.goCheckHorses();
-                    cc.goCheckHorses();
                     break;
 
                 case APPRAISING_THE_HORSES:

@@ -1,15 +1,22 @@
 package shared;
 
+import entities.HorseJockey;
+import entities.HorseJockeyState;
+import entities.Broker;
+import entities.BrokerState;
+
 /**
  *
  * @author Daniela
  */
 public class Stable implements IStable {
     
-    private boolean wakeHorsesToPaddock = false, proceedToStable = false;
+    private boolean wakeHorsesToPaddock = false, proceedToStable = false, wakeEntertainTheGuests = false;
      
     @Override
     public synchronized void summonHorsesToPaddock(){
+        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
+        
         this.wakeHorsesToPaddock = true;
         notifyAll();
     };
@@ -29,14 +36,20 @@ public class Stable implements IStable {
     
     @Override
     public synchronized void proceedToStable(){
-        // incomplete - waken up by summonHorsesToPaddock AND entertainTheGuests
-        
-        try{
-            wait();
-        }catch (InterruptedException ex){
-                // do something in the future
+        ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
+       
+        while(!this.proceedToStable || !this.wakeEntertainTheGuests){
+            try{
+                wait();
+            }catch (InterruptedException ex){
+                    // do something in the future
+            } 
         }
         
         this.proceedToStable = true;
     };
+    
+    public synchronized void setWaitEntertainTheGuests(boolean set){
+        this.wakeEntertainTheGuests = set;
+    }
 }

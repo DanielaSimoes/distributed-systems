@@ -12,16 +12,21 @@ public class HorseJockey extends Thread{
         Shared zones in which HorseJockey has actions
     */
     
+    private final int id;
     private final shared.IStable stable;
     private final shared.IControlCentre cc;
     private final shared.IPaddock paddock;
     private final shared.IRacingTrack rt;
     
-    public HorseJockey(shared.IStable s, shared.IControlCentre cc, shared.IPaddock paddock, shared.IRacingTrack rt){
+    private final double step_size;
+    
+    public HorseJockey(shared.IStable s, shared.IControlCentre cc, shared.IPaddock paddock, shared.IRacingTrack rt, double step_size, int id){
         this.stable = s;
         this.cc = cc;
         this.paddock = paddock;
         this.rt = rt;
+        this.step_size = step_size;
+        this.id = id;
     }
     
     @Override

@@ -18,6 +18,4 @@ public interface IControlCentre {
     public void waitForStartTheRace();
     public void waitForProceedToPaddock();
     public void waitForGoWatchTheRace();
-    public void goCheckHorses();
-    public void waitForGoCheckHorses();
 }

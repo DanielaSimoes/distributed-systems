@@ -28,7 +28,7 @@ public class Broker extends Thread{
         
             while(GeneralRepository.Races.actual_race < GeneralRepository.Races.N_OF_RACES){
                 switch(this.state){
-            
+         
                     case OPENING_THE_EVENT:
                         stable.summonHorsesToPaddock();
                         cc.summonHorsesToPaddock();

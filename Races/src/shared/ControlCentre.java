@@ -1,5 +1,12 @@
 package shared;
 
+import entities.Broker;
+import entities.BrokerState;
+import entities.HorseJockey;
+import entities.HorseJockeyState;
+import entities.Spectators;
+import entities.SpectatorsState;
+
 /**
  *
  * @author Daniela
@@ -9,25 +16,9 @@ public class ControlCentre implements IControlCentre {
     private boolean wakeHorsesToPaddock = false, startTheRace = false, entertainTheGuests=false, reportResults=false, proceedToPaddock = false, goWatchTheRace=false, goCheckHorses = false;
     
     @Override
-    public synchronized void goCheckHorses(){
-        this.goCheckHorses = true;
-        notifyAll();
-    };
-    
-    @Override
-    public synchronized void waitForGoCheckHorses(){
-        while(!this.goCheckHorses){
-            try{
-                wait();
-            }catch (InterruptedException ex){
-                // do something in the future
-            }
-        }
-        this.goCheckHorses = false;  
-    };
-    
-    @Override
     public synchronized void summonHorsesToPaddock(){
+        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
+        
         this.wakeHorsesToPaddock = true;
         notifyAll();
     };
@@ -46,6 +37,8 @@ public class ControlCentre implements IControlCentre {
     
     @Override
     public synchronized void startTheRace(){
+        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
+        
         this.startTheRace = true;
         notifyAll();
     };
@@ -64,18 +57,24 @@ public class ControlCentre implements IControlCentre {
     
     @Override
     public synchronized void entertainTheGuests(){
+        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.PLAYING_HOST_AT_THE_BAR);
+        
         this.entertainTheGuests = true;
         notifyAll();
     };
     
     @Override
     public synchronized void reportResults(){
+        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
+        
         this.reportResults = true;
         notifyAll();
     };
     
     @Override
     public synchronized void proceedToPaddock(){
+        ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
+        
         this.proceedToPaddock = true;
         notifyAll();
     };
@@ -99,6 +98,7 @@ public class ControlCentre implements IControlCentre {
     
     @Override
     public synchronized void goWatchTheRace(){
+        ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
         this.goWatchTheRace = true;
     };
     
@@ -116,12 +116,13 @@ public class ControlCentre implements IControlCentre {
     
     @Override
     public synchronized boolean haveIWon(){
+        ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
         return false;
     };
    
     
     @Override
     public synchronized void relaxABit(){
-    
+        ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.CELEBRATING);
     };
 }
