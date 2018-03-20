@@ -18,23 +18,8 @@ import com.sun.javafx.binding.Logging;
  * @author Daniela
  */
 public class Log {
-    /*
-    entities.BrokerState BrokerState;
-    entities.SpectatorsState SpectatorsState[] = new entities.SpectatorsState[4];
-    int SpectatorAmmount[] = new int[4];
-    int raceNumber;
-    entities.HorseJockeyState HorseJockeyState[] = new entities.HorseJockeyState[4];
-    int lengthStep[] = new int[4];
-    int raceNumber2;
-    int distance;
-    double BS[] = new double[4];
-    double BA[] = new double[4];
-    double ODD[] = new double[4];
-    int N[] = new int[4];
-    double Ps[] = new double[4];
-    int SD[] = new int[4];
-    */
     
+    private final Races races = Races.getInstace();
     
     /**
      * This will be a singleton
@@ -70,45 +55,41 @@ public class Log {
         try{
             pw = new PrintWriter(log);
             pw.println("         AFTERNOON AT THE RACE TRACK - Description of the internal state of the problem");
-            /*
-            String head = "Ref  Coa 1";
-            for(int i=1; i<=Match.N_CONTESTANTS/2; i++){
-                head += " Cont " + Integer.toString(i);
-            }
-            head += " Coa 2";
-            for(int i=1; i<=Match.N_CONTESTANTS/2; i++){
-                head += " Cont " + Integer.toString(i);
-            }
-            head += "       Trial";
-            pw.println(head);
             
-            head = "Sta  Stat";
-            for(int i=1; i<=Match.N_CONTESTANTS/2; i++){
-                head += " Sta SG";
+            pw.println("MAN/BRK           SPECTATOR/BETTER              HORSE/JOCKEY PAIR at Race RN");
+            
+            String head = "  Stat";
+            
+            for(int i=1; i<=Races.N_OF_SPECTATORS; i++){
+                head += " St" + Integer.toString(i) + "  Am" + Integer.toString(i) + " ";
             }
-            head += "  Stat";
-            for(int i=1; i<=Match.N_CONTESTANTS/2; i++){
-                head += " Sta SG";
+            
+            head += this.races.getRaceNumber();
+            
+            for(int i=1; i<=Races.N_OF_HORSES; i++){
+                head += "  St" + Integer.toString(i) + " Len" + Integer.toString(i);
             }
-            head += " 3 2 1 . 1 2 3 NB PS";
+            
+            //head += "                                        Race R" + this.races.getRaceNumber() + " Status";
+            
             pw.println(head);
-            */
+          
             pw.flush();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Logging.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void setHorseJockeyState(int id, entities.HorseJockeyState state){
-        
+    public void setHorseJockeyState(int id, HorseJockeyState state){
+        this.races.setHorseJockeyState(id, state);
     }
 
-    public void setBrokerState(entities.HorseJockeyState state){
-        
+    public void setBrokerState(BrokerState state){
+        this.races.setBrokerState(state);
     }
     
-    public void setSpectatorState(entities.SpectatorsState state){
-        
+    public void setSpectatorState(int id, SpectatorsState state){
+        this.races.setSpectatorState(id, state);
     }
 
 }

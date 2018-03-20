@@ -1,5 +1,7 @@
 package entities;
 
+import GeneralRepository.Log;
+
 /**
  *
  * @author Daniela
@@ -8,6 +10,7 @@ public class Spectators extends Thread{
     
     private SpectatorsState state;
     private double moneyToBet;
+    private final Log log;
     
     /*
         Shared zones in which Spectators has actions
@@ -24,6 +27,8 @@ public class Spectators extends Thread{
         this.bc = bc;
         this.paddock = paddock;
         this.moneyToBet = moneyToBet;
+        this.log = Log.getInstance();
+        this.state = SpectatorsState.WAITING_FOR_A_RACE_TO_START;
     }
     
     @Override
@@ -62,6 +67,7 @@ public class Spectators extends Thread{
     
     public void setSpectatorsState(SpectatorsState state){
         this.state = state;
+        this.log.setSpectatorState(id, state);
     } 
     
     public SpectatorsState getSpectatorsState(){
@@ -70,5 +76,9 @@ public class Spectators extends Thread{
     
     public double getMoneyToBet(){
         return this.moneyToBet;
+    }
+    
+    public int getSpectatorId(){
+        return this.id;
     }
 }

@@ -5,6 +5,7 @@
  */
 package shared;
 
+import GeneralRepository.Races;
 import entities.Broker;
 import entities.BrokerState;
 import entities.HorseJockey;
@@ -18,6 +19,7 @@ public class RacingTrack implements IRacingTrack {
     
     private boolean startTheRace = false, proceedToStartLine = false, makeAMove = false;
     
+    
     @Override
     public synchronized void startTheRace(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
@@ -27,20 +29,17 @@ public class RacingTrack implements IRacingTrack {
     };
     
     @Override
-    public synchronized void waitForStartTheRace(){
-        while(!this.startTheRace){
+    public synchronized void proceedToStartLine(){
+        ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
+        
+        // not sure
+        while(!(this.startTheRace || this.makeAMove)){
             try{
                 wait();
             }catch (InterruptedException ex){
                 // do something in the future
             }
         }
-        this.startTheRace = false;
-    };
-    
-    @Override
-    public synchronized void proceedToStartLine(){
-        ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
         
         this.proceedToStartLine = true;
     };

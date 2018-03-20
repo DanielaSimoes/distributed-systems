@@ -14,8 +14,4 @@ public interface IControlCentre {
     public void goWatchTheRace();
     public boolean haveIWon();
     public void relaxABit();
-    public void waitForSummonHorsesToPaddock();
-    public void waitForStartTheRace();
-    public void waitForProceedToPaddock();
-    public void waitForGoWatchTheRace();
 }

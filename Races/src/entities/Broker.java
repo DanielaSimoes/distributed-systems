@@ -1,5 +1,7 @@
 package entities;
 
+import GeneralRepository.Log;
+
 /**
  *
  * @author Daniela
@@ -8,6 +10,7 @@ public class Broker extends Thread{
     
     private BrokerState state;
     
+    private final Log log;
     /**
      *   Shared zones in which broker has actions
      */
@@ -21,6 +24,8 @@ public class Broker extends Thread{
         this.cc = cc;
         this.bc = bc;
         this.rt = rt;
+        this.log = Log.getInstance();
+        this.state = BrokerState.OPENING_THE_EVENT;
     }
     
     @Override
@@ -64,6 +69,7 @@ public class Broker extends Thread{
     
     public void setBrokerState(BrokerState state){
         this.state = state;
+        this.log.setBrokerState(state);
     } 
     
     public BrokerState getBrokerState(){

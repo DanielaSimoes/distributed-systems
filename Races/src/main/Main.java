@@ -30,7 +30,7 @@ public class Main {
     private static HorseJockey horseJockey[];
     private static Spectators spectators[];
     
-    private static Log log;
+    private static Log lg;
     private static Races races; 
     
     public static void main(String[] args){
@@ -42,7 +42,13 @@ public class Main {
         
         assert actual_race <= nRaces;
         
-        //Log = Log.getInstance();
+        stable = new Stable();
+        racingTrack = new RacingTrack();
+        paddock = new Paddock();
+        controlCentre = new ControlCentre();
+        bettingCentre = new BettingCentre();
+        
+        lg = Log.getInstance();
         
         horseJockey = new HorseJockey[nHorses];
         for(int i = 0; i < nHorses; i++){
@@ -92,6 +98,7 @@ public class Main {
             //Escrever para o log
         }
     
+        // lg.writeEnd();
     }
     
 }

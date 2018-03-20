@@ -1,5 +1,7 @@
 package entities;
 
+import GeneralRepository.Log;
+
 /**
  *
  * @author Daniela
@@ -12,6 +14,7 @@ public class HorseJockey extends Thread{
         Shared zones in which HorseJockey has actions
     */
     
+    private final Log log;
     private final int id;
     private final shared.IStable stable;
     private final shared.IControlCentre cc;
@@ -27,35 +30,40 @@ public class HorseJockey extends Thread{
         this.rt = rt;
         this.step_size = step_size;
         this.id = id;
+        this.log = Log.getInstance();
+        this.state = HorseJockeyState.AT_THE_STABLE;
     }
     
     @Override
     public void run(){  
     
-        switch(this.state){
-            case AT_THE_STABLE:
-                stable.proceedToStable();
-                break;
-            case AT_THE_PADDOCK:
-                cc.proceedToPaddock();
-                paddock.proceedToPaddock();
-                break;
-            case AT_THE_START_LINE:
-                paddock.proceedToStartLine();
-                rt.proceedToStartLine();
-                break;
-            case RUNNNING:
-                while(!rt.hasFinishLineBeenCrossed()) rt.makeAMove();
-                break;
-            case AT_THE_FINISH_LINE:
-                stable.proceedToStable();
-                break;
-        
+        while(cc.waitForNextRace()){
+            switch(this.state){
+                case AT_THE_STABLE:
+                    stable.proceedToStable();
+                    break;
+                case AT_THE_PADDOCK:
+                    cc.proceedToPaddock();
+                    paddock.proceedToPaddock();
+                    break;
+                case AT_THE_START_LINE:
+                    paddock.proceedToStartLine();
+                    rt.proceedToStartLine();
+                    break;
+                case RUNNNING:
+                    while(!rt.hasFinishLineBeenCrossed()) rt.makeAMove();
+                    break;
+                case AT_THE_FINISH_LINE:
+                    stable.proceedToStable();
+                    break;
+
+            }
         }
     }
     
     public void setHorseJockeyState(HorseJockeyState state){
         this.state = state;
+        this.log.setHorseJockeyState(id, state);
     } 
     
     public HorseJockeyState getHorseJockeyState(){

@@ -11,13 +11,11 @@ package GeneralRepository;
  */
 public class Race {
     
-    private String winner;
-    private String[] horses;
-    private int ID;
+    private final String winner;
+    private final int id;
     
-    public Race(int id, String[] horses){
-        this.ID = id;
-        this.horses = horses;
+    public Race(int id){
+        this.id = id;
         this.winner = null;
     }
     

@@ -1,5 +1,6 @@
 package shared;
 
+import GeneralRepository.Races;
 import entities.Broker;
 import entities.HorseJockey;
 import entities.HorseJockeyState;
@@ -13,29 +14,19 @@ import entities.SpectatorsState;
 public class Paddock implements IPaddock {
     
     private boolean wakeHorsesToPaddock = false, proceedToPaddock = false, proceedToStartLine = false, goCheckHorses = false;
+    private int nSpectatorsArrivedAtPaddock = 0, nHorseJockeyLeftThePadock = 0;
     
     @Override
-    public synchronized void summonHorsesToPaddock(){
-        this.wakeHorsesToPaddock = true;
-        notifyAll();
-    };
-    
-    @Override
-    public synchronized void waitForSummonHorsesToPaddock(){
-        while(!this.wakeHorsesToPaddock){
+    public synchronized void proceedToPaddock(){
+        ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
+        
+        while(nSpectatorsArrivedAtPaddock!=Races.N_OF_SPECTATORS){
             try{
                 wait();
             }catch (InterruptedException ex){
                 // do something in the future
             }
         }
-        this.wakeHorsesToPaddock = false;  
-    };
-    
-    
-    @Override
-    public synchronized void proceedToPaddock(){
-        ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
         
         this.proceedToPaddock = true;
         notifyAll();
@@ -57,8 +48,9 @@ public class Paddock implements IPaddock {
     public synchronized void proceedToStartLine(){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
         
-        this.proceedToStartLine = true;
-        notifyAll();
+        if(++nHorseJockeyLeftThePadock==Races.N_OF_HORSES){
+            notifyAll();
+        }
     };
     
     @Override
@@ -75,11 +67,21 @@ public class Paddock implements IPaddock {
     
     @Override
     public synchronized void goCheckHorses(){
-        this.goCheckHorses = true;
+        //this.goCheckHorses = true;
         
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.APPRAISING_THE_HORSES);
         
-        notifyAll();
+        if(++this.nSpectatorsArrivedAtPaddock==Races.N_OF_SPECTATORS){
+            notifyAll();
+        }
+        
+        while(nHorseJockeyLeftThePadock!=Races.N_OF_HORSES){
+            try{
+                wait();
+            }catch (InterruptedException ex){
+                // do something in the future
+            }
+        }        
     };
     
     @Override

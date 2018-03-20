@@ -11,7 +11,7 @@ import entities.BrokerState;
  */
 public class Stable implements IStable {
     
-    private boolean wakeHorsesToPaddock = false, proceedToStable = false, wakeEntertainTheGuests = false;
+    private boolean wakeHorsesToPaddock = false, wakeEntertainTheGuests = false;
      
     @Override
     public synchronized void summonHorsesToPaddock(){
@@ -21,35 +21,21 @@ public class Stable implements IStable {
         notifyAll();
     };
     
-    @Override
-    public synchronized void waitForSummonHorsesToPaddock(){
-        while(!this.wakeHorsesToPaddock){
-            try{
-                wait();
-            }catch (InterruptedException ex){
-                // do something in the future
-            }
-        }
-        this.wakeHorsesToPaddock = false;  
-    };
-    
     
     @Override
     public synchronized void proceedToStable(){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
        
-        while(!this.proceedToStable || !this.wakeEntertainTheGuests){
+        while(!this.wakeHorsesToPaddock || !this.wakeEntertainTheGuests){
             try{
                 wait();
             }catch (InterruptedException ex){
                     // do something in the future
             } 
         }
-        
-        this.proceedToStable = true;
     };
     
-    public synchronized void setWaitEntertainTheGuests(boolean set){
+    public synchronized void setEntertainTheGuests(boolean set){
         this.wakeEntertainTheGuests = set;
     }
 }
