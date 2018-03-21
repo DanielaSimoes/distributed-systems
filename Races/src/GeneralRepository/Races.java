@@ -10,31 +10,26 @@ import java.util.HashMap;
 import entities.BrokerState;
 import entities.HorseJockeyState;
 import entities.SpectatorsState;
+import entities.HorseJockey;
 
 public class Races {
     
     public static final int N_OF_RACES = 4;
     public static final int N_OF_HORSES = 5;
     public static final int N_OF_SPECTATORS = 4;
-    public static final int SIZE_OF_RACING_TRACK = 21;
-    public static int actual_race = 0;
-    
-    private final HashMap<Integer, Integer> horsesPosition;
-    
+    public static final int SIZE_OF_RACING_TRACK = 2;
+    public static int actual_race = -1;
+        
     private static Races instance = null;
     
     private final HashMap<Integer, SpectatorsState> spectatorsState;
     private final HashMap<Integer, Integer> spectatorAmmount;
     private final HashMap<Integer, HorseJockeyState> horseJockeysState;
     private BrokerState brokerState;
-    private final Race[] races;
+    public Race[] races;
     private int raceNumber;
     
     /*
-    int raceNumber;
-    int lengthStep[] = new int[4];
-    int raceNumber2;
-    int distance;
     double BS[] = new double[4];
     double BA[] = new double[4];
     double ODD[] = new double[4];
@@ -44,7 +39,6 @@ public class Races {
     */
     
     private Races(){
-        this.horsesPosition = new HashMap<>();
         this.spectatorsState = new HashMap<>();
         this.horseJockeysState = new HashMap<>();
         this.spectatorAmmount = new HashMap<>();
@@ -61,8 +55,13 @@ public class Races {
     
     public void newRace(){
         assert raceNumber < this.races.length;
-        
-        this.races[raceNumber] = new Race(raceNumber++);
+        this.raceNumber += 1;
+        actual_race = this.raceNumber;
+        this.races[raceNumber] = new Race(raceNumber);
+    }
+    
+    public boolean horseHasBeenSelectedToRace(HorseJockey horseJockey){
+        return this.races[raceNumber].horseHasBeenSelectedToRace(horseJockey);
     }
     
     public void setHorseJockeyState(int id, HorseJockeyState state){
@@ -100,5 +99,16 @@ public class Races {
     public int getRaceNumber(){
         return this.raceNumber;
     }
+    
+    public int getWinner(){
+        return races[actual_race].getWinner();
+    }
+    
+    public Race getRace(){
+        return this.races[actual_race];
+    }
   
+    public int horsesFinished(){
+        return this.races[actual_race].horsesFinished();
+    }
 }

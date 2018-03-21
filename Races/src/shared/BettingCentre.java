@@ -11,11 +11,11 @@ import entities.SpectatorsState;
  */
 public class BettingCentre implements IBettingCentre {
     
-    private boolean[] betsOfSpectators = new boolean[4];
-    private boolean[] acceptedTheBet = new boolean[4];
+    private final boolean[] betsOfSpectators = new boolean[4];
+    private final boolean[] acceptedTheBet = new boolean[4];
     
-    private boolean[] waitingToBePaidSpectators = new boolean[4];
-    private boolean[] paidSpectators = new boolean[4];
+    private final boolean[] waitingToBePaidSpectators = new boolean[4];
+    private final boolean[] paidSpectators = new boolean[4];
     
     public BettingCentre(){
         for(int i = 0; i < 4; i++){
@@ -119,6 +119,7 @@ public class BettingCentre implements IBettingCentre {
                 // do something in the future
             }
         }
+        
         
         this.waitingToBePaidSpectators[spectator.getSpectatorId()] = false;
         

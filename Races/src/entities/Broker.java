@@ -18,12 +18,14 @@ public class Broker extends Thread{
     private final shared.IControlCentre cc;
     private final shared.IBettingCentre bc;
     private final shared.IRacingTrack rt;
+    private final shared.IPaddock paddock;
     
-    public Broker(shared.IStable s, shared.IControlCentre cc, shared.IBettingCentre bc, shared.IRacingTrack rt){
+    public Broker(shared.IStable s, shared.IControlCentre cc, shared.IBettingCentre bc, shared.IRacingTrack rt, shared.IPaddock paddock){
         this.stable = s;
         this.cc = cc;
         this.bc = bc;
         this.rt = rt;
+        this.paddock = paddock;
         this.log = Log.getInstance();
         this.state = BrokerState.OPENING_THE_EVENT;
     }
@@ -36,7 +38,7 @@ public class Broker extends Thread{
          
                     case OPENING_THE_EVENT:
                         stable.summonHorsesToPaddock();
-                        cc.summonHorsesToPaddock();
+                        paddock.summonHorsesToPaddock();
                         break;
 
                     case ANNOUNCING_NEXT_RACE:
@@ -55,7 +57,7 @@ public class Broker extends Thread{
 
                     case SETTLING_ACCOUNTS:
                         stable.summonHorsesToPaddock();
-                        cc.summonHorsesToPaddock();
+                        paddock.summonHorsesToPaddock();
                         break;
 
                     case PLAYING_HOST_AT_THE_BAR:

@@ -33,10 +33,11 @@ public class Spectators extends Thread{
     
     @Override
     public void run(){ 
-        while(cc.waitForNextRace()){
+        while(GeneralRepository.Races.actual_race < GeneralRepository.Races.N_OF_RACES){
             switch(this.state){
 
                 case WAITING_FOR_A_RACE_TO_START:
+                    cc.waitForNextRace();
                     paddock.goCheckHorses();
                     break;
 
@@ -59,10 +60,10 @@ public class Spectators extends Thread{
                 case CELEBRATING:
                     // don't know what to do
                     break;
-            }
-            
-            cc.relaxABit();
+            }   
         }
+        
+        cc.relaxABit();
     }
     
     public void setSpectatorsState(SpectatorsState state){

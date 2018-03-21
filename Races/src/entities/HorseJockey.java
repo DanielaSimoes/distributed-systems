@@ -1,6 +1,7 @@
 package entities;
 
 import GeneralRepository.Log;
+import GeneralRepository.Races;
 
 /**
  *
@@ -21,14 +22,14 @@ public class HorseJockey extends Thread{
     private final shared.IPaddock paddock;
     private final shared.IRacingTrack rt;
     
-    private final double step_size;
+    private final double stepSize;
     
-    public HorseJockey(shared.IStable s, shared.IControlCentre cc, shared.IPaddock paddock, shared.IRacingTrack rt, double step_size, int id){
+    public HorseJockey(shared.IStable s, shared.IControlCentre cc, shared.IPaddock paddock, shared.IRacingTrack rt, double stepSize, int id){
         this.stable = s;
         this.cc = cc;
         this.paddock = paddock;
         this.rt = rt;
-        this.step_size = step_size;
+        this.stepSize = stepSize;
         this.id = id;
         this.log = Log.getInstance();
         this.state = HorseJockeyState.AT_THE_STABLE;
@@ -36,22 +37,26 @@ public class HorseJockey extends Thread{
     
     @Override
     public void run(){  
-    
-        while(cc.waitForNextRace()){
+        stable.proceedToStable();
+                    
+        while(Races.actual_race < Races.N_OF_RACES){
             switch(this.state){
                 case AT_THE_STABLE:
-                    stable.proceedToStable();
-                    break;
-                case AT_THE_PADDOCK:
                     cc.proceedToPaddock();
                     paddock.proceedToPaddock();
+                    System.out.println("Out of paddock");
                     break;
-                case AT_THE_START_LINE:
+                case AT_THE_PADDOCK:
                     paddock.proceedToStartLine();
                     rt.proceedToStartLine();
+                    System.out.println("Out of proceedToStartLine");
+                    break;
+                case AT_THE_START_LINE:
+                    rt.makeAMove();
+                    System.out.println("Out of makeAMove1");
                     break;
                 case RUNNNING:
-                    while(!rt.hasFinishLineBeenCrossed()) rt.makeAMove();
+                    while(rt.hasFinishLineBeenCrossed() == false) rt.makeAMove();
                     break;
                 case AT_THE_FINISH_LINE:
                     stable.proceedToStable();
@@ -61,6 +66,10 @@ public class HorseJockey extends Thread{
         }
     }
     
+    public int getHorseId(){
+        return this.id;
+    }
+    
     public void setHorseJockeyState(HorseJockeyState state){
         this.state = state;
         this.log.setHorseJockeyState(id, state);
@@ -68,5 +77,9 @@ public class HorseJockey extends Thread{
     
     public HorseJockeyState getHorseJockeyState(){
         return this.state;
+    }
+    
+    public double getStepSize(){
+        return this.stepSize;
     }
 }

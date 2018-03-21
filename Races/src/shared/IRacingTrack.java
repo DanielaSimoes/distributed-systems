@@ -12,7 +12,6 @@ package shared;
 public interface IRacingTrack {
     public void startTheRace();
     public void proceedToStartLine();
-    public void waitForProceedToStartLine();
     public boolean hasFinishLineBeenCrossed();
     public void makeAMove();
 }

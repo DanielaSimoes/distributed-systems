@@ -57,10 +57,10 @@ public class Main {
         
         spectators = new Spectators[nSpectators];
         for(int i = 0; i < nSpectators; i++){
-            spectators[i] = new Spectators((shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre , (shared.IPaddock) paddock, 15, i);
+            spectators[i] = new Spectators((shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre , (shared.IPaddock) paddock, (double) (Math.random() * (2000 - 200)) + 200, i);
         }
         
-        broker = new Broker((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre, (shared.IRacingTrack) racingTrack);
+        broker = new Broker((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre, (shared.IRacingTrack) racingTrack, (shared.IPaddock) paddock);
         
         for(int k = 0; k < nHorses; k++){
             horseJockey[k].start();
