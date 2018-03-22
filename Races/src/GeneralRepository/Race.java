@@ -6,6 +6,8 @@
 package GeneralRepository;
 import entities.HorseJockey;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -24,7 +26,8 @@ public class Race {
     
     private final double trackSize;
     private final int nHorsesToRun;
-    
+    private int horseToMove = 0;
+   
     public Race(int id){
         this.id = id;
         this.winner = -1;
@@ -56,13 +59,16 @@ public class Race {
             }while(repeated);
             
             this.selectedHorses[i] = selectedId;
+        }    
+    }
+    
+    public boolean nextMovingHorse(int horseJockeyId){
+        if(this.selectedHorses[horseToMove]==horseJockeyId){
+            horseToMove = (horseToMove + 1) % this.nHorsesToRun;
+            return true;
+        }else{
+            return false;
         }
-        
-        for (int i = 0; i < selectedHorses.length; i++){
-            System.out.println("This horse has been selected: " + selectedHorses[i]);
-        } 
-        
-        
     }
     
     public boolean horseHasBeenSelectedToRace(HorseJockey horseJockey){
@@ -90,6 +96,9 @@ public class Race {
 
             if(this.horsesPosition.get(horseId) >= trackSize){
                 this.horsesFinished.put(horseId, Boolean.TRUE);
+                if(this.winner == -1){
+                    this.winner = horseId;
+                }
             }
         }catch(Exception e){
         
@@ -100,8 +109,15 @@ public class Race {
         return this.horsesFinished.get(horseId);
     }
     
-    public int horsesFinished(){
-        return 0;
+    public boolean horsesFinished(){
+        boolean result = true;
+        Iterator it = horsesFinished.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            result &= (boolean) pair.getValue();
+        }
+        
+        return result;
     }
     
     public int getWinner(){

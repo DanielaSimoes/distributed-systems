@@ -19,6 +19,7 @@ public class Broker extends Thread{
     private final shared.IBettingCentre bc;
     private final shared.IRacingTrack rt;
     private final shared.IPaddock paddock;
+    private boolean entertainTheGuests = false;
     
     public Broker(shared.IStable s, shared.IControlCentre cc, shared.IBettingCentre bc, shared.IRacingTrack rt, shared.IPaddock paddock){
         this.stable = s;
@@ -33,7 +34,8 @@ public class Broker extends Thread{
     @Override
     public void run(){  
         
-            while(GeneralRepository.Races.actual_race < GeneralRepository.Races.N_OF_RACES){
+            while(!this.entertainTheGuests){
+
                 switch(this.state){
          
                     case OPENING_THE_EVENT:
@@ -47,26 +49,30 @@ public class Broker extends Thread{
 
                     case WAITING_FOR_BETS:
                         rt.startTheRace();
-                        cc.startTheRace();
                         break;
 
                     case SUPERVISING_THE_RACE:
                         cc.reportResults();
-                        if(bc.areThereAnyWinners()) bc.honourTheBets();
+                        if(bc.areThereAnyWinners()){ 
+                            bc.honourTheBets();
+                        }else{
+                            this.entertainTheGuests = true;
+                        }
                         break;
 
                     case SETTLING_ACCOUNTS:
-                        stable.summonHorsesToPaddock();
-                        paddock.summonHorsesToPaddock();
+                        this.entertainTheGuests = true;
                         break;
 
-                    case PLAYING_HOST_AT_THE_BAR:
+                    //case PLAYING_HOST_AT_THE_BAR:
                         // do not know what to do yet
-                        break;
+                        //break;
                     
                 }
             }
-            cc.entertainTheGuests();
+            
+            this.stable.entertainTheGuests();
+            System.out.println("Broker died");
     }
     
     public void setBrokerState(BrokerState state){

@@ -20,6 +20,7 @@ public class Spectators extends Thread{
     private final shared.IBettingCentre bc;
     private final shared.IPaddock paddock;
     private final int id;
+    private boolean relaxABit;
     
     public Spectators(shared.IControlCentre cc, shared.IBettingCentre bc, shared.IPaddock paddock, double moneyToBet, int id){
         this.id = id;
@@ -29,11 +30,12 @@ public class Spectators extends Thread{
         this.moneyToBet = moneyToBet;
         this.log = Log.getInstance();
         this.state = SpectatorsState.WAITING_FOR_A_RACE_TO_START;
+        this.relaxABit = false;
     }
     
     @Override
     public void run(){ 
-        while(GeneralRepository.Races.actual_race < GeneralRepository.Races.N_OF_RACES){
+        while(!this.relaxABit){
             switch(this.state){
 
                 case WAITING_FOR_A_RACE_TO_START:
@@ -50,20 +52,26 @@ public class Spectators extends Thread{
                     break;
 
                 case WATCHING_A_RACE:
-                    if(cc.haveIWon()) bc.goCollectTheGains();
+                    if(cc.haveIWon()){
+                        bc.goCollectTheGains();
+                    }else{
+                        this.relaxABit = true;
+                    }
                     break;
 
                 case COLLECTING_THE_GAINS:
+                    this.relaxABit = true;
                     // don't know what to do
                     break;
 
-                case CELEBRATING:
+                //case CELEBRATING:
                     // don't know what to do
-                    break;
+                    //break;
             }   
         }
         
         cc.relaxABit();
+        System.out.println("Spectator died");
     }
     
     public void setSpectatorsState(SpectatorsState state){

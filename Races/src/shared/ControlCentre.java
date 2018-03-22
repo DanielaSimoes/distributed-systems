@@ -20,24 +20,6 @@ public class ControlCentre implements IControlCentre {
     private Races races = Races.getInstace();
     
     @Override
-    public synchronized void startTheRace(){
-        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
-        
-        while(races.getRace().horsesFinished() != races.getRace().getNRunningHorses()){
-            try{
-                wait();
-            }catch (InterruptedException ex){
-                // do something in the future
-            }
-        }
-    };
-    
-    @Override
-    public synchronized void entertainTheGuests(){
-        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.PLAYING_HOST_AT_THE_BAR);
-    };
-    
-    @Override
     public synchronized void reportResults(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
         
@@ -64,8 +46,6 @@ public class ControlCentre implements IControlCentre {
                 // do something in the future
             }
         }
-        
-        System.out.println("Out of waitForNextRace");   
     };
     
     @Override
@@ -79,15 +59,14 @@ public class ControlCentre implements IControlCentre {
                 // do something in the future
             }
         }
-        
-        this.reportResults = false;
     };
     
     
     @Override
     public synchronized boolean haveIWon(){
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
-        
+        return false;
+        /*
         Races r = Races.getInstace();
       
         if(r.getWinner() == ((Spectators)Thread.currentThread()).getSpectatorId()){
@@ -95,6 +74,7 @@ public class ControlCentre implements IControlCentre {
         }else{
             return false;
         }
+        */
     };
    
     

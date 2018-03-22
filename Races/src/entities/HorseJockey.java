@@ -21,6 +21,7 @@ public class HorseJockey extends Thread{
     private final shared.IControlCentre cc;
     private final shared.IPaddock paddock;
     private final shared.IRacingTrack rt;
+    private Races races = Races.getInstace();
     
     private final double stepSize;
     
@@ -39,24 +40,21 @@ public class HorseJockey extends Thread{
     public void run(){  
         stable.proceedToStable();
                     
-        while(Races.actual_race < Races.N_OF_RACES){
+        while(races.hasMoreRaces()){
             switch(this.state){
                 case AT_THE_STABLE:
                     cc.proceedToPaddock();
                     paddock.proceedToPaddock();
-                    System.out.println("Out of paddock");
                     break;
                 case AT_THE_PADDOCK:
                     paddock.proceedToStartLine();
                     rt.proceedToStartLine();
-                    System.out.println("Out of proceedToStartLine");
                     break;
                 case AT_THE_START_LINE:
                     rt.makeAMove();
-                    System.out.println("Out of makeAMove1");
                     break;
                 case RUNNNING:
-                    while(rt.hasFinishLineBeenCrossed() == false) rt.makeAMove();
+                    while(!rt.hasFinishLineBeenCrossed()) rt.makeAMove();
                     break;
                 case AT_THE_FINISH_LINE:
                     stable.proceedToStable();
@@ -64,6 +62,7 @@ public class HorseJockey extends Thread{
 
             }
         }
+        System.out.println("Horse died");
     }
     
     public int getHorseId(){

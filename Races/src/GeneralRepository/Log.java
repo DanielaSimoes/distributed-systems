@@ -53,6 +53,7 @@ public class Log {
     
     private void writeInit(){
         try{
+                        
             pw = new PrintWriter(log);
             pw.println("         AFTERNOON AT THE RACE TRACK - Description of the internal state of the problem");
             
@@ -64,7 +65,7 @@ public class Log {
                 head += " St" + Integer.toString(i) + "  Am" + Integer.toString(i) + " ";
             }
             
-            head += this.races.getRaceNumber();
+            head += this.races.getRaceNumber()+1;
             
             for(int i=1; i<=Races.N_OF_HORSES; i++){
                 head += "  St" + Integer.toString(i) + " Len" + Integer.toString(i);
@@ -73,6 +74,7 @@ public class Log {
             //head += "                                        Race R" + this.races.getRaceNumber() + " Status";
             
             pw.println(head);
+            
           
             pw.flush();
         } catch (FileNotFoundException ex) {

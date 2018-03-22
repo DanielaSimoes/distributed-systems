@@ -38,10 +38,7 @@ public class Main {
         int nRaces = Races.N_OF_RACES;
         int nHorses = Races.N_OF_HORSES;
         int nSpectators = Races.N_OF_SPECTATORS;
-        int actual_race = Races.actual_race;
-        
-        assert actual_race <= nRaces;
-        
+                
         stable = new Stable();
         racingTrack = new RacingTrack();
         paddock = new Paddock();
@@ -98,7 +95,7 @@ public class Main {
             //Escrever para o log
         }
     
-        // lg.writeEnd();
+        //lg.writeEnd();
     }
     
 }

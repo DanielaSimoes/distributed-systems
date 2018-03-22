@@ -36,7 +36,6 @@ public class Paddock implements IPaddock {
         
         if(++this.nHorseJockeyLeftThePadock==races.getRace().getNRunningHorses()){
             notifyAll();
-            System.out.println("notificnado com nHorseJockeyLeftThePadock = " + nHorseJockeyLeftThePadock);
         }
     };
     
@@ -68,8 +67,6 @@ public class Paddock implements IPaddock {
                 // do something in the future
             }
         }
-        
-        System.out.println("Out of goCheckHorses");
     };
     
 }

@@ -4,6 +4,7 @@ import entities.Broker;
 import entities.BrokerState;
 import entities.Spectators;
 import entities.SpectatorsState;
+import GeneralRepository.Races;
 
 /**
  *
@@ -11,14 +12,14 @@ import entities.SpectatorsState;
  */
 public class BettingCentre implements IBettingCentre {
     
-    private final boolean[] betsOfSpectators = new boolean[4];
-    private final boolean[] acceptedTheBet = new boolean[4];
+    private final boolean[] betsOfSpectators = new boolean[Races.N_OF_SPECTATORS];
+    private final boolean[] acceptedTheBet = new boolean[Races.N_OF_SPECTATORS];
     
-    private final boolean[] waitingToBePaidSpectators = new boolean[4];
-    private final boolean[] paidSpectators = new boolean[4];
+    private final boolean[] waitingToBePaidSpectators = new boolean[Races.N_OF_SPECTATORS];
+    private final boolean[] paidSpectators = new boolean[Races.N_OF_SPECTATORS];
     
     public BettingCentre(){
-        for(int i = 0; i < 4; i++){
+        for(int i = 0; i < Races.N_OF_SPECTATORS; i++){
             this.betsOfSpectators[i] = false;
             this.acceptedTheBet[i] = false;
             this.paidSpectators[i] = false;
@@ -39,8 +40,10 @@ public class BettingCentre implements IBettingCentre {
                 // do something in the future
             }
 
-            for(int i = 0; i < 4; i++){
-                if (betsOfSpectators[i]) {
+            all_spectators_betted = true;
+            
+            for(int i = 0; i < Races.N_OF_SPECTATORS; i++){
+                if (betsOfSpectators[i] && !this.acceptedTheBet[i]) {
                     this.acceptedTheBet[i] = true;
                     notifyAll();
                 }

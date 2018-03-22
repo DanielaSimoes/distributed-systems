@@ -14,11 +14,10 @@ import entities.HorseJockey;
 
 public class Races {
     
-    public static final int N_OF_RACES = 4;
+    public static final int N_OF_RACES = 1;
     public static final int N_OF_HORSES = 5;
     public static final int N_OF_SPECTATORS = 4;
     public static final int SIZE_OF_RACING_TRACK = 2;
-    public static int actual_race = -1;
         
     private static Races instance = null;
     
@@ -27,7 +26,7 @@ public class Races {
     private final HashMap<Integer, HorseJockeyState> horseJockeysState;
     private BrokerState brokerState;
     public Race[] races;
-    private int raceNumber;
+    private int raceNumber = -1;
     
     /*
     double BS[] = new double[4];
@@ -56,7 +55,6 @@ public class Races {
     public void newRace(){
         assert raceNumber < this.races.length;
         this.raceNumber += 1;
-        actual_race = this.raceNumber;
         this.races[raceNumber] = new Race(raceNumber);
     }
     
@@ -101,14 +99,14 @@ public class Races {
     }
     
     public int getWinner(){
-        return races[actual_race].getWinner();
+        return races[this.raceNumber].getWinner();
     }
     
     public Race getRace(){
-        return this.races[actual_race];
+        return this.races[this.raceNumber];
     }
   
-    public int horsesFinished(){
-        return this.races[actual_race].horsesFinished();
+    public boolean hasMoreRaces(){
+        return !((this.raceNumber == Races.N_OF_RACES - 1) && this.races[this.raceNumber].horsesFinished());
     }
 }

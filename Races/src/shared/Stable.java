@@ -28,17 +28,19 @@ public class Stable implements IStable {
     public synchronized void proceedToStable(){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
 
-        while(((this.wakeHorsesToPaddock && races.getRace().horseHasBeenSelectedToRace((HorseJockey)Thread.currentThread()))|| this.wakeEntertainTheGuests) == false){
+        while(!((this.wakeHorsesToPaddock && races.getRace().horseHasBeenSelectedToRace((HorseJockey)Thread.currentThread())) || this.wakeEntertainTheGuests)){
             try{
                 wait();
             }catch (InterruptedException ex){
                     // do something in the future
             } 
         }
-        System.out.println("Out of proceedToStable");
     };
     
+    @Override
     public synchronized void entertainTheGuests(){
+        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.PLAYING_HOST_AT_THE_BAR);
         this.wakeEntertainTheGuests = true;
+        notifyAll();
     }
 }
