@@ -20,7 +20,7 @@ public class ControlCentre implements IControlCentre {
     public synchronized void reportResults(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
         
-        this.races.getRace().setReportResults(true);
+        this.races.setReportResults(true);
         notifyAll();
     };
     
@@ -28,10 +28,10 @@ public class ControlCentre implements IControlCentre {
     public synchronized void proceedToPaddock(){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
         
-        this.races.getRace().addNHorsesInPaddock();
+        this.races.addNHorsesInPaddock();
         
-        if (this.races.getRace().allNHorsesInPaddock()){
-            this.races.getRace().setProceedToPaddock(true);
+        if (this.races.allNHorsesInPaddock()){
+            this.races.setProceedToPaddock(true);
             notifyAll();
         }
     };
@@ -39,7 +39,7 @@ public class ControlCentre implements IControlCentre {
     
     @Override
     public synchronized void waitForNextRace(){
-        while(!this.races.getRace().getProceedToPaddock() || this.races.getRace().horsesFinished()){
+        while(!this.races.getProceedToPaddock() || this.races.horsesFinished()){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -52,7 +52,7 @@ public class ControlCentre implements IControlCentre {
     public synchronized void goWatchTheRace(){
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
         
-        while(!this.races.getRace().getReportResults()){
+        while(!this.races.getReportResults()){
             try{
                 wait();
             }catch (InterruptedException ex){

@@ -17,7 +17,7 @@ public class Stable implements IStable {
     @Override
     public synchronized void summonHorsesToPaddock(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
-        this.races.getRace().setAnnuncedNextRace(true);
+        this.races.setAnnuncedNextRace(true);
         // verify when the race ends
         //races.setAnnuncedNextRace(false);
         notifyAll();
@@ -28,7 +28,7 @@ public class Stable implements IStable {
     public synchronized void proceedToStable(){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
 
-        while(!((races.getRace().getAnnuncedNextRace() && this.races.getRace().getWakedHorsesToPaddock()!=races.getRace().getNRunningHorses() && races.getRace().horseHasBeenSelectedToRace((HorseJockey)Thread.currentThread())) || races.getRace().getWakeEntertainTheGuests())){
+        while(!((races.getAnnuncedNextRace() && this.races.getWakedHorsesToPaddock()!=races.getNRunningHorses() && races.horseHasBeenSelectedToRace((HorseJockey)Thread.currentThread())) || races.getWakeEntertainTheGuests())){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -36,13 +36,13 @@ public class Stable implements IStable {
             } 
         }
         
-        this.races.getRace().addWakedHorsesToPaddock();
+        this.races.addWakedHorsesToPaddock();
     };
     
     @Override
     public synchronized void entertainTheGuests(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.PLAYING_HOST_AT_THE_BAR);
-        races.getRace().setWakeEntertainTheGuests(true);
+        races.setWakeEntertainTheGuests(true);
         notifyAll();
     }
 }

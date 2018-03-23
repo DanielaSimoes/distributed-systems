@@ -23,10 +23,10 @@ public class RacingTrack implements IRacingTrack {
     public synchronized void startTheRace(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
        
-        races.getRace().setStartTheRace(true);
+        races.setStartTheRace(true);
         notifyAll();
         
-        while(!races.getRace().horsesFinished()){
+        while(!races.horsesFinished()){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -34,7 +34,7 @@ public class RacingTrack implements IRacingTrack {
             }
         }
         
-        races.getRace().setStartTheRace(false);
+        races.setStartTheRace(false);
     };
     
     @Override
@@ -42,7 +42,7 @@ public class RacingTrack implements IRacingTrack {
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
         
         // not sure
-        while(!(races.getRace().getStartTheRace() || !this.races.getRace().nextMovingHorse(((HorseJockey)Thread.currentThread()).getHorseId()))){
+        while(!(races.getStartTheRace() || !this.races.nextMovingHorse(((HorseJockey)Thread.currentThread()).getHorseId()))){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -55,14 +55,14 @@ public class RacingTrack implements IRacingTrack {
     
     @Override
     public synchronized boolean hasFinishLineBeenCrossed(int horseId){  
-        return races.getRace().horseFinished(horseId);
+        return races.horseFinished(horseId);
     };
     
     @Override
     public synchronized void makeAMove(){
         int horseId = ((HorseJockey)Thread.currentThread()).getHorseId();
         
-        while(!this.races.getRace().nextMovingHorse(horseId)){
+        while(!this.races.nextMovingHorse(horseId)){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -70,7 +70,7 @@ public class RacingTrack implements IRacingTrack {
             }
         }
         
-        races.getRace().makeAMove(horseId);
+        races.makeAMove(horseId);
         
         if(this.hasFinishLineBeenCrossed(horseId)){
             ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_FINISH_LINE);

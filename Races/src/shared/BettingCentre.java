@@ -30,12 +30,12 @@ public class BettingCentre implements IBettingCentre {
             all_spectators_betted = true;
             
             for(int i = 0; i < Races.N_OF_SPECTATORS; i++){
-                if (this.races.getRace().getBetsOfSpectator(i) && !this.races.getRace().getAcceptedTheBet(i)) {
-                    this.races.getRace().setAcceptedTheBet(i, true);
+                if (this.races.getBetsOfSpectator(i) && !this.races.getAcceptedTheBet(i)) {
+                    this.races.setAcceptedTheBet(i, true);
                     notifyAll();
                 }
                 
-                all_spectators_betted &= this.races.getRace().getBetsOfSpectator(i);
+                all_spectators_betted &= this.races.getBetsOfSpectator(i);
             }
         }
     };
@@ -54,12 +54,12 @@ public class BettingCentre implements IBettingCentre {
             }
 
             for(int i = 0; i < 4; i++){
-                if (this.races.getRace().getWaitingToBePaidSpectators(i)) {
-                    this.races.getRace().setPaidSpectators(i, true);
+                if (this.races.getWaitingToBePaidSpectators(i)) {
+                    this.races.setPaidSpectators(i, true);
                     notifyAll();
                 }
                 
-                all_spectators_paid &= this.races.getRace().getPaidSpectators(i);
+                all_spectators_paid &= this.races.getPaidSpectators(i);
             }
         }
     };
@@ -76,13 +76,13 @@ public class BettingCentre implements IBettingCentre {
         Spectators spectator = ((Spectators)Thread.currentThread());
         spectator.setSpectatorsState(SpectatorsState.PLACING_A_BET);
         
-        this.races.getRace().setBetsOfSpectator(spectator.getSpectatorId(), true);
+        this.races.setBetsOfSpectator(spectator.getSpectatorId(), true);
         
         // wake broker because spectator placed a bet, 
         // and broker must accpet the bet
         notifyAll();
         
-        while(!this.races.getRace().getAcceptedTheBet(spectator.getSpectatorId())){
+        while(!this.races.getAcceptedTheBet(spectator.getSpectatorId())){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -96,13 +96,13 @@ public class BettingCentre implements IBettingCentre {
         Spectators spectator = ((Spectators)Thread.currentThread());
         spectator.setSpectatorsState(SpectatorsState.COLLECTING_THE_GAINS);
         
-        this.races.getRace().setWaitingToBePaidSpectators(spectator.getSpectatorId(), true);
+        this.races.setWaitingToBePaidSpectators(spectator.getSpectatorId(), true);
         
         // wake broker because spectator is waiting to be Paid
         // and broker must pay the honours
         notifyAll();
         
-        while(!this.races.getRace().getPaidSpectators(spectator.getSpectatorId())){
+        while(!this.races.getPaidSpectators(spectator.getSpectatorId())){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -110,6 +110,6 @@ public class BettingCentre implements IBettingCentre {
             }
         }
         
-        this.races.getRace().setWaitingToBePaidSpectators(spectator.getSpectatorId(), false);
+        this.races.setWaitingToBePaidSpectators(spectator.getSpectatorId(), false);
     };
 }

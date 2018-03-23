@@ -24,13 +24,13 @@ public class Race {
     private boolean annuncedNextRace = false;
     
     /* Paddock */
-    private int nSpectatorsArrivedAtPaddock = 0;
-    private int nHorseJockeyLeftThePadock = 0;
+    protected int nSpectatorsArrivedAtPaddock = 0;
+    protected int nHorseJockeyLeftThePadock = 0;
     
     /* Control Centre */
     private boolean reportResults = false;
     private boolean proceedToPaddock = false;
-    private int nHorsesInPaddock = 0;
+    protected int nHorsesInPaddock = 0;
     
     /* BettingCentre */
     private final boolean[] betsOfSpectators = new boolean[Races.N_OF_SPECTATORS];
@@ -155,109 +155,109 @@ public class Race {
     
     /* condition states */
     /* Racing Track */
-    public synchronized boolean getStartTheRace(){
+    protected synchronized boolean getStartTheRace(){
         return this.startTheRace;
     }
     
-    public synchronized void setStartTheRace(boolean startTheRace){
+    protected synchronized void setStartTheRace(boolean startTheRace){
         this.startTheRace = startTheRace;
     }
     /* Stable */
-    public synchronized int getWakedHorsesToPaddock(){
+    protected synchronized int getWakedHorsesToPaddock(){
         return this.wakedHorsesToPaddock;
     }
     
-    public synchronized void addWakedHorsesToPaddock(){
+    protected synchronized void addWakedHorsesToPaddock(){
         this.wakedHorsesToPaddock = this.wakedHorsesToPaddock + 1;
     }
     
-    public synchronized boolean getWakeEntertainTheGuests(){
+    protected synchronized boolean getWakeEntertainTheGuests(){
         return this.wakeEntertainTheGuests;
     }
     
-    public synchronized void setWakeEntertainTheGuests(boolean wakeEntertainTheGuests){
+    protected synchronized void setWakeEntertainTheGuests(boolean wakeEntertainTheGuests){
         this.wakeEntertainTheGuests = wakeEntertainTheGuests;
     }
     
-    public synchronized boolean getAnnuncedNextRace(){
+    protected synchronized boolean getAnnuncedNextRace(){
         return this.annuncedNextRace;
     }
     
-    public synchronized void setAnnuncedNextRace(boolean annuncedNextRace){
+    protected synchronized void setAnnuncedNextRace(boolean annuncedNextRace){
         this.annuncedNextRace = annuncedNextRace;
     }
     /* Paddock */
-    public synchronized boolean allSpectatorsArrivedAtPaddock(){
+    protected synchronized boolean allSpectatorsArrivedAtPaddock(){
         return this.nSpectatorsArrivedAtPaddock == Races.N_OF_SPECTATORS;
     }
     
-    public synchronized void addNSpectatorsArrivedAtPaddock(){
+    protected synchronized void addNSpectatorsArrivedAtPaddock(){
         this.nSpectatorsArrivedAtPaddock = this.nSpectatorsArrivedAtPaddock + 1;
     }
     
-    public synchronized boolean allHorseJockeyLeftThePadock(){
+    protected synchronized boolean allHorseJockeyLeftThePadock(){
         return this.nHorseJockeyLeftThePadock == this.getNRunningHorses();
     }
     
-    public synchronized void addNHorseJockeyLeftThePadock(){
+    protected synchronized void addNHorseJockeyLeftThePadock(){
         this.nHorseJockeyLeftThePadock = this.nHorseJockeyLeftThePadock + 1;
     }
     
     /* Control Centre */
-    public synchronized void setReportResults(boolean set){
+    protected synchronized void setReportResults(boolean set){
         this.reportResults = set;
     }
     
-    public synchronized boolean getReportResults(){
+    protected synchronized boolean getReportResults(){
         return this.reportResults;
     }
     
-    public synchronized void setProceedToPaddock(boolean set){
+    protected synchronized void setProceedToPaddock(boolean set){
         this.proceedToPaddock = set;
     }
     
-    public synchronized boolean getProceedToPaddock(){
+    protected synchronized boolean getProceedToPaddock(){
         return this.proceedToPaddock;
     }
     
-    public synchronized boolean allNHorsesInPaddock(){
+    protected synchronized boolean allNHorsesInPaddock(){
         return this.nHorsesInPaddock == this.getNRunningHorses();
     }
     
-    public synchronized void addNHorsesInPaddock(){
+    protected synchronized void addNHorsesInPaddock(){
         this.nHorsesInPaddock = this.nHorsesInPaddock + 1;
     }
     
     /* Betting Centre */
-    public synchronized boolean getBetsOfSpectator(int i){
+    protected synchronized boolean getBetsOfSpectator(int i){
         return this.betsOfSpectators[i];
     }
     
-    public synchronized void setBetsOfSpectator(int i, boolean set){
+    protected synchronized void setBetsOfSpectator(int i, boolean set){
         this.betsOfSpectators[i] = set;
     }
     
-    public synchronized boolean getAcceptedTheBet(int i){
+    protected synchronized boolean getAcceptedTheBet(int i){
         return this.acceptedTheBet[i];
     }
     
-    public synchronized void setAcceptedTheBet(int i, boolean set){
+    protected synchronized void setAcceptedTheBet(int i, boolean set){
         this.acceptedTheBet[i] = set;
     }
     
-    public synchronized boolean getWaitingToBePaidSpectators(int i){
+    protected synchronized boolean getWaitingToBePaidSpectators(int i){
         return this.waitingToBePaidSpectators[i];
     }
     
-    public synchronized void setWaitingToBePaidSpectators(int i, boolean set){
+    protected synchronized void setWaitingToBePaidSpectators(int i, boolean set){
         this.waitingToBePaidSpectators[i] = set;
     }
     
-    public synchronized boolean getPaidSpectators(int i){
+    protected synchronized boolean getPaidSpectators(int i){
         return this.paidSpectators[i];
     }
     
-    public synchronized void setPaidSpectators(int i, boolean set){
+    protected synchronized void setPaidSpectators(int i, boolean set){
         this.paidSpectators[i] = set;
     }
     /* end condition states */

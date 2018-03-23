@@ -20,7 +20,7 @@ public class Paddock implements IPaddock {
     public synchronized void proceedToPaddock(){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
         
-        while(!this.races.getRace().allSpectatorsArrivedAtPaddock()){
+        while(!this.races.allSpectatorsArrivedAtPaddock()){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -33,9 +33,9 @@ public class Paddock implements IPaddock {
     public synchronized void proceedToStartLine(){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
         
-        this.races.getRace().addNHorseJockeyLeftThePadock();
+        this.races.addNHorseJockeyLeftThePadock();
         
-        if(this.races.getRace().allHorseJockeyLeftThePadock()){
+        if(this.races.allHorseJockeyLeftThePadock()){
             notifyAll();
         }
     };
@@ -44,7 +44,7 @@ public class Paddock implements IPaddock {
     public synchronized void summonHorsesToPaddock(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
         
-        while(!this.races.getRace().allSpectatorsArrivedAtPaddock()){
+        while(!this.races.allSpectatorsArrivedAtPaddock()){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -57,13 +57,13 @@ public class Paddock implements IPaddock {
     public synchronized void goCheckHorses(){
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.APPRAISING_THE_HORSES);
         
-        this.races.getRace().addNSpectatorsArrivedAtPaddock();
+        this.races.addNSpectatorsArrivedAtPaddock();
         
-        if(this.races.getRace().allSpectatorsArrivedAtPaddock()){
+        if(this.races.allSpectatorsArrivedAtPaddock()){
             notifyAll();
         } 
         
-        while(!this.races.getRace().allHorseJockeyLeftThePadock()){
+        while(!this.races.allHorseJockeyLeftThePadock()){
             try{
                 wait();
             }catch (InterruptedException ex){

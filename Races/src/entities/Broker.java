@@ -35,7 +35,8 @@ public class Broker extends Thread{
     }
     
     @Override
-    public void run(){  
+    public void run(){
+            this.races.newRaceContext();  
         
             while(!this.entertainTheGuests){
 
@@ -59,7 +60,7 @@ public class Broker extends Thread{
                         if(bc.areThereAnyWinners()){ 
                             bc.honourTheBets();
                         }else if(races.hasMoreRaces()){
-                            races.newRace();
+                            this.races.newRaceContext();
                             stable.summonHorsesToPaddock();
                             paddock.summonHorsesToPaddock();
                         }else{
@@ -70,7 +71,7 @@ public class Broker extends Thread{
 
                     case SETTLING_ACCOUNTS:
                         if(races.hasMoreRaces()){
-                            races.newRace();
+                            this.races.newRaceContext();
                             stable.summonHorsesToPaddock();
                             paddock.summonHorsesToPaddock();
                         }else{
