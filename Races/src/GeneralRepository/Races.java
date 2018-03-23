@@ -17,7 +17,7 @@ public class Races {
     public static final int N_OF_RACES = 1;
     public static final int N_OF_HORSES = 5;
     public static final int N_OF_SPECTATORS = 4;
-    public static final int SIZE_OF_RACING_TRACK = 2;
+    public static final int SIZE_OF_RACING_TRACK = 14;
         
     private static Races instance = null;
     
@@ -42,6 +42,9 @@ public class Races {
         this.horseJockeysState = new HashMap<>();
         this.spectatorAmmount = new HashMap<>();
         this.races = new Race[N_OF_RACES];
+        
+        // create new Race to save states
+        this.newRace();
     }
     
     public static Races getInstace(){
@@ -54,8 +57,9 @@ public class Races {
     
     public void newRace(){
         assert raceNumber < this.races.length;
+        this.races[this.raceNumber+1] = new Race(raceNumber);
         this.raceNumber += 1;
-        this.races[raceNumber] = new Race(raceNumber);
+        System.out.println("New race " + this.raceNumber);
     }
     
     public boolean horseHasBeenSelectedToRace(HorseJockey horseJockey){
@@ -105,8 +109,17 @@ public class Races {
     public Race getRace(){
         return this.races[this.raceNumber];
     }
+    
+    public Race getRace(int n){
+        if(this.raceNumber==-1){
+            return null;
+        }
+        return this.races[n];
+    }
   
     public boolean hasMoreRaces(){
-        return !((this.raceNumber == Races.N_OF_RACES - 1) && this.races[this.raceNumber].horsesFinished());
+        boolean hasMore = !((this.raceNumber == Races.N_OF_RACES - 1) && this.races[this.raceNumber].horsesFinished());
+        //System.out.println("HasMoreRaces: " + hasMore + " | running horses: " + this.races[this.raceNumber].getNRunningHorses());
+        return hasMore;
     }
 }

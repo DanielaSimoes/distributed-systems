@@ -1,6 +1,7 @@
 package entities;
 
 import GeneralRepository.Log;
+import GeneralRepository.Races;
 
 /**
  *
@@ -11,6 +12,7 @@ public class Spectators extends Thread{
     private SpectatorsState state;
     private double moneyToBet;
     private final Log log;
+    private final Races races = Races.getInstace();
     
     /*
         Shared zones in which Spectators has actions
@@ -31,6 +33,7 @@ public class Spectators extends Thread{
         this.log = Log.getInstance();
         this.state = SpectatorsState.WAITING_FOR_A_RACE_TO_START;
         this.relaxABit = false;
+        this.setName("Spectator " + id);
     }
     
     @Override
@@ -54,24 +57,26 @@ public class Spectators extends Thread{
                 case WATCHING_A_RACE:
                     if(cc.haveIWon()){
                         bc.goCollectTheGains();
+                    }else if(races.hasMoreRaces()){
+                        cc.waitForNextRace();
+                        paddock.goCheckHorses();
                     }else{
                         this.relaxABit = true;
                     }
                     break;
 
                 case COLLECTING_THE_GAINS:
-                    this.relaxABit = true;
-                    // don't know what to do
+                    if(races.hasMoreRaces()){
+                        cc.waitForNextRace();
+                        paddock.goCheckHorses();
+                    }else{
+                        this.relaxABit = true;
+                    }
                     break;
-
-                //case CELEBRATING:
-                    // don't know what to do
-                    //break;
             }   
         }
         
         cc.relaxABit();
-        System.out.println("Spectator died");
     }
     
     public void setSpectatorsState(SpectatorsState state){

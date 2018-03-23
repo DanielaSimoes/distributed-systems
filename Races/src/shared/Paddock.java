@@ -14,14 +14,13 @@ import entities.SpectatorsState;
  */
 public class Paddock implements IPaddock {
     
-    private int nSpectatorsArrivedAtPaddock = 0, nHorseJockeyLeftThePadock = 0;
     private Races races = Races.getInstace();
     
     @Override
     public synchronized void proceedToPaddock(){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
         
-        while(nSpectatorsArrivedAtPaddock!=Races.N_OF_SPECTATORS){
+        while(!this.races.getRace().allSpectatorsArrivedAtPaddock()){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -34,7 +33,9 @@ public class Paddock implements IPaddock {
     public synchronized void proceedToStartLine(){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
         
-        if(++this.nHorseJockeyLeftThePadock==races.getRace().getNRunningHorses()){
+        this.races.getRace().addNHorseJockeyLeftThePadock();
+        
+        if(this.races.getRace().allHorseJockeyLeftThePadock()){
             notifyAll();
         }
     };
@@ -43,7 +44,7 @@ public class Paddock implements IPaddock {
     public synchronized void summonHorsesToPaddock(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
         
-        while(this.nSpectatorsArrivedAtPaddock != Races.N_OF_SPECTATORS){
+        while(!this.races.getRace().allSpectatorsArrivedAtPaddock()){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -56,11 +57,13 @@ public class Paddock implements IPaddock {
     public synchronized void goCheckHorses(){
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.APPRAISING_THE_HORSES);
         
-        if(++this.nSpectatorsArrivedAtPaddock==Races.N_OF_SPECTATORS){
+        this.races.getRace().addNSpectatorsArrivedAtPaddock();
+        
+        if(this.races.getRace().allSpectatorsArrivedAtPaddock()){
             notifyAll();
         } 
         
-        while(this.nHorseJockeyLeftThePadock!=races.getRace().getNRunningHorses()){
+        while(!this.races.getRace().allHorseJockeyLeftThePadock()){
             try{
                 wait();
             }catch (InterruptedException ex){

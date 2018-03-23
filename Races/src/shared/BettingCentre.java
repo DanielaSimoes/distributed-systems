@@ -12,20 +12,7 @@ import GeneralRepository.Races;
  */
 public class BettingCentre implements IBettingCentre {
     
-    private final boolean[] betsOfSpectators = new boolean[Races.N_OF_SPECTATORS];
-    private final boolean[] acceptedTheBet = new boolean[Races.N_OF_SPECTATORS];
-    
-    private final boolean[] waitingToBePaidSpectators = new boolean[Races.N_OF_SPECTATORS];
-    private final boolean[] paidSpectators = new boolean[Races.N_OF_SPECTATORS];
-    
-    public BettingCentre(){
-        for(int i = 0; i < Races.N_OF_SPECTATORS; i++){
-            this.betsOfSpectators[i] = false;
-            this.acceptedTheBet[i] = false;
-            this.paidSpectators[i] = false;
-            this.waitingToBePaidSpectators[i] = false;
-        }
-     }
+    private Races races = Races.getInstace();
     
     @Override
     public synchronized void acceptTheBets(){
@@ -43,12 +30,12 @@ public class BettingCentre implements IBettingCentre {
             all_spectators_betted = true;
             
             for(int i = 0; i < Races.N_OF_SPECTATORS; i++){
-                if (betsOfSpectators[i] && !this.acceptedTheBet[i]) {
-                    this.acceptedTheBet[i] = true;
+                if (this.races.getRace().getBetsOfSpectator(i) && !this.races.getRace().getAcceptedTheBet(i)) {
+                    this.races.getRace().setAcceptedTheBet(i, true);
                     notifyAll();
                 }
                 
-                all_spectators_betted &= betsOfSpectators[i];
+                all_spectators_betted &= this.races.getRace().getBetsOfSpectator(i);
             }
         }
     };
@@ -67,12 +54,12 @@ public class BettingCentre implements IBettingCentre {
             }
 
             for(int i = 0; i < 4; i++){
-                if (waitingToBePaidSpectators[i]) {
-                    this.paidSpectators[i] = true;
+                if (this.races.getRace().getWaitingToBePaidSpectators(i)) {
+                    this.races.getRace().setPaidSpectators(i, true);
                     notifyAll();
                 }
                 
-                all_spectators_paid &= paidSpectators[i];
+                all_spectators_paid &= this.races.getRace().getPaidSpectators(i);
             }
         }
     };
@@ -89,13 +76,13 @@ public class BettingCentre implements IBettingCentre {
         Spectators spectator = ((Spectators)Thread.currentThread());
         spectator.setSpectatorsState(SpectatorsState.PLACING_A_BET);
         
-        this.betsOfSpectators[spectator.getSpectatorId()] = true;
+        this.races.getRace().setBetsOfSpectator(spectator.getSpectatorId(), true);
         
         // wake broker because spectator placed a bet, 
         // and broker must accpet the bet
         notifyAll();
         
-        while(!this.acceptedTheBet[spectator.getSpectatorId()]){
+        while(!this.races.getRace().getAcceptedTheBet(spectator.getSpectatorId())){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -109,13 +96,13 @@ public class BettingCentre implements IBettingCentre {
         Spectators spectator = ((Spectators)Thread.currentThread());
         spectator.setSpectatorsState(SpectatorsState.COLLECTING_THE_GAINS);
         
-        this.waitingToBePaidSpectators[spectator.getSpectatorId()] = true;
+        this.races.getRace().setWaitingToBePaidSpectators(spectator.getSpectatorId(), true);
         
         // wake broker because spectator is waiting to be Paid
         // and broker must pay the honours
         notifyAll();
         
-        while(!this.paidSpectators[spectator.getSpectatorId()]){
+        while(!this.races.getRace().getPaidSpectators(spectator.getSpectatorId())){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -123,8 +110,6 @@ public class BettingCentre implements IBettingCentre {
             }
         }
         
-        
-        this.waitingToBePaidSpectators[spectator.getSpectatorId()] = false;
-        
+        this.races.getRace().setWaitingToBePaidSpectators(spectator.getSpectatorId(), false);
     };
 }

@@ -1,6 +1,7 @@
 package entities;
 
 import GeneralRepository.Log;
+import GeneralRepository.Races;
 
 /**
  *
@@ -20,6 +21,7 @@ public class Broker extends Thread{
     private final shared.IRacingTrack rt;
     private final shared.IPaddock paddock;
     private boolean entertainTheGuests = false;
+    private final Races races = Races.getInstace();
     
     public Broker(shared.IStable s, shared.IControlCentre cc, shared.IBettingCentre bc, shared.IRacingTrack rt, shared.IPaddock paddock){
         this.stable = s;
@@ -29,6 +31,7 @@ public class Broker extends Thread{
         this.paddock = paddock;
         this.log = Log.getInstance();
         this.state = BrokerState.OPENING_THE_EVENT;
+        this.setName("Broker");
     }
     
     @Override
@@ -55,24 +58,30 @@ public class Broker extends Thread{
                         cc.reportResults();
                         if(bc.areThereAnyWinners()){ 
                             bc.honourTheBets();
+                        }else if(races.hasMoreRaces()){
+                            races.newRace();
+                            stable.summonHorsesToPaddock();
+                            paddock.summonHorsesToPaddock();
+                        }else{
+                            this.entertainTheGuests = true;
+                        }
+                        
+                        break;
+
+                    case SETTLING_ACCOUNTS:
+                        if(races.hasMoreRaces()){
+                            races.newRace();
+                            stable.summonHorsesToPaddock();
+                            paddock.summonHorsesToPaddock();
                         }else{
                             this.entertainTheGuests = true;
                         }
                         break;
 
-                    case SETTLING_ACCOUNTS:
-                        this.entertainTheGuests = true;
-                        break;
-
-                    //case PLAYING_HOST_AT_THE_BAR:
-                        // do not know what to do yet
-                        //break;
-                    
                 }
             }
             
             this.stable.entertainTheGuests();
-            System.out.println("Broker died");
     }
     
     public void setBrokerState(BrokerState state){

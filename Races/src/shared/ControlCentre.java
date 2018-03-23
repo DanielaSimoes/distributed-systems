@@ -1,7 +1,6 @@
 package shared;
 
 import GeneralRepository.Races;
-import GeneralRepository.Race;
 import entities.Broker;
 import entities.BrokerState;
 import entities.HorseJockey;
@@ -15,23 +14,24 @@ import entities.SpectatorsState;
  */
 public class ControlCentre implements IControlCentre {
     
-    private boolean reportResults=false, proceedToPaddock = false;
-    private int nHorsesInPaddock = 0;
     private Races races = Races.getInstace();
     
     @Override
     public synchronized void reportResults(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
         
-        this.reportResults = true;
+        this.races.getRace().setReportResults(true);
         notifyAll();
     };
     
     @Override
     public synchronized void proceedToPaddock(){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
-        if (++this.nHorsesInPaddock == races.getRace().getNRunningHorses()){
-            this.proceedToPaddock = true;
+        
+        this.races.getRace().addNHorsesInPaddock();
+        
+        if (this.races.getRace().allNHorsesInPaddock()){
+            this.races.getRace().setProceedToPaddock(true);
             notifyAll();
         }
     };
@@ -39,7 +39,7 @@ public class ControlCentre implements IControlCentre {
     
     @Override
     public synchronized void waitForNextRace(){
-        while(!this.proceedToPaddock){
+        while(!this.races.getRace().getProceedToPaddock() || this.races.getRace().horsesFinished()){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -52,7 +52,7 @@ public class ControlCentre implements IControlCentre {
     public synchronized void goWatchTheRace(){
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
         
-        while(!this.reportResults){
+        while(!this.races.getRace().getReportResults()){
             try{
                 wait();
             }catch (InterruptedException ex){

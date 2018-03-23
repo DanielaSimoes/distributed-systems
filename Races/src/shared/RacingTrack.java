@@ -17,14 +17,13 @@ import entities.HorseJockeyState;
  */
 public class RacingTrack implements IRacingTrack {
     
-    private boolean startTheRace = false, makeAMove = false;
     private Races races = Races.getInstace();
     
     @Override
     public synchronized void startTheRace(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
        
-        this.startTheRace = true;
+        races.getRace().setStartTheRace(true);
         notifyAll();
         
         while(!races.getRace().horsesFinished()){
@@ -34,7 +33,8 @@ public class RacingTrack implements IRacingTrack {
                 // do something in the future
             }
         }
-
+        
+        races.getRace().setStartTheRace(false);
     };
     
     @Override
@@ -42,7 +42,7 @@ public class RacingTrack implements IRacingTrack {
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
         
         // not sure
-        while(!(this.startTheRace || this.makeAMove)){
+        while(!(races.getRace().getStartTheRace() || !this.races.getRace().nextMovingHorse(((HorseJockey)Thread.currentThread()).getHorseId()))){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -50,17 +50,19 @@ public class RacingTrack implements IRacingTrack {
             }
         }
         
-        this.makeAMove = true;
+        notifyAll();
     };
     
     @Override
-    public synchronized boolean hasFinishLineBeenCrossed(){  
-        return races.getRace().horseFinished(((HorseJockey)Thread.currentThread()).getHorseId());
+    public synchronized boolean hasFinishLineBeenCrossed(int horseId){  
+        return races.getRace().horseFinished(horseId);
     };
     
     @Override
     public synchronized void makeAMove(){
-        while(!this.races.getRace().nextMovingHorse(((HorseJockey)Thread.currentThread()).getHorseId())){
+        int horseId = ((HorseJockey)Thread.currentThread()).getHorseId();
+        
+        while(!this.races.getRace().nextMovingHorse(horseId)){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -68,17 +70,16 @@ public class RacingTrack implements IRacingTrack {
             }
         }
         
-        races.getRace().makeAMove(((HorseJockey)Thread.currentThread()).getHorseId());
+        races.getRace().makeAMove(horseId);
         
-        if(this.hasFinishLineBeenCrossed()){
+        if(this.hasFinishLineBeenCrossed(horseId)){
             ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_FINISH_LINE);
+            //System.out.println("Horse "+ horseId + " at the finish line");
         }else{
             ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.RUNNNING);
+            //System.out.println("Horse "+ horseId + " running");
         }
         
-        if(!races.getRace().horsesFinished()){
-            notifyAll();
-        }   
-    };
-    
+        notifyAll();
+    };   
 }

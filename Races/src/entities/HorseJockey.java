@@ -21,7 +21,7 @@ public class HorseJockey extends Thread{
     private final shared.IControlCentre cc;
     private final shared.IPaddock paddock;
     private final shared.IRacingTrack rt;
-    private Races races = Races.getInstace();
+    private final Races races = Races.getInstace();
     
     private final double stepSize;
     
@@ -34,6 +34,7 @@ public class HorseJockey extends Thread{
         this.id = id;
         this.log = Log.getInstance();
         this.state = HorseJockeyState.AT_THE_STABLE;
+        this.setName("HorseJockey " + id);
     }
     
     @Override
@@ -54,7 +55,10 @@ public class HorseJockey extends Thread{
                     rt.makeAMove();
                     break;
                 case RUNNNING:
-                    while(!rt.hasFinishLineBeenCrossed()) rt.makeAMove();
+                    while(!rt.hasFinishLineBeenCrossed(this.id)){
+                        rt.makeAMove();
+                    }
+                    System.out.println("Horse "+id+" out of running");
                     break;
                 case AT_THE_FINISH_LINE:
                     stable.proceedToStable();
@@ -62,7 +66,6 @@ public class HorseJockey extends Thread{
 
             }
         }
-        System.out.println("Horse died");
     }
     
     public int getHorseId(){
