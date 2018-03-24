@@ -7,7 +7,7 @@ import GeneralRepository.Races;
  *
  * @author Daniela
  */
-public class Broker extends Thread{
+public class Broker extends Thread implements IEntity{
     
     private BrokerState state;
     
@@ -22,6 +22,7 @@ public class Broker extends Thread{
     private final shared.IPaddock paddock;
     private boolean entertainTheGuests = false;
     private final Races races = Races.getInstace();
+    private int raceId = 0;
     
     public Broker(shared.IStable s, shared.IControlCentre cc, shared.IBettingCentre bc, shared.IRacingTrack rt, shared.IPaddock paddock){
         this.stable = s;
@@ -36,8 +37,6 @@ public class Broker extends Thread{
     
     @Override
     public void run(){
-            this.races.newRaceContext();  
-        
             while(!this.entertainTheGuests){
 
                 switch(this.state){
@@ -60,7 +59,7 @@ public class Broker extends Thread{
                         if(bc.areThereAnyWinners()){ 
                             bc.honourTheBets();
                         }else if(races.hasMoreRaces()){
-                            this.races.newRaceContext();
+                            this.nextRace();
                             stable.summonHorsesToPaddock();
                             paddock.summonHorsesToPaddock();
                         }else{
@@ -71,7 +70,7 @@ public class Broker extends Thread{
 
                     case SETTLING_ACCOUNTS:
                         if(races.hasMoreRaces()){
-                            this.races.newRaceContext();
+                            this.nextRace();
                             stable.summonHorsesToPaddock();
                             paddock.summonHorsesToPaddock();
                         }else{
@@ -83,6 +82,16 @@ public class Broker extends Thread{
             }
             
             this.stable.entertainTheGuests();
+    }
+    
+    @Override
+    public void nextRace(){
+        this.raceId++;
+    }
+    
+    @Override
+    public int getCurrentRace(){
+        return this.raceId;
     }
     
     public void setBrokerState(BrokerState state){

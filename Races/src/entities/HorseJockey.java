@@ -7,7 +7,7 @@ import GeneralRepository.Races;
  *
  * @author Daniela
  */
-public class HorseJockey extends Thread{
+public class HorseJockey extends Thread implements IEntity{
     
     private HorseJockeyState state;
     
@@ -23,6 +23,7 @@ public class HorseJockey extends Thread{
     private final shared.IRacingTrack rt;
     private final Races races = Races.getInstace();
     
+    private int raceId = 0;
     private final double stepSize;
     
     public HorseJockey(shared.IStable s, shared.IControlCentre cc, shared.IPaddock paddock, shared.IRacingTrack rt, double stepSize, int id){
@@ -58,14 +59,25 @@ public class HorseJockey extends Thread{
                     while(!rt.hasFinishLineBeenCrossed(this.id)){
                         rt.makeAMove();
                     }
-                    System.out.println("Horse "+id+" out of running");
+                    //System.out.println("Horse "+id+" out of running");
                     break;
                 case AT_THE_FINISH_LINE:
+                    this.nextRace();
                     stable.proceedToStable();
                     break;
 
             }
         }
+    }
+    
+    @Override
+    public void nextRace(){
+        this.raceId++;
+    }
+    
+    @Override
+    public int getCurrentRace(){
+        return this.raceId;
     }
     
     public int getHorseId(){

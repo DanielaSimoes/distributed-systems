@@ -11,10 +11,12 @@ import entities.BrokerState;
 import entities.HorseJockeyState;
 import entities.SpectatorsState;
 import entities.HorseJockey;
+import entities.IEntity;
+
 
 public class Races {
     
-    public static final int N_OF_RACES = 1;
+    public static final int N_OF_RACES = 5;
     public static final int N_OF_HORSES = 5;
     public static final int N_OF_SPECTATORS = 4;
     public static final int SIZE_OF_RACING_TRACK = 14;
@@ -26,7 +28,6 @@ public class Races {
     private final HashMap<Integer, HorseJockeyState> horseJockeysState;
     private BrokerState brokerState;
     public Race[] races;
-    private int raceNumber = -1;
     
     /*
     double BS[] = new double[4];
@@ -56,14 +57,10 @@ public class Races {
         
         return instance;
     }
-    
-    public void newRaceContext(){
-        assert raceNumber < this.races.length;
-        this.raceNumber += 1;
-        System.out.println("New race " + this.raceNumber);
-    }
-    
+   
     public boolean horseHasBeenSelectedToRace(HorseJockey horseJockey){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
         return this.races[raceNumber].horseHasBeenSelectedToRace(horseJockey);
     }
     
@@ -99,205 +96,198 @@ public class Races {
         return this.spectatorsState.get(id);
     }
     
-    public int getRaceNumber(){
-        return this.raceNumber;
-    }
-    
     public int getWinner(){
-        return races[this.raceNumber].getWinner();
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        return races[raceNumber].getWinner();
     }
     
-    public Race getRace(){
-        return this.races[this.raceNumber];
-    }
-    
-    public Race getRace(int n){
-        if(this.raceNumber==-1){
-            return null;
-        }
-        return this.races[n];
-    }
-  
     public boolean hasMoreRaces(){
-        boolean hasMore = !((this.raceNumber == Races.N_OF_RACES - 1) && this.races[this.raceNumber].horsesFinished());
-        //System.out.println("HasMoreRaces: " + hasMore + " | running horses: " + this.races[this.raceNumber].getNRunningHorses());
-        return hasMore;
+        //System.out.println("HasMoreRaces: " + hasMore + " | running horses: " + this.races[raceNumber].getNRunningHorses());
+        return !this.races[Races.N_OF_RACES-1].horsesFinished();
     }
     
     public void makeAMove(int horseId){
-        this.races[this.raceNumber].makeAMove(horseId);
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        this.races[raceNumber].makeAMove(horseId);
     }
     
     public boolean nextMovingHorse(int horseJockeyId){
-        return this.races[this.raceNumber].nextMovingHorse(horseJockeyId);
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        return this.races[raceNumber].nextMovingHorse(horseJockeyId);
     }
     
     public boolean horseFinished(int horseId){
-        return this.races[this.raceNumber].horseFinished(horseId);
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        return this.races[raceNumber].horseFinished(horseId);
     }
     
     public boolean horsesFinished(){
-        return this.races[this.raceNumber].horsesFinished();
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        return this.races[raceNumber].horsesFinished();
     }
     
     
     public int getNRunningHorses(){
-        return this.races[this.raceNumber].getNRunningHorses();
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        return this.races[raceNumber].getNRunningHorses();
     }
     
     /* condition states */
     /* Racing Track */
     public synchronized boolean getStartTheRace(){
-        if(this.raceNumber==-1){
-            return false;
-        }
-        return this.races[this.raceNumber].getStartTheRace();
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        return this.races[raceNumber].getStartTheRace();
     }
     
     public synchronized void setStartTheRace(boolean startTheRace){
-        this.races[this.raceNumber].setStartTheRace(startTheRace);
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        this.races[raceNumber].setStartTheRace(startTheRace);
     }
     /* Stable */
     public synchronized int getWakedHorsesToPaddock(){
-        if(this.raceNumber==-1){
-            return 0;
-        }
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
-        return this.races[this.raceNumber].getWakedHorsesToPaddock();
+        return this.races[raceNumber].getWakedHorsesToPaddock();
     }
     
     public synchronized void addWakedHorsesToPaddock(){
-        this.races[this.raceNumber].addWakedHorsesToPaddock();
-    }
-    
-    public synchronized boolean getWakeEntertainTheGuests(){
-        if(this.raceNumber==-1){
-            return false;
-        }
-        return this.races[this.raceNumber].getWakeEntertainTheGuests();
-    }
-    
-    public synchronized void setWakeEntertainTheGuests(boolean wakeEntertainTheGuests){
-        this.races[this.raceNumber].setWakeEntertainTheGuests(wakeEntertainTheGuests);
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        this.races[raceNumber].addWakedHorsesToPaddock();
     }
     
     public synchronized boolean getAnnuncedNextRace(){
-        if (this.raceNumber==-1){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        if(raceNumber>=N_OF_RACES){
             return false;
         }
-        return this.races[this.raceNumber].getAnnuncedNextRace();
+        
+        return this.races[raceNumber].getAnnuncedNextRace();
     }
     
     public synchronized void setAnnuncedNextRace(boolean annuncedNextRace){
-        this.races[this.raceNumber].setAnnuncedNextRace(annuncedNextRace);
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        this.races[raceNumber].setAnnuncedNextRace(annuncedNextRace);
     }
     /* Paddock */
     public synchronized boolean allSpectatorsArrivedAtPaddock(){
-        if(this.raceNumber==-1){
-            return false;
-        }
-        return this.races[this.raceNumber].allSpectatorsArrivedAtPaddock();
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        return this.races[raceNumber].allSpectatorsArrivedAtPaddock();
     }
     
     public synchronized void addNSpectatorsArrivedAtPaddock(){
-        this.races[this.raceNumber].addNSpectatorsArrivedAtPaddock();
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        this.races[raceNumber].addNSpectatorsArrivedAtPaddock();
     }
     
     public synchronized boolean allHorseJockeyLeftThePadock(){
-        if(this.raceNumber==-1){
-            return false;
-        }
-        return this.races[this.raceNumber].allHorseJockeyLeftThePadock();
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        return this.races[raceNumber].allHorseJockeyLeftThePadock();
     }
     
     public synchronized void addNHorseJockeyLeftThePadock(){
-        this.races[this.raceNumber].addNHorseJockeyLeftThePadock();
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        this.races[raceNumber].addNHorseJockeyLeftThePadock();
     }
     
     /* Control Centre */
     public synchronized void setReportResults(boolean set){
-        this.races[this.raceNumber].setReportResults(set);
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        this.races[raceNumber].setReportResults(set);
     }
     
     public synchronized boolean getReportResults(){
-        if(this.raceNumber==-1){
-            return false;
-        }
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
-        return this.races[this.raceNumber].getReportResults();
+        return this.races[raceNumber].getReportResults();
     }
     
     public synchronized void setProceedToPaddock(boolean set){
-        this.races[this.raceNumber].setProceedToPaddock(set);
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        this.races[raceNumber].setProceedToPaddock(set);
     }
     
     public synchronized boolean getProceedToPaddock(){
-        if(this.raceNumber==-1){
-            return false;
-        }
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
-        return this.races[this.raceNumber].getProceedToPaddock();
+        return this.races[raceNumber].getProceedToPaddock();
     }
     
     public synchronized boolean allNHorsesInPaddock(){
-        if(this.raceNumber==-1){
-            return false;
-        }
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
-        return this.races[this.raceNumber].allNHorsesInPaddock();
+        return this.races[raceNumber].allNHorsesInPaddock();
     }
     
     public synchronized void addNHorsesInPaddock(){
-        this.races[this.raceNumber].addNHorsesInPaddock();
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        this.races[raceNumber].addNHorsesInPaddock();
     }
     
     /* Betting Centre */
     public synchronized boolean getBetsOfSpectator(int i){
-        if(this.raceNumber==-1){
-            return false;
-        }
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
-        return this.races[this.raceNumber].getBetsOfSpectator(i);
+        return this.races[raceNumber].getBetsOfSpectator(i);
     }
     
     public synchronized void setBetsOfSpectator(int i, boolean set){
-        this.races[this.raceNumber].setBetsOfSpectator(i, set);
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        this.races[raceNumber].setBetsOfSpectator(i, set);
     }
     
     public synchronized boolean getAcceptedTheBet(int i){
-        if(this.raceNumber==-1){
-            return false;
-        }
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
-        return this.races[this.raceNumber].getAcceptedTheBet(i);
+        return this.races[raceNumber].getAcceptedTheBet(i);
     }
     
     public synchronized void setAcceptedTheBet(int i, boolean set){
-        this.races[this.raceNumber].setAcceptedTheBet(i, set);
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        this.races[raceNumber].setAcceptedTheBet(i, set);
     }
     
     public synchronized boolean getWaitingToBePaidSpectators(int i){
-        if(this.raceNumber==-1){
-            return false;
-        }
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
-        return this.races[this.raceNumber].getWaitingToBePaidSpectators(i);
+        return this.races[raceNumber].getWaitingToBePaidSpectators(i);
     }
     
     public synchronized void setWaitingToBePaidSpectators(int i, boolean set){
-        this.races[this.raceNumber].setWaitingToBePaidSpectators(i, set);
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        this.races[raceNumber].setWaitingToBePaidSpectators(i, set);
     }
     
     public synchronized boolean getPaidSpectators(int i){
-        if(this.raceNumber==-1){
-            return false;
-        }
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
-        return this.races[this.raceNumber].getPaidSpectators(i);
+        return this.races[raceNumber].getPaidSpectators(i);
     }
     
     public synchronized void setPaidSpectators(int i, boolean set){
-        this.races[this.raceNumber].setPaidSpectators(i, set);
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        this.races[raceNumber].setPaidSpectators(i, set);
     }
     /* end condition states */
 }

@@ -7,7 +7,7 @@ import GeneralRepository.Races;
  *
  * @author Daniela
  */
-public class Spectators extends Thread{
+public class Spectators extends Thread implements IEntity{
     
     private SpectatorsState state;
     private double moneyToBet;
@@ -23,6 +23,7 @@ public class Spectators extends Thread{
     private final shared.IPaddock paddock;
     private final int id;
     private boolean relaxABit;
+    private int raceId = 0;
     
     public Spectators(shared.IControlCentre cc, shared.IBettingCentre bc, shared.IPaddock paddock, double moneyToBet, int id){
         this.id = id;
@@ -58,6 +59,7 @@ public class Spectators extends Thread{
                     if(cc.haveIWon()){
                         bc.goCollectTheGains();
                     }else if(races.hasMoreRaces()){
+                        this.nextRace();
                         cc.waitForNextRace();
                         paddock.goCheckHorses();
                     }else{
@@ -67,6 +69,7 @@ public class Spectators extends Thread{
 
                 case COLLECTING_THE_GAINS:
                     if(races.hasMoreRaces()){
+                        this.nextRace();
                         cc.waitForNextRace();
                         paddock.goCheckHorses();
                     }else{
@@ -77,6 +80,16 @@ public class Spectators extends Thread{
         }
         
         cc.relaxABit();
+    }
+    
+    @Override
+    public void nextRace(){
+        this.raceId++;
+    }
+    
+    @Override
+    public int getCurrentRace(){
+        return this.raceId;
     }
     
     public void setSpectatorsState(SpectatorsState state){

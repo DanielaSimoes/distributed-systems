@@ -20,7 +20,6 @@ public class Race {
     
     /* Stable */
     private int wakedHorsesToPaddock = 0;
-    private boolean wakeEntertainTheGuests = false;
     private boolean annuncedNextRace = false;
     
     /* Paddock */
@@ -85,7 +84,10 @@ public class Race {
             }while(repeated);
             
             this.selectedHorses[i] = selectedId;
+            //System.out.printf("%d ", this.selectedHorses[i]);
         }
+        
+        //System.out.println();
         
         for(int i = 0; i < Races.N_OF_SPECTATORS; i++){
             this.betsOfSpectators[i] = false;
@@ -171,14 +173,6 @@ public class Race {
         this.wakedHorsesToPaddock = this.wakedHorsesToPaddock + 1;
     }
     
-    protected synchronized boolean getWakeEntertainTheGuests(){
-        return this.wakeEntertainTheGuests;
-    }
-    
-    protected synchronized void setWakeEntertainTheGuests(boolean wakeEntertainTheGuests){
-        this.wakeEntertainTheGuests = wakeEntertainTheGuests;
-    }
-    
     protected synchronized boolean getAnnuncedNextRace(){
         return this.annuncedNextRace;
     }
@@ -220,7 +214,7 @@ public class Race {
         return this.proceedToPaddock;
     }
     
-    protected synchronized boolean allNHorsesInPaddock(){
+    protected synchronized boolean allNHorsesInPaddock(){       
         return this.nHorsesInPaddock == this.getNRunningHorses();
     }
     

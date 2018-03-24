@@ -1,10 +1,13 @@
 package shared;
 
+import GeneralRepository.Race;
 import GeneralRepository.Races;
 import entities.HorseJockey;
 import entities.HorseJockeyState;
 import entities.Broker;
 import entities.BrokerState;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  *
@@ -12,6 +15,7 @@ import entities.BrokerState;
  */
 public class Stable implements IStable {
     
+    private boolean wakeEntertainTheGuests = false;
     private final Races races = Races.getInstace();
      
     @Override
@@ -28,21 +32,27 @@ public class Stable implements IStable {
     public synchronized void proceedToStable(){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
 
-        while(!((races.getAnnuncedNextRace() && this.races.getWakedHorsesToPaddock()!=races.getNRunningHorses() && races.horseHasBeenSelectedToRace((HorseJockey)Thread.currentThread())) || races.getWakeEntertainTheGuests())){
+        while(!((races.getAnnuncedNextRace() && this.races.getWakedHorsesToPaddock()!=races.getNRunningHorses() && races.horseHasBeenSelectedToRace((HorseJockey)Thread.currentThread())) || wakeEntertainTheGuests)){
             try{
                 wait();
             }catch (InterruptedException ex){
                     // do something in the future
             } 
+            
+            if(((HorseJockey)Thread.currentThread()).getCurrentRace()<Races.N_OF_RACES && races.horsesFinished() && races.hasMoreRaces()){
+                ((HorseJockey)Thread.currentThread()).nextRace();
+            }
         }
         
-        this.races.addWakedHorsesToPaddock();
+        if(!wakeEntertainTheGuests){
+            this.races.addWakedHorsesToPaddock();
+        }
     };
     
     @Override
     public synchronized void entertainTheGuests(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.PLAYING_HOST_AT_THE_BAR);
-        races.setWakeEntertainTheGuests(true);
+        wakeEntertainTheGuests = true;
         notifyAll();
     }
 }

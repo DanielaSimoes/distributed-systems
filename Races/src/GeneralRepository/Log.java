@@ -65,7 +65,7 @@ public class Log {
                 head += " St" + Integer.toString(i) + "  Am" + Integer.toString(i) + " ";
             }
             
-            head += this.races.getRaceNumber()+1;
+            head += 0+1;
             
             for(int i=1; i<=Races.N_OF_HORSES; i++){
                 head += "  St" + Integer.toString(i) + " Len" + Integer.toString(i);
