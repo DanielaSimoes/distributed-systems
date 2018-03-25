@@ -74,11 +74,8 @@ public class Paddock implements IPaddock {
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.APPRAISING_THE_HORSES);
         
         this.races.addNSpectatorsArrivedAtPaddock();
-        
-        if(this.races.allSpectatorsArrivedAtPaddock()){
-            notifyAll();
-        } 
-        
+        notifyAll();
+    
         while(!this.races.allHorseJockeyLeftThePadock()){
             try{
                 wait();

@@ -291,25 +291,25 @@ public class Races {
         this.races[raceNumber].setAnnuncedNextRace(annuncedNextRace);
     }
     /* Paddock */
-    public synchronized boolean allSpectatorsArrivedAtPaddock(){
+    public boolean allSpectatorsArrivedAtPaddock(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].allSpectatorsArrivedAtPaddock();
     }
     
-    public synchronized void addNSpectatorsArrivedAtPaddock(){
+    public void addNSpectatorsArrivedAtPaddock(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         this.races[raceNumber].addNSpectatorsArrivedAtPaddock();
     }
     
-    public synchronized boolean allHorseJockeyLeftThePadock(){
+    public boolean allHorseJockeyLeftThePadock(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].allHorseJockeyLeftThePadock();
     }
     
-    public synchronized void addNHorseJockeyLeftThePadock(){
+    public void addNHorseJockeyLeftThePadock(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         this.races[raceNumber].addNHorseJockeyLeftThePadock();

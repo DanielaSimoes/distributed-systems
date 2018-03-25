@@ -269,7 +269,6 @@ public class Race {
         return this.nHorsesFinished==this.nHorsesToRun;
     }
     
-<<<<<<< HEAD
     /**
     *
     * Method to retrieve the HorseJockey winner.
@@ -350,7 +349,7 @@ public class Race {
     *
     * Method to verify if all Spectators reached the Paddock.
     */
-    protected synchronized boolean allSpectatorsArrivedAtPaddock(){
+    protected boolean allSpectatorsArrivedAtPaddock(){
         return this.nSpectatorsArrivedAtPaddock == Races.N_OF_SPECTATORS;
     }
     
@@ -358,7 +357,7 @@ public class Race {
     *
     * Method to add the variable of the Spectators that has arrived to Paddock.
     */
-    protected synchronized void addNSpectatorsArrivedAtPaddock(){
+    protected void addNSpectatorsArrivedAtPaddock(){
         this.nSpectatorsArrivedAtPaddock = this.nSpectatorsArrivedAtPaddock + 1;
     }
     
@@ -366,7 +365,7 @@ public class Race {
     *
     * Method to verify if all horses left the Paddock.
     */
-    protected synchronized boolean allHorseJockeyLeftThePadock(){
+    protected boolean allHorseJockeyLeftThePadock(){
         return this.nHorseJockeyLeftThePadock == this.getNRunningHorses();
     }
     
@@ -374,7 +373,7 @@ public class Race {
     *
     * Method to add the variable of horses which left the Paddock.
     */
-    protected synchronized void addNHorseJockeyLeftThePadock(){
+    protected void addNHorseJockeyLeftThePadock(){
         this.nHorseJockeyLeftThePadock = this.nHorseJockeyLeftThePadock + 1;
     }
     
@@ -417,7 +416,7 @@ public class Race {
     *
     * Method to verify if all horses are in paddock.
     */
-    protected synchronized boolean allNHorsesInPaddock(){       
+    protected boolean allNHorsesInPaddock(){       
         return this.nHorsesInPaddock == this.getNRunningHorses();
     }
     
@@ -425,20 +424,20 @@ public class Race {
     *
     * Method to add the variable of horses in paddock.
     */
-    protected synchronized void addNHorsesInPaddock(){
+    protected void addNHorsesInPaddock(){
         this.nHorsesInPaddock = this.nHorsesInPaddock + 1;
     }
     
     /* Betting Centre */
     protected Integer waitAddedBet(){
-        if(!this.betsOfSpectators.isEmpty()){
+        if(!this.betsOfSpectators.isEmpty() || this.betsOfSpectators.peek()==null){
             return this.betsOfSpectators.poll();
         }else{
             synchronized (this.addedBet) {
                 try {
-                    System.out.println("Broker Waiting for bets");
+                    //System.out.println("Broker Waiting for bets");
                     this.addedBet.wait();
-                    System.out.println("Broker waked");
+                    //System.out.println("Broker waked");
                 } catch (Exception e) {}
             }
             return this.betsOfSpectators.poll();
@@ -446,7 +445,7 @@ public class Race {
     }
     
     protected boolean allSpectatorsBettsAceppted(){
-        return this.betsOfSpectators.isEmpty();
+        return this.betsOfSpectators.peek()==null || this.betsOfSpectators.isEmpty();
     }
     
     protected void addBetOfSpectator(Bet bet){
@@ -454,8 +453,10 @@ public class Race {
         
         synchronized (this.addedBet) {
             this.bets.add(bet);
-            this.betsOfSpectators.add(spectator.getSpectatorId());
-            System.out.println("Spectator Placed Bet S" + spectator.getSpectatorId());
+            Integer spectatorId = (Integer)spectator.getSpectatorId();
+            
+            this.betsOfSpectators.add(spectatorId);
+            //System.out.println("Spectator Placed Bet S" + spectator.getSpectatorId());
             this.addedBet.notifyAll();
         }
     }
@@ -466,7 +467,11 @@ public class Race {
         for(int i=0; i<Races.N_OF_SPECTATORS; i++){
             if(!this.acceptedBet[i]){
                 allSpectatorsBetted = false;
-                this.betsOfSpectators.add(i);
+                synchronized (this.addedBet) {
+                    this.betsOfSpectators.add(i);
+                    //System.out.println("Spectator Placed Bet S" + spectator.getSpectatorId());
+                    this.addedBet.notifyAll();
+                }
             }
         }
         
@@ -480,7 +485,7 @@ public class Race {
             try {
                 this.waitingAcceptedTheBet[spectator.getSpectatorId()].wait();
                 this.acceptedBet[spectator.getSpectatorId()] = true;
-                System.out.println("Broker Accepted bets for S" + (spectator.getSpectatorId()));
+                //System.out.println("Broker Accepted bets for S" + (spectator.getSpectatorId()));
             } catch (Exception e) {}
         }
     }

@@ -35,7 +35,7 @@ public class BettingCentre implements IBettingCentre {
             }
         }
         
-        System.out.println("Broker All bets accepted");
+        //System.out.println("Broker All bets accepted");
     };
     
     /**
@@ -93,7 +93,7 @@ public class BettingCentre implements IBettingCentre {
         this.races.addBetOfSpectator(spectator_bet);
 
         this.races.waitAcceptedTheBet();
-        System.out.println("Spectator OUT Accepted Bet S" + spectator.getSpectatorId());
+        //System.out.println("Spectator OUT Accepted Bet S" + spectator.getSpectatorId());
     };
     
     /**
