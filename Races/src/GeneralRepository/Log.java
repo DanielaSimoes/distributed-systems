@@ -13,10 +13,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.sun.javafx.binding.Logging;
 import entities.IEntity;
+import entities.Spectators;
 
 /**
- *
- * @author Daniela
+ * This file contains the code to generate a log file.
+ * @author Daniela Simões, 76771
  */
 public class Log {
     
@@ -34,6 +35,8 @@ public class Log {
     
     private static PrintWriter pw;
     
+    private double[] spectatorAmounts;
+    
     private Log(String filename){
         if(filename.length()==0){
             Date today = Calendar.getInstance().getTime();
@@ -41,6 +44,11 @@ public class Log {
             filename = "AfternoonAtTheRaces.log";// + date.format(today) + ".log";
         }
         this.log = new File(filename);
+        this.spectatorAmounts = new double[Races.N_OF_SPECTATORS];
+        
+        for (int i=0; i<Races.N_OF_SPECTATORS; i++){
+            this.spectatorAmounts[i] = 0;
+        }
     }
     
     static{
@@ -48,6 +56,10 @@ public class Log {
         instance.writeInit();
     }
     
+    /**
+     *
+     * @return
+     */
     public synchronized static Log getInstance(){
         return instance;
     }
@@ -72,7 +84,7 @@ public class Log {
                 head += "  St" + Integer.toString(i+1) + " Len" + Integer.toString(i+1);
             }
             
-            head += "\t\t\t\t\t\t Race RN Status \n";
+            head += "\n\t\t\t\t\t\t Race RN Status \n";
             
             head += " RN DIST ";
             
@@ -96,25 +108,23 @@ public class Log {
         }
     }
     
+    /**
+     *
+     */
     public synchronized void writeLineRace(){
-        if(!this.races.allInitStatesRegistered()){
-            return;
-        }
         
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
-        String head = String.format("\t\t\t\t\t\t Race %2d Status \n", raceNumber);
-
-        head += String.format(" %2d %4.2f ", raceNumber, races.getCurrentRaceDistance());
+        String head = String.format("%4d %3.0f ", raceNumber+1, races.getCurrentRaceDistance());
 
         for(int i=0; i<Races.N_OF_SPECTATORS; i++){
-            head += " BS" + Integer.toString(i+1) + "  BA" + Integer.toString(i+1);
+            head += String.format(" %3d %4.0f", this.races.getSpectatorBet(i).getHorseId(), this.races.getSpectatorBet(i).getAmount());
         }
 
         head += " ";
 
         for(int i=0; i<Races.N_OF_HORSES; i++){
-            head += " Od" + Integer.toString(i+1) + " N" + Integer.toString(i+1)  + " Ps" + Integer.toString(i+1)  + " SD" + Integer.toString(i+1);
+            head += String.format(" %2.1f %d %2.2f %d", this.races.getHorseOdd(i), this.races.getHorseIteration(i), this.races.getHorsePosition(i), this.races.getStandingPosition(i));
         }
 
         head += " ";
@@ -124,13 +134,16 @@ public class Log {
         pw.flush();
     }
     
+    /**
+     *
+     */
     public synchronized void writeLineStatus(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
 
         String head = "  " + this.races.getBrokerState() + " ";
 
         for(int i=0; i<Races.N_OF_SPECTATORS; i++){
-            head += " " + this.races.getSpectatorsState(i) + "  " + String.format("%3d", 0) + " ";
+            head += " " + this.races.getSpectatorsState(i) + "  " + String.format("%3.0f", this.spectatorAmounts[i]) + " ";
         }
 
         head += (raceNumber+1);
@@ -148,19 +161,65 @@ public class Log {
         pw.flush();
     }
     
+    /**
+     *
+     * @param spectatorId
+     * @param amount
+     */
+    public void setSpectatorAmount(int spectatorId, double amount){
+        this.spectatorAmounts[spectatorId] = amount;
+    }
+    
+    /**
+     *
+     * @param id
+     * @param state
+     */
     public synchronized void setHorseJockeyState(int id, HorseJockeyState state){
         this.races.setHorseJockeyState(id, state);
         this.writeLineStatus();
+        
+        if(this.races.getStartTheRace()){
+            this.writeLineRace();
+        }
     }
 
+    /**
+     *
+     * @param state
+     */
     public synchronized void setBrokerState(BrokerState state){
         this.races.setBrokerState(state);
         this.writeLineStatus();
+        
+        if(this.races.getStartTheRace()){
+            this.writeLineRace();
+        }
     }
     
+    /**
+     *
+     * @param id
+     * @param state
+     */
     public synchronized void setSpectatorState(int id, SpectatorsState state){
         this.races.setSpectatorState(id, state);
         this.writeLineStatus();
+        
+        if(this.races.getStartTheRace()){
+            this.writeLineRace();
+        }
     }
 
+    /**
+     *
+     */
+    public synchronized void makeAMove(){
+        this.writeLineStatus();
+        
+        if(this.races.getStartTheRace()){
+            this.writeLineRace();
+        }
+    }
+    
 }

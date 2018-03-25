@@ -32,7 +32,7 @@ public class Spectators extends Thread implements IEntity{
     * @param bc The Betting Centre is a shared memory region where the Spectator will perform actions.
     * @param paddock The Paddock is a shared memory region where the Spectator will perform actions.
     * @param moneyToBet The money the spectator has to bet.
-    * @param ID The ID of the spectator.
+    * @param id The ID of the spectator.
     */
     public Spectators(shared.IControlCentre cc, shared.IBettingCentre bc, shared.IPaddock paddock, double moneyToBet, int id){
         this.id = id;
@@ -42,6 +42,7 @@ public class Spectators extends Thread implements IEntity{
         this.moneyToBet = moneyToBet;
         this.initialMoney = moneyToBet;
         this.log = Log.getInstance();
+        this.log.setSpectatorAmount(id, moneyToBet);
         this.relaxABit = false;
         this.setName("Spectator " + id);
     }
@@ -107,6 +108,9 @@ public class Spectators extends Thread implements IEntity{
     */
     @Override
     public void nextRace(){
+        if(this.raceId==Races.N_OF_RACES-1){
+            return;
+        }
         this.raceId++;
     }
     
@@ -135,11 +139,17 @@ public class Spectators extends Thread implements IEntity{
     /**
     *
     * Method to get the state of the Spectator.
+    * @return
     */
     public SpectatorsState getSpectatorsState(){
         return this.state;
     }
     
+    /**
+    *
+    * Method to retrieve initial ammount of money to bet
+    * @return
+    */
     public double getInitialBet(){
         return this.initialMoney;
     }
@@ -147,22 +157,34 @@ public class Spectators extends Thread implements IEntity{
     /**
     *
     * Method to get the money that the Spectator has to bet.
+    * @return
     */
     public double getMoneyToBet(){
         return this.moneyToBet;
     }
    
+    /**
+    *
+    * Method to subtract spectators money in case of loss.
+    */
     public void subtractMoneyToBet(double money){
         this.moneyToBet -= money;
+        this.log.setSpectatorAmount(id, moneyToBet);
     }
     
+    /**
+    *
+    * Method to add spectators money in case of winning.
+    */
     public void addMoneyToBet(double money){
         this.moneyToBet += money;
+        this.log.setSpectatorAmount(id, moneyToBet);
     }
     
     /**
     *
     * Method to get the Spectator ID.
+    * @return 
     */
     public int getSpectatorId(){
         return this.id;

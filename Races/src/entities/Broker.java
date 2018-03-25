@@ -113,6 +113,9 @@ public class Broker extends Thread implements IEntity{
     */
     @Override
     public void nextRace(){
+        if(this.raceId==Races.N_OF_RACES-1){
+            return;
+        }
         this.raceId++;
     }
     
@@ -141,6 +144,7 @@ public class Broker extends Thread implements IEntity{
     /**
     *
     * Method to get the state of the broker.
+    * @return 
     */
     public BrokerState getBrokerState(){
         return this.state;

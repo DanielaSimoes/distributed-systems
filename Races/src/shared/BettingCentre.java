@@ -34,8 +34,6 @@ public class BettingCentre implements IBettingCentre {
                 break;
             }
         }
-        
-        //System.out.println("Broker All bets accepted");
     };
     
     /**
@@ -76,7 +74,6 @@ public class BettingCentre implements IBettingCentre {
     @Override
     public synchronized boolean areThereAnyWinners(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
-        // verify something and return
         return this.races.areThereAnyWinners();
     };
     
@@ -93,7 +90,6 @@ public class BettingCentre implements IBettingCentre {
         this.races.addBetOfSpectator(spectator_bet);
 
         this.races.waitAcceptedTheBet();
-        //System.out.println("Spectator OUT Accepted Bet S" + spectator.getSpectatorId());
     };
     
     /**

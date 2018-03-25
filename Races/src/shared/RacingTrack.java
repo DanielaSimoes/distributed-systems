@@ -90,10 +90,8 @@ public class RacingTrack implements IRacingTrack {
         
         if(this.hasFinishLineBeenCrossed(horseId)){
             ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_FINISH_LINE);
-            //System.out.println("Horse "+ horseId + " at the finish line");
         }else{
             ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.RUNNNING);
-            //System.out.println("Horse "+ horseId + " running");
         }
         
         notifyAll();

@@ -21,6 +21,7 @@ public class HorseJockey extends Thread implements IEntity{
     private final shared.IPaddock paddock;
     private final shared.IRacingTrack rt;
     private final Races races = Races.getInstace();
+    private boolean entertainTheGuests;
     
     private int raceId = 0;
     private final double stepSize;
@@ -33,7 +34,7 @@ public class HorseJockey extends Thread implements IEntity{
     * @param rt The Racing Track is a shared memory region where the HorseJockey will perform actions.
     * @param paddock The Paddock is a shared memory region where the HorseJockey will perform actions.
     * @param stepSize The step size of the horse.
-    * @param ID The ID of the horse.
+    * @param id The ID of the horse.
     */
     public HorseJockey(shared.IStable s, shared.IControlCentre cc, shared.IPaddock paddock, shared.IRacingTrack rt, double stepSize, int id){
         this.stable = s;
@@ -45,6 +46,7 @@ public class HorseJockey extends Thread implements IEntity{
         this.id = id;
         this.log = Log.getInstance();
         this.setName("HorseJockey " + id);
+        this.entertainTheGuests = false;
     }
     
     /**
@@ -58,11 +60,15 @@ public class HorseJockey extends Thread implements IEntity{
         this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
         stable.proceedToStable();
                     
-        while(races.hasMoreRaces()){
+        while(!this.entertainTheGuests){
             switch(this.state){
                 case AT_THE_STABLE:
-                    cc.proceedToPaddock();
-                    paddock.proceedToPaddock();
+                    if(races.hasMoreRaces()){
+                        cc.proceedToPaddock();
+                        paddock.proceedToPaddock();
+                    }else{
+                        this.entertainTheGuests = true;
+                    }
                     break;
                 case AT_THE_PADDOCK:
                     paddock.proceedToStartLine();
@@ -70,16 +76,25 @@ public class HorseJockey extends Thread implements IEntity{
                     break;
                 case AT_THE_START_LINE:
                     rt.makeAMove();
+                    this.log.makeAMove();
                     break;
                 case RUNNNING:
                     while(!rt.hasFinishLineBeenCrossed(this.id)){
                         rt.makeAMove();
+                        this.log.makeAMove();
                     }
-                    //System.out.println("Horse "+id+" out of running");
                     break;
                 case AT_THE_FINISH_LINE:
-                    this.nextRace();
-                    stable.proceedToStable();
+                    if(races.hasMoreRaces()){
+                        this.nextRace();
+                        stable.proceedToStable();
+                    }else{
+                        stable.proceedToStable();
+                    }
+                    
+                    if(!races.hasMoreRaces()){
+                        this.entertainTheGuests = true;
+                    }
                     break;
 
             }
@@ -92,6 +107,9 @@ public class HorseJockey extends Thread implements IEntity{
     */
     @Override
     public void nextRace(){
+        if(this.raceId==Races.N_OF_RACES-1){
+            return;
+        }
         this.raceId++;
     }
     
@@ -107,6 +125,7 @@ public class HorseJockey extends Thread implements IEntity{
     /**
     *
     * Method to get the HorseJockey ID.
+    * @return 
     */
     public int getHorseId(){
         return this.id;
@@ -128,6 +147,7 @@ public class HorseJockey extends Thread implements IEntity{
     /**
     *
     * Method to get the state of the HorseJockey.
+    * @return 
     */
     public HorseJockeyState getHorseJockeyState(){
         return this.state;
@@ -136,6 +156,7 @@ public class HorseJockey extends Thread implements IEntity{
     /**
     *
     * Method to get the HorseJockey step size.
+    * @return 
     */
     public double getStepSize(){
         return this.stepSize;

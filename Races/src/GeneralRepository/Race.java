@@ -2,12 +2,15 @@ package GeneralRepository;
 import entities.HorseJockey;
 import entities.Spectators;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Random;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 
 /**
  * This file describes the Race itself.
@@ -24,13 +27,27 @@ public class Race {
     private boolean annuncedNextRace = false;
     
     /* Paddock */
+
+    /**
+     * Number os spectators arrived at paddock.
+     */
+
     protected int nSpectatorsArrivedAtPaddock = 0;
+
+    /**
+     * Number of horses which left the paddock.
+     */
     protected int nHorseJockeyLeftThePadock = 0;
     
     /* Control Centre */
     private boolean reportResults = false;
     private boolean proceedToPaddock = false;
+
+    /**
+     * Number of horses in paddock.
+     */
     protected int nHorsesInPaddock = 0;
+    private int[] horseIterations = new int[Races.N_OF_HORSES];
     
     /* BettingCentre */
     Queue<Integer> betsOfSpectators = new LinkedList<>();
@@ -65,7 +82,7 @@ public class Race {
    /**
     *
     * Race Constructor - this constructor inits the horses positions and select the horses that will participate in the race.
-    * @param ID The ID of the race.
+     * @param id - race id
     */
     public Race(int id){
         this.id = id;
@@ -104,13 +121,16 @@ public class Race {
             this.paidSpectators[i] = false;
             this.waitingAcceptedTheBet[i] = new Object();
             this.acceptedBet[i] = false;
+            this.horseIterations[i] = 0;
         }
+        
     }
     
     /**
     *
     * Method to verify which horse should iterate next.
-    * @param ID The ID of the HorseJockey.
+     * @param horseJockeyId
+     * @return next moving horse
     */
     public boolean nextMovingHorse(int horseJockeyId){
         return this.selectedHorses[horseToMove]==horseJockeyId;
@@ -119,7 +139,8 @@ public class Race {
     /**
     *
     * Method to verify if a given horse was selected to participate in the race.
-    * @param ID The ID of the HorseJockey.
+     * @param horseJockey
+     * @return if the horse has been selected to run and init its position.
     */
     public boolean horseHasBeenSelectedToRace(HorseJockey horseJockey){
         for(int i=0; i<this.nHorsesToRun; i++){
@@ -134,6 +155,9 @@ public class Race {
         return false;
     }
     
+    /**
+     * Method to generate the odds - each bet is generated considering the maximum step size of each horse, the less the step size, the bigger the odd.
+     */
     public synchronized void generateOdds(){
         for(Entry<?, ?> e: horsesRunning.entrySet()){
             double stepSize = ((HorseJockey)e.getValue()).getStepSize();
@@ -142,12 +166,27 @@ public class Race {
             // max = 5
             // step = 5
             // max-step*0,75=1,25
+            double percent = 0.75;
+            double odd = Races.HORSE_MAX_STEP_SIZE-stepSize*percent;
             
-            this.horsesOdds.put(Races.HORSE_MAX_STEP_SIZE-stepSize*0.75, horseJockeyId);
+            while(this.horsesOdds.containsKey(odd)){
+                percent += 0.01;
+                odd = Races.HORSE_MAX_STEP_SIZE-stepSize*percent;
+            }
+            
+            this.horsesOdds.put(odd, horseJockeyId);
         }
     }
     
+    /**
+     * Method to choose the bet to each spectator.
+     * @return
+     */
     public synchronized Bet chooseBet(){
+        if(this.horsesOdds.size()!=this.nHorsesToRun){
+            this.generateOdds();
+        }
+        
         Spectators spectator = ((Spectators)Thread.currentThread());
         
         double perception = spectator.getInitialBet() / Races.MAX_SPECTATOR_BET;
@@ -177,7 +216,38 @@ public class Race {
         return new Bet(horseId, amountToBet, spectator.getSpectatorId(), odd);
     }
     
+    /**
+     * Method to retrieve the spectator Bet.
+     * @param spectatorId
+     * @return
+     */
+    public Bet getSpectatorBet(int spectatorId){
+        for(Bet bet : this.bets){
+            if(bet.getSpectatorId()==spectatorId){
+                return bet;
+            }
+        }
+        return null;
+    }
     
+    /**
+     * Method to get the odd generated to a given horse.
+     * @param horseId
+     * @return
+     */
+    public double getHorseOdd(int horseId){
+        for(Map.Entry<Double, Integer> entry : this.horsesOdds.entrySet()) {
+            if((int)entry.getValue()==horseId){
+                return (double)entry.getKey();
+            }
+        }
+        return 0.0;
+    }
+    
+    /**
+     * Method to verify if are there any winners of the bets.
+     * @return
+     */
     public synchronized boolean areThereAnyWinners(){
         boolean thereAreWinners = false;
         
@@ -194,6 +264,10 @@ public class Race {
         return thereAreWinners;
     };
     
+    /**
+     * Method to verify if a spectator has won the bet.
+     * @return
+     */
     public synchronized boolean haveIWon(){
         Spectators spectator = ((Spectators)Thread.currentThread());
         
@@ -213,7 +287,7 @@ public class Race {
     /**
     *
     * Method to increment a position of in the race a given horse.
-    * @param ID The ID of the HorseJockey.
+     * @param horseId
     */
     public void makeAMove(int horseId){
         double start = 0;
@@ -250,12 +324,64 @@ public class Race {
         while(this.horsesFinished.get(this.selectedHorses[horseToMove]) && !this.horsesFinished()){
             horseToMove = (horseToMove + 1) % this.nHorsesToRun;
         }
+        
+        this.horseIterations[horseId]++;
+    }
+    
+    /**
+     * Method to retrieve the number of iterations that a given horse has in the race.
+     * @param horseId
+     * @return
+     */
+    public int getHorseIteration(int horseId){
+        return this.horseIterations[horseId];
+    }
+    
+    /**
+     * Method to retrieve the horse position in the race.
+     * @param horseId
+     * @return
+     */
+    public double getHorsePosition(int horseId){
+        if(!this.horsesPosition.containsKey(horseId)){
+            return 0.0;
+        }
+        return this.horsesPosition.get(horseId);
+    }
+    
+    /**
+     * Method to verify the standing position at the end of the race.
+     * @param horseId
+     * @return
+     */
+    public int getStandingPosition(int horseId){
+        int pos = 0;
+        
+        if(this.horsesFinished()){
+            Stream<Map.Entry<Integer, Double>> entries = this.horsesPosition.entrySet().stream()
+                .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()));
+            
+            Iterator<Map.Entry<Integer, Double>> it = entries.iterator();
+            
+            while (it.hasNext()) {
+                Map.Entry<Integer, Double> pair = it.next();
+                
+                if(pair.getKey()==horseId){
+                    return pos;
+                }
+                
+                pos++;
+            }
+        }
+        
+        return 0;
     }
     
     /**
     *
     * Method to verify if a given horse has finished the race.
-    * @param ID The ID of the HorseJockey.
+     * @param horseId
+     * @return 
     */
     public boolean horseFinished(int horseId){
         return this.horsesFinished.get(horseId);
@@ -264,6 +390,7 @@ public class Race {
     /**
     *
     * Method to verify if all horses finished the race.
+     * @return 
     */
     public boolean horsesFinished(){
         return this.nHorsesFinished==this.nHorsesToRun;
@@ -272,6 +399,7 @@ public class Race {
     /**
     *
     * Method to retrieve the HorseJockey winner.
+     * @return 
     */
     public LinkedList<Integer> getWinner(){
         return this.winners;
@@ -281,11 +409,16 @@ public class Race {
     /**
     *
     * Method to retrieve the number of HorseJockey participating in the race.
+     * @return 
     */
     public int getNRunningHorses(){
         return this.nHorsesToRun;
     }
     
+    /**
+     * Method to retrieve the racing track size.
+     * @return
+     */
     public double getCurrentRaceDistance(){
         return this.trackSize;
     }
@@ -296,6 +429,7 @@ public class Race {
     /**
     *
     * Method to retrieve the status of the start of the race.
+     * @return 
     */
     protected synchronized boolean getStartTheRace(){
         return this.startTheRace;
@@ -314,6 +448,7 @@ public class Race {
     /**
     *
     * Method to retrieve the waked horses variable.
+     * @return 
     */
     protected synchronized int getWakedHorsesToPaddock(){
         return this.wakedHorsesToPaddock;
@@ -330,6 +465,7 @@ public class Race {
     /**
     *
     * Method to get the variable of announcing next race.
+     * @return 
     */
     protected synchronized boolean getAnnuncedNextRace(){
         return this.annuncedNextRace;
@@ -348,6 +484,7 @@ public class Race {
     /**
     *
     * Method to verify if all Spectators reached the Paddock.
+     * @return 
     */
     protected boolean allSpectatorsArrivedAtPaddock(){
         return this.nSpectatorsArrivedAtPaddock == Races.N_OF_SPECTATORS;
@@ -364,6 +501,7 @@ public class Race {
     /**
     *
     * Method to verify if all horses left the Paddock.
+     * @return 
     */
     protected boolean allHorseJockeyLeftThePadock(){
         return this.nHorseJockeyLeftThePadock == this.getNRunningHorses();
@@ -390,6 +528,7 @@ public class Race {
     /**
     *
     * Method to retrieve the variable of report results.
+     * @return 
     */
     protected synchronized boolean getReportResults(){
         return this.reportResults;
@@ -407,6 +546,7 @@ public class Race {
     /**
     *
     * Method to retrieve the variable of proceed to paddock.
+     * @return 
     */
     protected synchronized boolean getProceedToPaddock(){
         return this.proceedToPaddock;
@@ -415,6 +555,7 @@ public class Race {
     /**
     *
     * Method to verify if all horses are in paddock.
+     * @return 
     */
     protected boolean allNHorsesInPaddock(){       
         return this.nHorsesInPaddock == this.getNRunningHorses();
@@ -429,25 +570,37 @@ public class Race {
     }
     
     /* Betting Centre */
+
+    /**
+     * Method to wait for the next spectator to bet.
+     * @return
+     */
+
     protected Integer waitAddedBet(){
         if(!this.betsOfSpectators.isEmpty() || this.betsOfSpectators.peek()==null){
             return this.betsOfSpectators.poll();
         }else{
             synchronized (this.addedBet) {
                 try {
-                    //System.out.println("Broker Waiting for bets");
                     this.addedBet.wait();
-                    //System.out.println("Broker waked");
                 } catch (Exception e) {}
             }
             return this.betsOfSpectators.poll();
         }
     }
     
+    /**
+     * Method to verify if all spectators had their bets accepted.
+     * @return
+     */
     protected boolean allSpectatorsBettsAceppted(){
         return this.betsOfSpectators.peek()==null || this.betsOfSpectators.isEmpty();
     }
     
+    /**
+     * Method to add the bet of the spectator.
+     * @param bet
+     */
     protected void addBetOfSpectator(Bet bet){
         Spectators spectator = ((Spectators)Thread.currentThread());
         
@@ -461,6 +614,10 @@ public class Race {
         }
     }
     
+    /**
+     * Method to verify if every spectator has betted.
+     * @return
+     */
     protected boolean allSpectatorsBetted(){
         boolean allSpectatorsBetted = true;
         
@@ -478,6 +635,9 @@ public class Race {
         return allSpectatorsBetted;
     }
     
+    /**
+     * Method wait for the spectator bet to be accepted by the broker.
+     */
     protected void waitAcceptedTheBet(){
         Spectators spectator = ((Spectators)Thread.currentThread());
         
@@ -485,29 +645,49 @@ public class Race {
             try {
                 this.waitingAcceptedTheBet[spectator.getSpectatorId()].wait();
                 this.acceptedBet[spectator.getSpectatorId()] = true;
-                //System.out.println("Broker Accepted bets for S" + (spectator.getSpectatorId()));
             } catch (Exception e) {}
         }
     }
    
+    /**
+     * Method to wake the spectator who has betted.
+     * @param i
+     */
     protected void acceptBet(int i){
         synchronized (this.waitingAcceptedTheBet[i]) {
             this.waitingAcceptedTheBet[i].notifyAll();
         }
     }
     
+    /**
+     * Method to wait for the spectators to be paid.
+     * @return
+     */
     protected Integer poolWaitingToBePaidSpectators(){
         return this.waitingToBePaidSpectators.poll();
     }
     
+    /**
+     * Method to set that a given spectator has been paid.
+     * @param i
+     */
     protected void addWaitingToBePaidSpectator(int i){
         this.waitingToBePaidSpectators.add(i);
     }
     
+    /**
+     * Method to verify if every spectator have been paid.
+     * @return
+     */
     protected boolean allSpectatorsPaid(){
         return this.nPaidSpectators == this.spectatorsWinners.size();
     }
     
+    /**
+     * Method to verify if a given spectator has been paid.
+     * @param i
+     * @return
+     */
     protected synchronized boolean getPaidSpectators(int i){
         boolean pay = this.paidSpectators[i];
         
@@ -517,7 +697,7 @@ public class Race {
             for (Integer horseId : this.winners) {
                 for(Bet bet : this.bets){
                     if(bet.getHorseId() == horseId && bet.getSpectatorId()==spectator.getSpectatorId()){
-                        spectator.addMoneyToBet(bet.getAmount());
+                        spectator.addMoneyToBet(bet.getAmount()*bet.getOdd());
                     }
                 }
             }

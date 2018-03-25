@@ -14,14 +14,40 @@ import entities.HorseJockey;
 import entities.IEntity;
 import java.util.LinkedList;
 
-
+/**
+ *
+ * @author Daniela
+ */
 public class Races {
     
-    public static final int N_OF_RACES = 1;
+    /**
+     * Number of races.
+     */
+    public static final int N_OF_RACES = 5;
+
+    /**
+     * Number of horses.
+     */
     public static final int N_OF_HORSES = 4;
+
+    /**
+     * Number os spectators.
+     */
     public static final int N_OF_SPECTATORS = 4;
-    public static final int SIZE_OF_RACING_TRACK = 14;
+
+    /**
+     * Size of racing track.
+     */
+    public static final int SIZE_OF_RACING_TRACK = 4;
+
+    /**
+     * Horse maxium step size.
+     */
     public static final int HORSE_MAX_STEP_SIZE = 5;
+
+    /**
+     * Maximum ammount each spectator can bet.
+     */
     public static final int MAX_SPECTATOR_BET = 2000;
         
     private static Races instance = null;
@@ -35,6 +61,9 @@ public class Races {
     private BrokerState brokerState;
     private boolean allInitStatesRegistered = false;
     
+    /**
+     * Race array.
+     */
     public Race[] races;
     
     /**
@@ -57,6 +86,7 @@ public class Races {
     /**
     *
     * Method to retrieve an instance of Races
+     * @return 
     */
     public static Races getInstace(){
         if (instance == null){
@@ -66,6 +96,10 @@ public class Races {
         return instance;
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean allInitStatesRegistered(){
         if(allInitStatesRegistered){
             return true;
@@ -86,6 +120,10 @@ public class Races {
         }
     }
    
+    /**
+     *
+     * @return
+     */
     public synchronized Bet chooseBet(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
@@ -96,6 +134,7 @@ public class Races {
     *
     * Method to verify if a given horse was selected to a race.
     * @param horseJockey The HorseJockey object.
+     * @return 
     */
     public boolean horseHasBeenSelectedToRace(HorseJockey horseJockey){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
@@ -103,24 +142,45 @@ public class Races {
         return this.races[raceNumber].horseHasBeenSelectedToRace(horseJockey);
     }
     
+    /**
+     *
+     */
     public synchronized void generateOdds(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         this.races[raceNumber].generateOdds();
     }
     
+    /**
+     *
+     * @param id
+     * @param stepSize
+     */
     public void setHorseJockeyStepSize(int id, double stepSize){
         this.horseJockeyStepSize.put(id, stepSize);
     }
     
+    /**
+     *
+     * @param id
+     * @return
+     */
     public double getHorseJockeyStepSize(int id){
         return this.horseJockeyStepSize.get(id);
     }
     
+    /**
+     *
+     * @return
+     */
     public synchronized boolean areThereAnyWinners(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         return this.races[raceNumber].areThereAnyWinners();
     };
     
+    /**
+     *
+     * @return
+     */
     public synchronized boolean haveIWon(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         return this.races[raceNumber].haveIWon();
@@ -129,7 +189,7 @@ public class Races {
 	/**
     *
     * Method to set the state of a HorseJockey.
-    * @param ID The HorseJockey ID.
+     * @param id
     * @param state The state to be assigned.
     */
     public void setHorseJockeyState(int id, HorseJockeyState state){
@@ -143,7 +203,8 @@ public class Races {
     /**
     *
     * Method to get the state of a HorseJockey.
-    * @param ID The HorseJockey ID.
+     * @param id
+     * @return 
     */
     public HorseJockeyState getHorseJockeyState(int id){
         return this.horseJockeysState.get(id);
@@ -161,6 +222,7 @@ public class Races {
     /**
     *
     * Method to get the state of the Broker.
+     * @return 
     */
     public BrokerState getBrokerState(){
         return this.brokerState;
@@ -169,8 +231,8 @@ public class Races {
     /**
     *
     * Method to set the state of a Spectator.
+     * @param id
     * @param state The state to be assigned.
-    * @param ID The ID of the Spectator.
     */
     public void setSpectatorState(int id, SpectatorsState state){
         if(this.spectatorsState.containsKey(id)){
@@ -183,7 +245,8 @@ public class Races {
     /**
     *
     * Method to get the state of a Spectator.
-    * @param ID The ID of the Spectator.
+     * @param id
+     * @return 
     */
     public SpectatorsState getSpectatorsState(int id){
         return this.spectatorsState.get(id);
@@ -192,6 +255,7 @@ public class Races {
     /**
     *
     * Method to get the winner of the race.
+     * @return 
     */
     public LinkedList<Integer> getWinner(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
@@ -202,6 +266,7 @@ public class Races {
     /**
     *
     * Method to verify if has more races to happen.
+     * @return 
     */
     public boolean hasMoreRaces(){
         //System.out.println("HasMoreRaces: " + hasMore + " | running horses: " + this.races[raceNumber].getNRunningHorses());
@@ -219,31 +284,74 @@ public class Races {
         this.races[raceNumber].makeAMove(horseId);
     }
     
+    /**
+     *
+     * @param horseId
+     * @return
+     */
+    public int getHorseIteration(int horseId){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        return this.races[raceNumber].getHorseIteration(horseId);
+    }
+    
+    /**
+     *
+     * @param horseId
+     * @return
+     */
+    public int getStandingPosition(int horseId){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        return this.races[raceNumber].getStandingPosition(horseId);
+    }
+    
+    /**
+     *
+     * @param horseJockeyId
+     * @return
+     */
     public boolean nextMovingHorse(int horseJockeyId){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].nextMovingHorse(horseJockeyId);
     }
     
+    /**
+     *
+     * @param horseId
+     * @return
+     */
     public boolean horseFinished(int horseId){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].horseFinished(horseId);
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean horsesFinished(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].horsesFinished();
     }
     
-    
+    /**
+     *
+     * @return
+     */
     public int getNRunningHorses(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].getNRunningHorses();
     }
     
+    /**
+     *
+     * @return
+     */
     public synchronized double getCurrentRaceDistance(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         return this.races[raceNumber].getCurrentRaceDistance();
@@ -251,31 +359,54 @@ public class Races {
     
     /* condition states */
     /* Racing Track */
+
+    /**
+     *
+     * @return
+     */
+
     public synchronized boolean getStartTheRace(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].getStartTheRace();
     }
     
+    /**
+     *
+     * @param startTheRace
+     */
     public synchronized void setStartTheRace(boolean startTheRace){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         this.races[raceNumber].setStartTheRace(startTheRace);
     }
     /* Stable */
+
+    /**
+     *
+     * @return
+     */
+
     public synchronized int getWakedHorsesToPaddock(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].getWakedHorsesToPaddock();
     }
     
+    /**
+     *
+     */
     public synchronized void addWakedHorsesToPaddock(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         this.races[raceNumber].addWakedHorsesToPaddock();
     }
     
-    public synchronized boolean getAnnuncedNextRace(){
+    /**
+     *
+     * @return
+     */
+    public synchronized boolean getAnnouncedNextRace(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         if(raceNumber>=N_OF_RACES){
@@ -285,30 +416,50 @@ public class Races {
         return this.races[raceNumber].getAnnuncedNextRace();
     }
     
-    public synchronized void setAnnuncedNextRace(boolean annuncedNextRace){
+    /**
+     *
+     * @param annuncedNextRace
+     */
+    public synchronized void setAnnouncedNextRace(boolean annuncedNextRace){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         this.races[raceNumber].setAnnuncedNextRace(annuncedNextRace);
     }
     /* Paddock */
+
+    /**
+     *
+     * @return
+     */
+
     public boolean allSpectatorsArrivedAtPaddock(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].allSpectatorsArrivedAtPaddock();
     }
     
+    /**
+     *
+     */
     public void addNSpectatorsArrivedAtPaddock(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         this.races[raceNumber].addNSpectatorsArrivedAtPaddock();
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean allHorseJockeyLeftThePadock(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].allHorseJockeyLeftThePadock();
     }
     
+    /**
+     *
+     */
     public void addNHorseJockeyLeftThePadock(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
@@ -316,36 +467,61 @@ public class Races {
     }
     
     /* Control Centre */
+
+    /**
+     *
+     * @param set
+     */
+
     public synchronized void setReportResults(boolean set){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         this.races[raceNumber].setReportResults(set);
     }
     
+    /**
+     *
+     * @return
+     */
     public synchronized boolean getReportResults(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].getReportResults();
     }
     
+    /**
+     *
+     * @param set
+     */
     public synchronized void setProceedToPaddock(boolean set){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         this.races[raceNumber].setProceedToPaddock(set);
     }
     
+    /**
+     *
+     * @return
+     */
     public synchronized boolean getProceedToPaddock(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].getProceedToPaddock();
     }
     
+    /**
+     *
+     * @return
+     */
     public synchronized boolean allNHorsesInPaddock(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].allNHorsesInPaddock();
     }
     
+    /**
+     *
+     */
     public synchronized void addNHorsesInPaddock(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
@@ -353,65 +529,145 @@ public class Races {
     }
     
     /* Betting Centre */
+
+    /**
+     *
+     * @return
+     */
+
     public Integer waitAddedBet(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].waitAddedBet();
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean allSpectatorsBettsAceppted(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].allSpectatorsBettsAceppted();
     }
     
+    /**
+     *
+     * @param bet
+     */
     public void addBetOfSpectator(Bet bet){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         this.races[raceNumber].addBetOfSpectator(bet);
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean allSpectatorsBetted(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].allSpectatorsBetted();
     }
     
+    /**
+     *
+     */
     public void waitAcceptedTheBet(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         this.races[raceNumber].waitAcceptedTheBet();
     }
    
+    /**
+     *
+     * @param i
+     */
     public void acceptBet(int i){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         this.races[raceNumber].acceptBet(i);
     }
     
+    /**
+     *
+     * @return
+     */
     public Integer poolWaitingToBePaidSpectators(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         return this.races[raceNumber].poolWaitingToBePaidSpectators();
     }
     
+    /**
+     *
+     * @param i
+     */
     public void addWaitingToBePaidSpectator(int i){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         this.races[raceNumber].addWaitingToBePaidSpectator(i);
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean allSpectatorsPaid(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         return this.races[raceNumber].allSpectatorsPaid();
     }
     
+    /**
+     *
+     * @param i
+     * @return
+     */
     public synchronized boolean getPaidSpectators(int i){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].getPaidSpectators(i);
     }
     
+    /**
+     *
+     * @param i
+     * @param set
+     */
     public synchronized void setPaidSpectators(int i, boolean set){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         this.races[raceNumber].setPaidSpectators(i, set);
+    }
+    
+    /**
+     *
+     * @param spectatorId
+     * @return
+     */
+    public Bet getSpectatorBet(int spectatorId){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        return this.races[raceNumber].getSpectatorBet(spectatorId);
+    }
+    
+    /**
+     *
+     * @param horseId
+     * @return
+     */
+    public double getHorseOdd(int horseId){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        return this.races[raceNumber].getHorseOdd(horseId);
+    }
+    
+    /**
+     *
+     * @param horseId
+     * @return
+     */
+    public double getHorsePosition(int horseId){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        return this.races[raceNumber].getHorsePosition(horseId);
     }
     /* end condition states */
 }
