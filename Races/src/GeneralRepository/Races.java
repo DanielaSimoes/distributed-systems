@@ -12,31 +12,30 @@ import entities.HorseJockeyState;
 import entities.SpectatorsState;
 import entities.HorseJockey;
 import entities.IEntity;
+import java.util.LinkedList;
 
 
 public class Races {
     
-    public static final int N_OF_RACES = 5;
-    public static final int N_OF_HORSES = 5;
+    public static final int N_OF_RACES = 1;
+    public static final int N_OF_HORSES = 4;
     public static final int N_OF_SPECTATORS = 4;
     public static final int SIZE_OF_RACING_TRACK = 14;
+    public static final int HORSE_MAX_STEP_SIZE = 5;
+    public static final int MAX_SPECTATOR_BET = 2000;
         
     private static Races instance = null;
     
     private final HashMap<Integer, SpectatorsState> spectatorsState;
     private final HashMap<Integer, Integer> spectatorAmmount;
-    private final HashMap<Integer, HorseJockeyState> horseJockeysState;
-    private BrokerState brokerState;
-    public Race[] races;
     
-    /*
-    double BS[] = new double[4];
-    double BA[] = new double[4];
-    double ODD[] = new double[4];
-    int N[] = new int[4];
-    double Ps[] = new double[4];
-    int SD[] = new int[4];
-    */
+    private final HashMap<Integer, HorseJockeyState> horseJockeysState;
+    private final HashMap<Integer, Double> horseJockeyStepSize;
+    
+    private BrokerState brokerState;
+    private boolean allInitStatesRegistered = false;
+    
+    public Race[] races;
     
     /**
     *
@@ -46,6 +45,7 @@ public class Races {
         this.spectatorsState = new HashMap<>();
         this.horseJockeysState = new HashMap<>();
         this.spectatorAmmount = new HashMap<>();
+        this.horseJockeyStepSize = new HashMap<>();
         this.races = new Race[N_OF_RACES];
         
         for(int i=0; i<N_OF_RACES; i++){
@@ -65,8 +65,34 @@ public class Races {
         
         return instance;
     }
+    
+    public boolean allInitStatesRegistered(){
+        if(allInitStatesRegistered){
+            return true;
+        }else{
+            allInitStatesRegistered = true;
+            
+            for (int i = 0;  i<Races.N_OF_HORSES; i++){
+                allInitStatesRegistered &= this.getHorseJockeyState(i)!=null;
+            }
+            
+            for (int i = 0;  i<Races.N_OF_SPECTATORS; i++){
+                allInitStatesRegistered &= this.getHorseJockeyState(i)!=null;
+            }
+            
+            allInitStatesRegistered &= this.getBrokerState()!=null;
+            
+            return false;
+        }
+    }
    
-   /**
+    public synchronized Bet chooseBet(){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        return this.races[raceNumber].chooseBet();
+    }
+
+    /**
     *
     * Method to verify if a given horse was selected to a race.
     * @param horseJockey The HorseJockey object.
@@ -77,7 +103,30 @@ public class Races {
         return this.races[raceNumber].horseHasBeenSelectedToRace(horseJockey);
     }
     
-    /**
+    public synchronized void generateOdds(){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        this.races[raceNumber].generateOdds();
+    }
+    
+    public void setHorseJockeyStepSize(int id, double stepSize){
+        this.horseJockeyStepSize.put(id, stepSize);
+    }
+    
+    public double getHorseJockeyStepSize(int id){
+        return this.horseJockeyStepSize.get(id);
+    }
+    
+    public synchronized boolean areThereAnyWinners(){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        return this.races[raceNumber].areThereAnyWinners();
+    };
+    
+    public synchronized boolean haveIWon(){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        return this.races[raceNumber].haveIWon();
+    };
+    
+	/**
     *
     * Method to set the state of a HorseJockey.
     * @param ID The HorseJockey ID.
@@ -144,7 +193,7 @@ public class Races {
     *
     * Method to get the winner of the race.
     */
-    public int getWinner(){
+    public LinkedList<Integer> getWinner(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return races[raceNumber].getWinner();
@@ -193,6 +242,11 @@ public class Races {
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].getNRunningHorses();
+    }
+    
+    public synchronized double getCurrentRaceDistance(){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        return this.races[raceNumber].getCurrentRaceDistance();
     }
     
     /* condition states */
@@ -299,40 +353,53 @@ public class Races {
     }
     
     /* Betting Centre */
-    public synchronized boolean getBetsOfSpectator(int i){
+    public Integer waitAddedBet(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
-        return this.races[raceNumber].getBetsOfSpectator(i);
+        return this.races[raceNumber].waitAddedBet();
     }
     
-    public synchronized void setBetsOfSpectator(int i, boolean set){
+    public boolean allSpectatorsBettsAceppted(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
-        this.races[raceNumber].setBetsOfSpectator(i, set);
+        return this.races[raceNumber].allSpectatorsBettsAceppted();
     }
     
-    public synchronized boolean getAcceptedTheBet(int i){
+    public void addBetOfSpectator(Bet bet){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
-        return this.races[raceNumber].getAcceptedTheBet(i);
+        this.races[raceNumber].addBetOfSpectator(bet);
     }
     
-    public synchronized void setAcceptedTheBet(int i, boolean set){
+    public boolean allSpectatorsBetted(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
-        this.races[raceNumber].setAcceptedTheBet(i, set);
+        return this.races[raceNumber].allSpectatorsBetted();
     }
     
-    public synchronized boolean getWaitingToBePaidSpectators(int i){
+    public void waitAcceptedTheBet(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
-        
-        return this.races[raceNumber].getWaitingToBePaidSpectators(i);
+        this.races[raceNumber].waitAcceptedTheBet();
+    }
+   
+    public void acceptBet(int i){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        this.races[raceNumber].acceptBet(i);
     }
     
-    public synchronized void setWaitingToBePaidSpectators(int i, boolean set){
+    public Integer poolWaitingToBePaidSpectators(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
-        
-        this.races[raceNumber].setWaitingToBePaidSpectators(i, set);
+        return this.races[raceNumber].poolWaitingToBePaidSpectators();
+    }
+    
+    public void addWaitingToBePaidSpectator(int i){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        this.races[raceNumber].addWaitingToBePaidSpectator(i);
+    }
+    
+    public boolean allSpectatorsPaid(){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        return this.races[raceNumber].allSpectatorsPaid();
     }
     
     public synchronized boolean getPaidSpectators(int i){

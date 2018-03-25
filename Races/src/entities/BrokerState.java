@@ -57,7 +57,7 @@ public enum BrokerState {
     SETTLING_ACCOUNTS{
         @Override
         public String toString(){
-            return "SA";
+            return "SEA";
         }
     },
     
@@ -68,7 +68,7 @@ public enum BrokerState {
     PLAYING_HOST_AT_THE_BAR{
         @Override
         public String toString(){
-            return "PHATB";
+            return "PHB";
         }
     },
 }

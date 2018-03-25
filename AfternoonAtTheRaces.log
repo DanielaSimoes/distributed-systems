@@ -1,0 +1,42 @@
+         AFTERNOON AT THE RACE TRACK - Description of the internal state of the problem
+MAN/BRK           SPECTATOR/BETTER              HORSE/JOCKEY PAIR at Race RN
+  Stat St1  Am1  St2  Am2  St3  Am3  St4  Am4 1  St1 Len1  St2 Len2  St3 Len3  St4 Len4						 Race RN Status 
+ RN DIST  BS1  BA1 BS2  BA2 BS3  BA3 BS4  BA4  Od1 N1 Ps1 SD1 Od2 N2 Ps2 SD2 Od3 N3 Ps3 SD3 Od4 N4 Ps4 SD4 
+  OTE  WRS    0  WRS    0  WRS    0  WRS    0 1  ATS 4.00  ATS 3.00  ATS 1.00  ATS 2.00
+  ANR  WRS    0  WRS    0  WRS    0  WRS    0 1  ATS 4.00  ATS 3.00  ATS 1.00  ATS 2.00
+  ANR  WRS    0  WRS    0  WRS    0  WRS    0 1  ATS 4.00  ATP 3.00  ATS 1.00  ATS 2.00
+  ANR  WRS    0  WRS    0  WRS    0  WRS    0 1  ATS 4.00  ATP 3.00  ATP 1.00  ATS 2.00
+  ANR  WRS    0  WRS    0  WRS    0  WRS    0 1  ATS 4.00  ATP 3.00  ATP 1.00  ATP 2.00
+  ANR  ATH    0  WRS    0  WRS    0  WRS    0 1  ATS 4.00  ATP 3.00  ATP 1.00  ATP 2.00
+  ANR  ATH    0  ATH    0  WRS    0  WRS    0 1  ATS 4.00  ATP 3.00  ATP 1.00  ATP 2.00
+  ANR  ATH    0  ATH    0  WRS    0  ATH    0 1  ATS 4.00  ATP 3.00  ATP 1.00  ATP 2.00
+  ANR  ATH    0  ATH    0  ATH    0  ATH    0 1  ATS 4.00  ATP 3.00  ATP 1.00  ATP 2.00
+  ANR  ATH    0  ATH    0  ATH    0  ATH    0 1  ATS 4.00  ATP 3.00  ASL 1.00  ATP 2.00
+  ANR  ATH    0  ATH    0  ATH    0  ATH    0 1  ATS 4.00  ASL 3.00  ASL 1.00  ATP 2.00
+  ANR  ATH    0  ATH    0  ATH    0  ATH    0 1  ATS 4.00  ASL 3.00  ASL 1.00  ASL 2.00
+  WFB  ATH    0  ATH    0  ATH    0  ATH    0 1  ATS 4.00  ASL 3.00  ASL 1.00  ASL 2.00
+  WFB  ATH    0  ATH    0  PAB    0  ATH    0 1  ATS 4.00  ASL 3.00  ASL 1.00  ASL 2.00
+  WFB  ATH    0  ATH    0  PAB    0  PAB    0 1  ATS 4.00  ASL 3.00  ASL 1.00  ASL 2.00
+  WFB  ATH    0  PAB    0  PAB    0  PAB    0 1  ATS 4.00  ASL 3.00  ASL 1.00  ASL 2.00
+  WFB  PAB    0  PAB    0  PAB    0  PAB    0 1  ATS 4.00  ASL 3.00  ASL 1.00  ASL 2.00
+  STR  PAB    0  PAB    0  PAB    0  PAB    0 1  ATS 4.00  ASL 3.00  ASL 1.00  ASL 2.00
+  STR  PAB    0  PAB    0  WAR    0  PAB    0 1  ATS 4.00  ASL 3.00  ASL 1.00  ASL 2.00
+  STR  PAB    0  PAB    0  WAR    0  PAB    0 1  ATS 4.00  ASL 3.00  ASL 1.00  RNN 2.00
+  STR  WAR    0  PAB    0  WAR    0  PAB    0 1  ATS 4.00  ASL 3.00  ASL 1.00  RNN 2.00
+  STR  WAR    0  PAB    0  WAR    0  PAB    0 1  ATS 4.00  ASL 3.00  RNN 1.00  RNN 2.00
+  STR  WAR    0  WAR    0  WAR    0  PAB    0 1  ATS 4.00  ASL 3.00  RNN 1.00  RNN 2.00
+  STR  WAR    0  WAR    0  WAR    0  PAB    0 1  ATS 4.00  RNN 3.00  RNN 1.00  RNN 2.00
+  STR  WAR    0  WAR    0  WAR    0  WAR    0 1  ATS 4.00  RNN 3.00  RNN 1.00  RNN 2.00
+  STR  WAR    0  WAR    0  WAR    0  WAR    0 1  ATS 4.00  AFL 3.00  RNN 1.00  RNN 2.00
+  STR  WAR    0  WAR    0  WAR    0  WAR    0 2  ATS 4.00  ATS 3.00  RNN 1.00  RNN 2.00
+  STR  WAR    0  WAR    0  WAR    0  WAR    0 1  ATS 4.00  ATS 3.00  RNN 1.00  AFL 2.00
+  STR  WAR    0  WAR    0  WAR    0  WAR    0 2  ATS 4.00  ATS 3.00  RNN 1.00  ATS 2.00
+  STR  WAR    0  WAR    0  WAR    0  WAR    0 1  ATS 4.00  ATS 3.00  AFL 1.00  ATS 2.00
+  SEA  WAR    0  WAR    0  WAR    0  WAR    0 1  ATS 4.00  ATS 3.00  AFL 1.00  ATS 2.00
+  SEA  WAR    0  WAR    0  WAR    0  CBG    0 1  ATS 4.00  ATS 3.00  AFL 1.00  ATS 2.00
+  SEA  WAR    0  CTG    0  WAR    0  CBG    0 1  ATS 4.00  ATS 3.00  AFL 1.00  ATS 2.00
+  SEA  CBG    0  CTG    0  WAR    0  CBG    0 1  ATS 4.00  ATS 3.00  AFL 1.00  ATS 2.00
+  SEA  CBG    0  CTG    0  CTG    0  CBG    0 1  ATS 4.00  ATS 3.00  AFL 1.00  ATS 2.00
+  SEA  CBG    0  CBG    0  CTG    0  CBG    0 1  ATS 4.00  ATS 3.00  AFL 1.00  ATS 2.00
+  PHB  CBG    0  CBG    0  CTG    0  CBG    0 1  ATS 4.00  ATS 3.00  AFL 1.00  ATS 2.00
+  PHB  CBG    0  CBG    0  CBG    0  CBG    0 1  ATS 4.00  ATS 3.00  AFL 1.00  ATS 2.00

@@ -1,7 +1,13 @@
 package GeneralRepository;
 import entities.HorseJockey;
+import entities.Spectators;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Random;
+import java.util.TreeMap;
 
 /**
  * This file describes the Race itself.
@@ -27,20 +33,28 @@ public class Race {
     protected int nHorsesInPaddock = 0;
     
     /* BettingCentre */
-    private final boolean[] betsOfSpectators = new boolean[Races.N_OF_SPECTATORS];
-    private final boolean[] acceptedTheBet = new boolean[Races.N_OF_SPECTATORS];
-    private final boolean[] waitingToBePaidSpectators = new boolean[Races.N_OF_SPECTATORS];
+    Queue<Integer> betsOfSpectators = new LinkedList<>();
+    private final Object[] waitingAcceptedTheBet = new Object[Races.N_OF_SPECTATORS];
+    private final boolean[] acceptedBet = new boolean[Races.N_OF_SPECTATORS];
+    LinkedList<Bet> bets = new LinkedList();
+    private Object addedBet = new Object();
+    
+    Queue<Integer> waitingToBePaidSpectators = new LinkedList<>();
     private final boolean[] paidSpectators = new boolean[Races.N_OF_SPECTATORS];
+    private int nPaidSpectators = 0;
+    LinkedList<Integer> spectatorsWinners = new LinkedList();
     
     /* end condition states */
     
     private boolean raceStarted = false;
-    private int winner;
+    LinkedList<Integer> winners = new LinkedList();
     private final int id;
     
     private final HashMap<Integer, HorseJockey> horsesRunning;
     private final HashMap<Integer, Double> horsesPosition;
     private final HashMap<Integer, Boolean> horsesFinished;
+    private final Map<Double, Integer> horsesOdds;
+    
     private int nHorsesFinished = 0;
     private final int[] selectedHorses;
     
@@ -55,7 +69,6 @@ public class Race {
     */
     public Race(int id){
         this.id = id;
-        this.winner = -1;
         this.trackSize = Races.SIZE_OF_RACING_TRACK;
         
         // number of horses to run is between 2 and N of Horses available to run
@@ -64,6 +77,7 @@ public class Race {
         this.horsesRunning = new HashMap<>();
         this.horsesPosition = new HashMap<>();
         this.horsesFinished = new HashMap<>();
+        this.horsesOdds = new TreeMap<>();
         
         this.selectedHorses = new int[this.nHorsesToRun];
         
@@ -84,22 +98,13 @@ public class Race {
             }while(repeated);
             
             this.selectedHorses[i] = selectedId;
-            //System.out.printf("%d ", this.selectedHorses[i]);
         }
-        
-        //System.out.println();
         
         for(int i = 0; i < Races.N_OF_SPECTATORS; i++){
-            this.betsOfSpectators[i] = false;
-            this.acceptedTheBet[i] = false;
-            this.waitingToBePaidSpectators[i] = false;
             this.paidSpectators[i] = false;
+            this.waitingAcceptedTheBet[i] = new Object();
+            this.acceptedBet[i] = false;
         }
-        /*
-        for(int x = 0; x < selectedHorses.length; x++ ){
-            System.out.println(selectedHorses[x]);
-        }
-        */
     }
     
     /**
@@ -129,6 +134,82 @@ public class Race {
         return false;
     }
     
+    public synchronized void generateOdds(){
+        for(Entry<?, ?> e: horsesRunning.entrySet()){
+            double stepSize = ((HorseJockey)e.getValue()).getStepSize();
+            int horseJockeyId = ((HorseJockey)e.getValue()).getHorseId();
+            
+            // max = 5
+            // step = 5
+            // max-step*0,75=1,25
+            
+            this.horsesOdds.put(Races.HORSE_MAX_STEP_SIZE-stepSize*0.75, horseJockeyId);
+        }
+    }
+    
+    public synchronized Bet chooseBet(){
+        Spectators spectator = ((Spectators)Thread.currentThread());
+        
+        double perception = spectator.getInitialBet() / Races.MAX_SPECTATOR_BET;
+        double capacity = spectator.getMoneyToBet() / spectator.getInitialBet();
+        double peek = perception * capacity * 100;
+        
+        double interval = 100 / this.nHorsesToRun;
+        
+        int choosen_risk_interval = Math.round((float)(peek / interval))-1;
+        
+        int i = 0;
+        double odd = 1.0;
+        int horseId = 0;
+        
+        for(Map.Entry<Double, Integer> entry : this.horsesOdds.entrySet()) {
+            if(i==choosen_risk_interval){
+                odd = (double)entry.getKey();
+                horseId = (int)entry.getValue();
+            }
+            i++;
+        }
+        
+        double amountToBet = spectator.getMoneyToBet()*0.1;
+        
+        spectator.subtractMoneyToBet(amountToBet);
+        
+        return new Bet(horseId, amountToBet, spectator.getSpectatorId(), odd);
+    }
+    
+    
+    public synchronized boolean areThereAnyWinners(){
+        boolean thereAreWinners = false;
+        
+        for (Integer horseId : this.winners) {
+            for(Bet bet : this.bets){
+                thereAreWinners |= (bet.getHorseId() == horseId);
+                
+                if(bet.getHorseId() == horseId && !spectatorsWinners.contains(bet.getSpectatorId())){
+                    spectatorsWinners.add(bet.getSpectatorId());
+                }
+            }
+        }
+        
+        return thereAreWinners;
+    };
+    
+    public synchronized boolean haveIWon(){
+        Spectators spectator = ((Spectators)Thread.currentThread());
+        
+        boolean haveIWon = false;
+        
+        for (Integer horseId : this.winners) {
+            for(Bet bet : this.bets){
+                if(bet.getHorseId() == horseId && bet.getSpectatorId()==spectator.getSpectatorId()){
+                    haveIWon = true;
+                }
+            }
+        }
+        
+        return haveIWon;
+    };
+
     /**
     *
     * Method to increment a position of in the race a given horse.
@@ -143,6 +224,23 @@ public class Race {
         this.horsesPosition.put(horseId, this.horsesPosition.get(horseId)+result);
 
         if(this.horsesPosition.get(horseId) >= trackSize){
+            
+            if(winners.isEmpty()){
+                winners.add(horseId);
+            }else{
+                double pos_winner = this.horsesPosition.get(this.winners.getFirst());
+                
+                if(this.horsesPosition.get(horseId)>pos_winner){
+                    while(!this.winners.isEmpty()){
+                        this.winners.remove();
+                    }
+                    
+                    this.winners.add(horseId);
+                }else if(this.horsesPosition.get(horseId)==pos_winner){
+                    this.winners.add(horseId);
+                }
+            }
+            
             this.horsesFinished.put(horseId, Boolean.TRUE);
             this.nHorsesFinished += 1;
         }
@@ -171,13 +269,15 @@ public class Race {
         return this.nHorsesFinished==this.nHorsesToRun;
     }
     
+<<<<<<< HEAD
     /**
     *
     * Method to retrieve the HorseJockey winner.
     */
-    public int getWinner(){
-        return this.winner;
+    public LinkedList<Integer> getWinner(){
+        return this.winners;
     }
+    
     
     /**
     *
@@ -185,6 +285,10 @@ public class Race {
     */
     public int getNRunningHorses(){
         return this.nHorsesToRun;
+    }
+    
+    public double getCurrentRaceDistance(){
+        return this.trackSize;
     }
     
     /* condition states */
@@ -326,69 +430,96 @@ public class Race {
     }
     
     /* Betting Centre */
-    /**
-    *
-    * Method to retrieve the bet of the spectator.
-    * @param i The id of the spectator.
-    */
-    protected synchronized boolean getBetsOfSpectator(int i){
-        return this.betsOfSpectators[i];
+    protected Integer waitAddedBet(){
+        if(!this.betsOfSpectators.isEmpty()){
+            return this.betsOfSpectators.poll();
+        }else{
+            synchronized (this.addedBet) {
+                try {
+                    System.out.println("Broker Waiting for bets");
+                    this.addedBet.wait();
+                    System.out.println("Broker waked");
+                } catch (Exception e) {}
+            }
+            return this.betsOfSpectators.poll();
+        }
     }
     
-    /**
-    *
-    * Method to set the bet of the spectator.
-    * @param i The id of the spectator.
-    */
-    protected synchronized void setBetsOfSpectator(int i, boolean set){
-        this.betsOfSpectators[i] = set;
+    protected boolean allSpectatorsBettsAceppted(){
+        return this.betsOfSpectators.isEmpty();
     }
     
-    /**
-    *
-    * Method to verify if a given bet was accepted by the broker.
-    * @param i The id of the spectator.
-    */
-    protected synchronized boolean getAcceptedTheBet(int i){
-        return this.acceptedTheBet[i];
+    protected void addBetOfSpectator(Bet bet){
+        Spectators spectator = ((Spectators)Thread.currentThread());
+        
+        synchronized (this.addedBet) {
+            this.bets.add(bet);
+            this.betsOfSpectators.add(spectator.getSpectatorId());
+            System.out.println("Spectator Placed Bet S" + spectator.getSpectatorId());
+            this.addedBet.notifyAll();
+        }
     }
     
-    /**
-    *
-    * Method to accept the bet by the broker.
-    * @param i The id of the spectator.
-    * @param set The value of the variable to be assigned.
-    */
-    protected synchronized void setAcceptedTheBet(int i, boolean set){
-        this.acceptedTheBet[i] = set;
+    protected boolean allSpectatorsBetted(){
+        boolean allSpectatorsBetted = true;
+        
+        for(int i=0; i<Races.N_OF_SPECTATORS; i++){
+            if(!this.acceptedBet[i]){
+                allSpectatorsBetted = false;
+                this.betsOfSpectators.add(i);
+            }
+        }
+        
+        return allSpectatorsBetted;
     }
     
-    /**
-    *
-    * Method to retrieve the variable of waiting to be paid.
-    * @param i The id of the spectator.
-    */
-    protected synchronized boolean getWaitingToBePaidSpectators(int i){
-        return this.waitingToBePaidSpectators[i];
+    protected void waitAcceptedTheBet(){
+        Spectators spectator = ((Spectators)Thread.currentThread());
+        
+        synchronized (this.waitingAcceptedTheBet[spectator.getSpectatorId()]) {
+            try {
+                this.waitingAcceptedTheBet[spectator.getSpectatorId()].wait();
+                this.acceptedBet[spectator.getSpectatorId()] = true;
+                System.out.println("Broker Accepted bets for S" + (spectator.getSpectatorId()));
+            } catch (Exception e) {}
+        }
+    }
+   
+    protected void acceptBet(int i){
+        synchronized (this.waitingAcceptedTheBet[i]) {
+            this.waitingAcceptedTheBet[i].notifyAll();
+        }
     }
     
-    /**
-    *
-    * Method to set the variable of waiting to be paid.
-    * @param i The id of the spectator.
-    * @param set The value of the variable to be assigned.
-    */
-    protected synchronized void setWaitingToBePaidSpectators(int i, boolean set){
-        this.waitingToBePaidSpectators[i] = set;
+    protected Integer poolWaitingToBePaidSpectators(){
+        return this.waitingToBePaidSpectators.poll();
     }
     
-    /**
-    *
-    * Method to retrieve the variable of get paid.
-    * @param i The id of the spectator.
-    */
+    protected void addWaitingToBePaidSpectator(int i){
+        this.waitingToBePaidSpectators.add(i);
+    }
+    
+    protected boolean allSpectatorsPaid(){
+        return this.nPaidSpectators == this.spectatorsWinners.size();
+    }
+    
     protected synchronized boolean getPaidSpectators(int i){
-        return this.paidSpectators[i];
+        boolean pay = this.paidSpectators[i];
+        
+        if(pay){
+            Spectators spectator = ((Spectators)Thread.currentThread());
+
+            for (Integer horseId : this.winners) {
+                for(Bet bet : this.bets){
+                    if(bet.getHorseId() == horseId && bet.getSpectatorId()==spectator.getSpectatorId()){
+                        spectator.addMoneyToBet(bet.getAmount());
+                    }
+                }
+            }
+            
+        }
+        
+        return pay;
     }
     
     /**
@@ -398,6 +529,7 @@ public class Race {
     * @param set The value of the variable to be assigned.
     */
     protected synchronized void setPaidSpectators(int i, boolean set){
+        this.nPaidSpectators++;
         this.paidSpectators[i] = set;
     }
     /* end condition states */

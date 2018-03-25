@@ -84,16 +84,7 @@ public class ControlCentre implements IControlCentre {
     @Override
     public synchronized boolean haveIWon(){
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
-        return false;
-        /*
-        Races r = Races.getInstace();
-      
-        if(r.getWinner() == ((Spectators)Thread.currentThread()).getSpectatorId()){
-            return true;
-        }else{
-            return false;
-        }
-        */
+        return this.races.haveIWon();
     };
    
     /**

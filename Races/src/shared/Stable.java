@@ -54,6 +54,9 @@ public class Stable implements IStable {
         if(!wakeEntertainTheGuests){
             this.races.addWakedHorsesToPaddock();
         }
+        if(races.getAnnuncedNextRace() && this.races.getWakedHorsesToPaddock()==races.getNRunningHorses()){
+            this.races.generateOdds();
+        }
     };
     
     /**

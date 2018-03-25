@@ -12,6 +12,7 @@ import entities.SpectatorsState;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.sun.javafx.binding.Logging;
+import entities.IEntity;
 
 /**
  *
@@ -37,7 +38,7 @@ public class Log {
         if(filename.length()==0){
             Date today = Calendar.getInstance().getTime();
             SimpleDateFormat date = new SimpleDateFormat("yyyyMMddhhmmss");
-            filename = "AfternoonAtTheRaces_" + date.format(today) + ".log";
+            filename = "AfternoonAtTheRaces.log";// + date.format(today) + ".log";
         }
         this.log = new File(filename);
     }
@@ -61,20 +62,33 @@ public class Log {
             
             String head = "  Stat";
             
-            for(int i=1; i<=Races.N_OF_SPECTATORS; i++){
-                head += " St" + Integer.toString(i) + "  Am" + Integer.toString(i) + " ";
+            for(int i=0; i<Races.N_OF_SPECTATORS; i++){
+                head += " St" + Integer.toString(i+1) + "  Am" + Integer.toString(i+1) + " ";
             }
             
             head += 0+1;
             
-            for(int i=1; i<=Races.N_OF_HORSES; i++){
-                head += "  St" + Integer.toString(i) + " Len" + Integer.toString(i);
+            for(int i=0; i<Races.N_OF_HORSES; i++){
+                head += "  St" + Integer.toString(i+1) + " Len" + Integer.toString(i+1);
             }
             
-            //head += "                                        Race R" + this.races.getRaceNumber() + " Status";
+            head += "\t\t\t\t\t\t Race RN Status \n";
+            
+            head += " RN DIST ";
+            
+            for(int i=0; i<Races.N_OF_SPECTATORS; i++){
+                head += " BS" + Integer.toString(i+1) + "  BA" + Integer.toString(i+1);
+            }
+            
+            head += " ";
+            
+            for(int i=0; i<Races.N_OF_HORSES; i++){
+                head += " Od" + Integer.toString(i+1) + " N" + Integer.toString(i+1)  + " Ps" + Integer.toString(i+1)  + " SD" + Integer.toString(i+1);
+            }
+            
+            head += " ";
             
             pw.println(head);
-            
           
             pw.flush();
         } catch (FileNotFoundException ex) {
@@ -82,16 +96,71 @@ public class Log {
         }
     }
     
-    public void setHorseJockeyState(int id, HorseJockeyState state){
-        this.races.setHorseJockeyState(id, state);
-    }
+    public synchronized void writeLineRace(){
+        if(!this.races.allInitStatesRegistered()){
+            return;
+        }
+        
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+        
+        String head = String.format("\t\t\t\t\t\t Race %2d Status \n", raceNumber);
 
-    public void setBrokerState(BrokerState state){
-        this.races.setBrokerState(state);
+        head += String.format(" %2d %4.2f ", raceNumber, races.getCurrentRaceDistance());
+
+        for(int i=0; i<Races.N_OF_SPECTATORS; i++){
+            head += " BS" + Integer.toString(i+1) + "  BA" + Integer.toString(i+1);
+        }
+
+        head += " ";
+
+        for(int i=0; i<Races.N_OF_HORSES; i++){
+            head += " Od" + Integer.toString(i+1) + " N" + Integer.toString(i+1)  + " Ps" + Integer.toString(i+1)  + " SD" + Integer.toString(i+1);
+        }
+
+        head += " ";
+
+        pw.println(head);
+
+        pw.flush();
     }
     
-    public void setSpectatorState(int id, SpectatorsState state){
+    public synchronized void writeLineStatus(){
+        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+
+        String head = "  " + this.races.getBrokerState() + " ";
+
+        for(int i=0; i<Races.N_OF_SPECTATORS; i++){
+            head += " " + this.races.getSpectatorsState(i) + "  " + String.format("%3d", 0) + " ";
+        }
+
+        head += (raceNumber+1);
+
+        for(int i=0; i<Races.N_OF_HORSES; i++){
+            head += "  " + this.races.getHorseJockeyState(i) + " " + String.format("%3.2f", this.races.getHorseJockeyStepSize(i));
+        }
+
+        if(head.contains("null")){
+            return;
+        }
+        
+        pw.println(head);
+
+        pw.flush();
+    }
+    
+    public synchronized void setHorseJockeyState(int id, HorseJockeyState state){
+        this.races.setHorseJockeyState(id, state);
+        this.writeLineStatus();
+    }
+
+    public synchronized void setBrokerState(BrokerState state){
+        this.races.setBrokerState(state);
+        this.writeLineStatus();
+    }
+    
+    public synchronized void setSpectatorState(int id, SpectatorsState state){
         this.races.setSpectatorState(id, state);
+        this.writeLineStatus();
     }
 
 }

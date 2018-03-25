@@ -11,6 +11,7 @@ public class Spectators extends Thread implements IEntity{
     
     private SpectatorsState state;
     private double moneyToBet;
+    private double initialMoney;
     private final Log log;
     private final Races races = Races.getInstace();
     
@@ -39,8 +40,8 @@ public class Spectators extends Thread implements IEntity{
         this.bc = bc;
         this.paddock = paddock;
         this.moneyToBet = moneyToBet;
+        this.initialMoney = moneyToBet;
         this.log = Log.getInstance();
-        this.state = SpectatorsState.WAITING_FOR_A_RACE_TO_START;
         this.relaxABit = false;
         this.setName("Spectator " + id);
     }
@@ -53,6 +54,8 @@ public class Spectators extends Thread implements IEntity{
     */
     @Override
     public void run(){ 
+        this.setSpectatorsState(SpectatorsState.WAITING_FOR_A_RACE_TO_START);
+        
         while(!this.relaxABit){
             switch(this.state){
 
@@ -72,7 +75,9 @@ public class Spectators extends Thread implements IEntity{
                 case WATCHING_A_RACE:
                     if(cc.haveIWon()){
                         bc.goCollectTheGains();
-                    }else if(races.hasMoreRaces()){
+                    }
+                    
+                    if(races.hasMoreRaces()){
                         this.nextRace();
                         cc.waitForNextRace();
                         paddock.goCheckHorses();
@@ -120,6 +125,9 @@ public class Spectators extends Thread implements IEntity{
     * @param state The state to be assigned to the Spectator.
     */
     public void setSpectatorsState(SpectatorsState state){
+        if(state==this.state){
+            return;
+        }
         this.state = state;
         this.log.setSpectatorState(id, state);
     } 
@@ -132,12 +140,24 @@ public class Spectators extends Thread implements IEntity{
         return this.state;
     }
     
+    public double getInitialBet(){
+        return this.initialMoney;
+    }
+   
     /**
     *
     * Method to get the money that the Spectator has to bet.
     */
     public double getMoneyToBet(){
         return this.moneyToBet;
+    }
+   
+    public void subtractMoneyToBet(double money){
+        this.moneyToBet -= money;
+    }
+    
+    public void addMoneyToBet(double money){
+        this.moneyToBet += money;
     }
     
     /**

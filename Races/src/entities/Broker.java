@@ -44,7 +44,6 @@ public class Broker extends Thread implements IEntity{
         this.rt = rt;
         this.paddock = paddock;
         this.log = Log.getInstance();
-        this.state = BrokerState.OPENING_THE_EVENT;
         this.setName("Broker");
     }
     
@@ -56,51 +55,56 @@ public class Broker extends Thread implements IEntity{
     */
     @Override
     public void run(){
-            while(!this.entertainTheGuests){
+        this.setBrokerState(BrokerState.OPENING_THE_EVENT);
+        
+        while(!this.entertainTheGuests){
 
-                switch(this.state){
-         
-                    case OPENING_THE_EVENT:
+            switch(this.state){
+
+                case OPENING_THE_EVENT:
+                    stable.summonHorsesToPaddock();
+                    paddock.summonHorsesToPaddock();
+                    break;
+
+                case ANNOUNCING_NEXT_RACE:
+                    bc.acceptTheBets();
+                    break;
+
+                case WAITING_FOR_BETS:
+                    rt.startTheRace();
+                    break;
+
+                case SUPERVISING_THE_RACE:
+                    cc.reportResults();
+                    
+                    if(bc.areThereAnyWinners()){ 
+                        bc.honourTheBets();
+                    }
+                    
+                    if(races.hasMoreRaces()){
+                        this.nextRace();
                         stable.summonHorsesToPaddock();
                         paddock.summonHorsesToPaddock();
-                        break;
+                    }else{
+                        this.entertainTheGuests = true;
+                    }
 
-                    case ANNOUNCING_NEXT_RACE:
-                        bc.acceptTheBets();
-                        break;
+                    break;
 
-                    case WAITING_FOR_BETS:
-                        rt.startTheRace();
-                        break;
+                case SETTLING_ACCOUNTS:
+                    if(races.hasMoreRaces()){
+                        this.nextRace();
+                        stable.summonHorsesToPaddock();
+                        paddock.summonHorsesToPaddock();
+                    }else{
+                        this.entertainTheGuests = true;
+                    }
+                    break;
 
-                    case SUPERVISING_THE_RACE:
-                        cc.reportResults();
-                        if(bc.areThereAnyWinners()){ 
-                            bc.honourTheBets();
-                        }else if(races.hasMoreRaces()){
-                            this.nextRace();
-                            stable.summonHorsesToPaddock();
-                            paddock.summonHorsesToPaddock();
-                        }else{
-                            this.entertainTheGuests = true;
-                        }
-                        
-                        break;
-
-                    case SETTLING_ACCOUNTS:
-                        if(races.hasMoreRaces()){
-                            this.nextRace();
-                            stable.summonHorsesToPaddock();
-                            paddock.summonHorsesToPaddock();
-                        }else{
-                            this.entertainTheGuests = true;
-                        }
-                        break;
-
-                }
             }
-            
-            this.stable.entertainTheGuests();
+        }
+
+        this.stable.entertainTheGuests();
     }
     
     /**
@@ -127,6 +131,9 @@ public class Broker extends Thread implements IEntity{
     * @param state The state to be assigned to the broker.
     */
     public void setBrokerState(BrokerState state){
+        if(state==this.state){
+            return;
+        }
         this.state = state;
         this.log.setBrokerState(state);
     } 

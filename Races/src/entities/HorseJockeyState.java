@@ -35,7 +35,7 @@ public enum HorseJockeyState {
     AT_THE_START_LINE{
         @Override
         public String toString(){
-            return "ATSL";
+            return "ASL";
         }
     },
     
@@ -46,7 +46,7 @@ public enum HorseJockeyState {
     RUNNNING{
         @Override
         public String toString(){
-            return "R";
+            return "RNN";
         }
     },
     
@@ -57,7 +57,7 @@ public enum HorseJockeyState {
     AT_THE_FINISH_LINE{
         @Override
         public String toString(){
-            return "ATFL";
+            return "AFL";
         }
     },
 }
