@@ -33,6 +33,11 @@ public class Main {
     private static Log lg;
     private static Races races; 
     
+    /**
+    *    Main method.
+    *
+    *    @param args runtime arguments
+    */
     public static void main(String[] args){
     
         int nRaces = Races.N_OF_RACES;

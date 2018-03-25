@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package shared;
 
 /**
- *
- * @author Daniela
+ * This file contains the Interface implemented by the shared memory region Racing Track.
+ * @author Daniela Simões, 76771
  */
 public interface IRacingTrack {
     public void startTheRace();

@@ -12,13 +12,17 @@ import entities.HorseJockey;
 import entities.HorseJockeyState;
 
 /**
- *
- * @author Daniela
+ * This file contains the shared memory region Racing Track.
+ * @author Daniela Simões, 76771
  */
 public class RacingTrack implements IRacingTrack {
     
     private Races races = Races.getInstace();
     
+    /**
+    *
+    * Method to start the race.
+    */
     @Override
     public synchronized void startTheRace(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
@@ -37,11 +41,14 @@ public class RacingTrack implements IRacingTrack {
         races.setStartTheRace(false);
     };
     
+    /**
+    *
+    * Method to get the horses to proceed to the start line.
+    */
     @Override
     public synchronized void proceedToStartLine(){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
         
-        // not sure
         while(!(races.getStartTheRace() || !this.races.nextMovingHorse(((HorseJockey)Thread.currentThread()).getHorseId()))){
             try{
                 wait();
@@ -53,11 +60,20 @@ public class RacingTrack implements IRacingTrack {
         notifyAll();
     };
     
+    /**
+    *
+    * Method to verify if a given horse crossed the finish line.
+    * @param horseId The HorseJockey ID.
+    */
     @Override
     public synchronized boolean hasFinishLineBeenCrossed(int horseId){  
         return races.horseFinished(horseId);
     };
     
+    /**
+    *
+    * Method to make a move - an iteration in the racing track.
+    */
     @Override
     public synchronized void makeAMove(){
         int horseId = ((HorseJockey)Thread.currentThread()).getHorseId();

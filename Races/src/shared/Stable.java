@@ -10,14 +10,18 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- *
- * @author Daniela
+ * This file contains the shared memory region Stable.
+ * @author Daniela Simões, 76771
  */
 public class Stable implements IStable {
     
     private boolean wakeEntertainTheGuests = false;
     private final Races races = Races.getInstace();
      
+    /**
+    *
+    * Method to get the broker to announce the next race.
+    */
     @Override
     public synchronized void summonHorsesToPaddock(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
@@ -27,7 +31,10 @@ public class Stable implements IStable {
         notifyAll();
     };
     
-    
+    /**
+    *
+    * Method to get the horses to proceed to stable.
+    */
     @Override
     public synchronized void proceedToStable(){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
@@ -49,6 +56,10 @@ public class Stable implements IStable {
         }
     };
     
+    /**
+    *
+    * Method to get the broker to entertain the guests - death state.
+    */
     @Override
     public synchronized void entertainTheGuests(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.PLAYING_HOST_AT_THE_BAR);

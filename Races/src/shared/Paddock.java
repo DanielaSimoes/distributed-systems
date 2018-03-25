@@ -9,13 +9,17 @@ import entities.Spectators;
 import entities.SpectatorsState;
 
 /**
- *
- * @author Daniela
+ * This file contains the shared memory region Paddock.
+ * @author Daniela Simões, 76771
  */
 public class Paddock implements IPaddock {
     
     private Races races = Races.getInstace();
     
+    /**
+    *
+    * Method to send the horses to paddock.
+    */
     @Override
     public synchronized void proceedToPaddock(){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
@@ -29,6 +33,10 @@ public class Paddock implements IPaddock {
         }
     };
     
+    /**
+    *
+    * Method to send the horses to the start line.
+    */
     @Override
     public synchronized void proceedToStartLine(){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
@@ -40,6 +48,10 @@ public class Paddock implements IPaddock {
         }
     };
     
+    /**
+    *
+    * Method to get the broker to announce the next race.
+    */
     @Override
     public synchronized void summonHorsesToPaddock(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
@@ -53,6 +65,10 @@ public class Paddock implements IPaddock {
         }
     };
     
+    /**
+    *
+    * Method to get spectators to go check the horses.
+    */
     @Override
     public synchronized void goCheckHorses(){
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.APPRAISING_THE_HORSES);

@@ -1,8 +1,8 @@
 package GeneralRepository;
 
 /**
- *
- * @author Daniela
+ * This file describes the set of the Races.
+ * @author Daniela Simões, 76771
  */
 
 import java.util.HashMap;
@@ -38,6 +38,10 @@ public class Races {
     int SD[] = new int[4];
     */
     
+    /**
+    *
+    * Races Constructor
+    */
     private Races(){
         this.spectatorsState = new HashMap<>();
         this.horseJockeysState = new HashMap<>();
@@ -50,6 +54,10 @@ public class Races {
         
     }
     
+    /**
+    *
+    * Method to retrieve an instance of Races
+    */
     public static Races getInstace(){
         if (instance == null){
             instance = new Races();
@@ -58,12 +66,23 @@ public class Races {
         return instance;
     }
    
+   /**
+    *
+    * Method to verify if a given horse was selected to a race.
+    * @param horseJockey The HorseJockey object.
+    */
     public boolean horseHasBeenSelectedToRace(HorseJockey horseJockey){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].horseHasBeenSelectedToRace(horseJockey);
     }
     
+    /**
+    *
+    * Method to set the state of a HorseJockey.
+    * @param ID The HorseJockey ID.
+    * @param state The state to be assigned.
+    */
     public void setHorseJockeyState(int id, HorseJockeyState state){
         if(this.horseJockeysState.containsKey(id)){
             this.horseJockeysState.replace(id, state);
@@ -72,18 +91,38 @@ public class Races {
         }
     }
     
+    /**
+    *
+    * Method to get the state of a HorseJockey.
+    * @param ID The HorseJockey ID.
+    */
     public HorseJockeyState getHorseJockeyState(int id){
         return this.horseJockeysState.get(id);
     }
 
+    /**
+    *
+    * Method to set the state of the Broker.
+    * @param state The state to be assigned.
+    */
     public void setBrokerState(BrokerState state){
         this.brokerState = state;
     }
     
+    /**
+    *
+    * Method to get the state of the Broker.
+    */
     public BrokerState getBrokerState(){
         return this.brokerState;
     }
     
+    /**
+    *
+    * Method to set the state of a Spectator.
+    * @param state The state to be assigned.
+    * @param ID The ID of the Spectator.
+    */
     public void setSpectatorState(int id, SpectatorsState state){
         if(this.spectatorsState.containsKey(id)){
             this.spectatorsState.replace(id, state);
@@ -92,21 +131,39 @@ public class Races {
         }
     }
     
+    /**
+    *
+    * Method to get the state of a Spectator.
+    * @param ID The ID of the Spectator.
+    */
     public SpectatorsState getSpectatorsState(int id){
         return this.spectatorsState.get(id);
     }
     
+    /**
+    *
+    * Method to get the winner of the race.
+    */
     public int getWinner(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return races[raceNumber].getWinner();
     }
     
+    /**
+    *
+    * Method to verify if has more races to happen.
+    */
     public boolean hasMoreRaces(){
         //System.out.println("HasMoreRaces: " + hasMore + " | running horses: " + this.races[raceNumber].getNRunningHorses());
         return !this.races[Races.N_OF_RACES-1].horsesFinished();
     }
     
+    /**
+    *
+    * Method to allow the HorseJockey to make a move in the race.
+    * @param horseId The ID of the HorseJockey.
+    */
     public void makeAMove(int horseId){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         

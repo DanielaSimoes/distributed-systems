@@ -1,14 +1,14 @@
 package entities;
 
 /**
- *
- * @author Daniela
+ * This file contains an enum with the lifecycle states of the Spectator.
+ * @author Daniela Simões, 76771
  */
 public enum SpectatorsState {
-    /*
-        WAITING FOR A RACE TO START = WFARTS
+    /**
+    * WAITING FOR A RACE TO START = WFARTS
     */
-    
+            
     WAITING_FOR_A_RACE_TO_START{
         @Override
         public String toString(){
@@ -16,10 +16,10 @@ public enum SpectatorsState {
         }
     },
     
-    /*
-        APPRAISING THE HORSES = ATH
+    /**
+    * APPRAISING THE HORSES = ATH
     */
-    
+            
     APPRAISING_THE_HORSES{
         @Override
         public String toString(){
@@ -27,10 +27,10 @@ public enum SpectatorsState {
         }
     },
     
-    /*
-        PLACING A BET = PAB
+    /**
+    * PLACING A BET = PAB
     */
-    
+        
     PLACING_A_BET{
         @Override
         public String toString(){
@@ -38,10 +38,10 @@ public enum SpectatorsState {
         }
     },
     
-    /*
-        WATCHING A RACE = WAR
+    /**
+    * WATCHING A RACE = WAR
     */
-    
+           
     WATCHING_A_RACE{
         @Override
         public String toString(){
@@ -49,10 +49,10 @@ public enum SpectatorsState {
         }
     },
     
-    /*
-        COLLECTING THE GAINS = CTG
+    /**
+    * COLLECTING THE GAINS = CTG
     */
-    
+            
     COLLECTING_THE_GAINS{
         @Override
         public String toString(){
@@ -60,8 +60,8 @@ public enum SpectatorsState {
         }
     },
     
-    /*
-        CELEBRATING = C
+    /**
+    * CELEBRATING = C
     */
     
     CELEBRATING{

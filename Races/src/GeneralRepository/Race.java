@@ -1,16 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package GeneralRepository;
 import entities.HorseJockey;
 import java.util.HashMap;
 import java.util.Random;
 
 /**
- *
- * @author Daniela
+ * This file describes the Race itself.
+ * @author Daniela Simões, 76771
  */
 public class Race {
     
@@ -53,6 +48,11 @@ public class Race {
     private final int nHorsesToRun;
     private int horseToMove = 0;
    
+   /**
+    *
+    * Race Constructor - this constructor inits the horses positions and select the horses that will participate in the race.
+    * @param ID The ID of the race.
+    */
     public Race(int id){
         this.id = id;
         this.winner = -1;
@@ -102,10 +102,20 @@ public class Race {
         */
     }
     
+    /**
+    *
+    * Method to verify which horse should iterate next.
+    * @param ID The ID of the HorseJockey.
+    */
     public boolean nextMovingHorse(int horseJockeyId){
         return this.selectedHorses[horseToMove]==horseJockeyId;
     }
     
+    /**
+    *
+    * Method to verify if a given horse was selected to participate in the race.
+    * @param ID The ID of the HorseJockey.
+    */
     public boolean horseHasBeenSelectedToRace(HorseJockey horseJockey){
         for(int i=0; i<this.nHorsesToRun; i++){
             if(this.selectedHorses[i]==horseJockey.getHorseId()){
@@ -119,6 +129,11 @@ public class Race {
         return false;
     }
     
+    /**
+    *
+    * Method to increment a position of in the race a given horse.
+    * @param ID The ID of the HorseJockey.
+    */
     public void makeAMove(int horseId){
         double start = 0;
         double end = this.horsesRunning.get(horseId).getStepSize();
@@ -139,118 +154,249 @@ public class Race {
         }
     }
     
+    /**
+    *
+    * Method to verify if a given horse has finished the race.
+    * @param ID The ID of the HorseJockey.
+    */
     public boolean horseFinished(int horseId){
         return this.horsesFinished.get(horseId);
     }
     
+    /**
+    *
+    * Method to verify if all horses finished the race.
+    */
     public boolean horsesFinished(){
         return this.nHorsesFinished==this.nHorsesToRun;
     }
     
+    /**
+    *
+    * Method to retrieve the HorseJockey winner.
+    */
     public int getWinner(){
         return this.winner;
     }
     
+    /**
+    *
+    * Method to retrieve the number of HorseJockey participating in the race.
+    */
     public int getNRunningHorses(){
         return this.nHorsesToRun;
     }
     
     /* condition states */
     /* Racing Track */
+
+    /**
+    *
+    * Method to retrieve the status of the start of the race.
+    */
     protected synchronized boolean getStartTheRace(){
         return this.startTheRace;
     }
     
+    /**
+    *
+    * Method to set the variable of start the race.
+    * @param startTheRace The value of the variable to be assigned.
+    */
     protected synchronized void setStartTheRace(boolean startTheRace){
         this.startTheRace = startTheRace;
     }
+
     /* Stable */
+    /**
+    *
+    * Method to retrieve the waked horses variable.
+    */
     protected synchronized int getWakedHorsesToPaddock(){
         return this.wakedHorsesToPaddock;
     }
     
+    /**
+    *
+    * Method to add waked horses.
+    */
     protected synchronized void addWakedHorsesToPaddock(){
         this.wakedHorsesToPaddock = this.wakedHorsesToPaddock + 1;
     }
     
+    /**
+    *
+    * Method to get the variable of announcing next race.
+    */
     protected synchronized boolean getAnnuncedNextRace(){
         return this.annuncedNextRace;
     }
     
+    /**
+    *
+    * Method to set the variable of announcing next race.
+    * @param annuncedNextRace The value of the variable to be assigned.
+    */
     protected synchronized void setAnnuncedNextRace(boolean annuncedNextRace){
         this.annuncedNextRace = annuncedNextRace;
     }
+
     /* Paddock */
+    /**
+    *
+    * Method to verify if all Spectators reached the Paddock.
+    */
     protected synchronized boolean allSpectatorsArrivedAtPaddock(){
         return this.nSpectatorsArrivedAtPaddock == Races.N_OF_SPECTATORS;
     }
     
+    /**
+    *
+    * Method to add the variable of the Spectators that has arrived to Paddock.
+    */
     protected synchronized void addNSpectatorsArrivedAtPaddock(){
         this.nSpectatorsArrivedAtPaddock = this.nSpectatorsArrivedAtPaddock + 1;
     }
     
+    /**
+    *
+    * Method to verify if all horses left the Paddock.
+    */
     protected synchronized boolean allHorseJockeyLeftThePadock(){
         return this.nHorseJockeyLeftThePadock == this.getNRunningHorses();
     }
     
+    /**
+    *
+    * Method to add the variable of horses which left the Paddock.
+    */
     protected synchronized void addNHorseJockeyLeftThePadock(){
         this.nHorseJockeyLeftThePadock = this.nHorseJockeyLeftThePadock + 1;
     }
     
     /* Control Centre */
+    /**
+    *
+    * Method to set the variable of report results.
+    * @param set The value of the variable to be assigned.
+    */
     protected synchronized void setReportResults(boolean set){
         this.reportResults = set;
     }
     
+    /**
+    *
+    * Method to retrieve the variable of report results.
+    */
     protected synchronized boolean getReportResults(){
         return this.reportResults;
     }
     
+    /**
+    *
+    * Method to set the variable of proceed to paddock.
+    * @param set The value of the variable to be assigned.
+    */
     protected synchronized void setProceedToPaddock(boolean set){
         this.proceedToPaddock = set;
     }
     
+    /**
+    *
+    * Method to retrieve the variable of proceed to paddock.
+    */
     protected synchronized boolean getProceedToPaddock(){
         return this.proceedToPaddock;
     }
     
+    /**
+    *
+    * Method to verify if all horses are in paddock.
+    */
     protected synchronized boolean allNHorsesInPaddock(){       
         return this.nHorsesInPaddock == this.getNRunningHorses();
     }
     
+    /**
+    *
+    * Method to add the variable of horses in paddock.
+    */
     protected synchronized void addNHorsesInPaddock(){
         this.nHorsesInPaddock = this.nHorsesInPaddock + 1;
     }
     
     /* Betting Centre */
+    /**
+    *
+    * Method to retrieve the bet of the spectator.
+    * @param i The id of the spectator.
+    */
     protected synchronized boolean getBetsOfSpectator(int i){
         return this.betsOfSpectators[i];
     }
     
+    /**
+    *
+    * Method to set the bet of the spectator.
+    * @param i The id of the spectator.
+    */
     protected synchronized void setBetsOfSpectator(int i, boolean set){
         this.betsOfSpectators[i] = set;
     }
     
+    /**
+    *
+    * Method to verify if a given bet was accepted by the broker.
+    * @param i The id of the spectator.
+    */
     protected synchronized boolean getAcceptedTheBet(int i){
         return this.acceptedTheBet[i];
     }
     
+    /**
+    *
+    * Method to accept the bet by the broker.
+    * @param i The id of the spectator.
+    * @param set The value of the variable to be assigned.
+    */
     protected synchronized void setAcceptedTheBet(int i, boolean set){
         this.acceptedTheBet[i] = set;
     }
     
+    /**
+    *
+    * Method to retrieve the variable of waiting to be paid.
+    * @param i The id of the spectator.
+    */
     protected synchronized boolean getWaitingToBePaidSpectators(int i){
         return this.waitingToBePaidSpectators[i];
     }
     
+    /**
+    *
+    * Method to set the variable of waiting to be paid.
+    * @param i The id of the spectator.
+    * @param set The value of the variable to be assigned.
+    */
     protected synchronized void setWaitingToBePaidSpectators(int i, boolean set){
         this.waitingToBePaidSpectators[i] = set;
     }
     
+    /**
+    *
+    * Method to retrieve the variable of get paid.
+    * @param i The id of the spectator.
+    */
     protected synchronized boolean getPaidSpectators(int i){
         return this.paidSpectators[i];
     }
     
+    /**
+    *
+    * Method to set the variable of get paid.
+    * @param i The id of the spectator.
+    * @param set The value of the variable to be assigned.
+    */
     protected synchronized void setPaidSpectators(int i, boolean set){
         this.paidSpectators[i] = set;
     }

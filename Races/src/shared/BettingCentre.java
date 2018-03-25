@@ -7,13 +7,17 @@ import entities.SpectatorsState;
 import GeneralRepository.Races;
 
 /**
- *
- * @author Daniela
+ * This file contains the shared memory region Betting Centre.
+ * @author Daniela Simões, 76771
  */
 public class BettingCentre implements IBettingCentre {
     
     private Races races = Races.getInstace();
     
+    /**
+    *
+    * Method to the broker accept the bets of the spectators.
+    */
     @Override
     public synchronized void acceptTheBets(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.WAITING_FOR_BETS);
@@ -40,6 +44,10 @@ public class BettingCentre implements IBettingCentre {
         }
     };
     
+    /**
+    *
+    * Method to get the broker to honour the winners of the bets.
+    */
     @Override
     public synchronized void honourTheBets(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SETTLING_ACCOUNTS);
@@ -64,6 +72,10 @@ public class BettingCentre implements IBettingCentre {
         }
     };
     
+    /**
+    *
+    * Method to verify if are spectators who have won the bets.
+    */
     @Override
     public synchronized boolean areThereAnyWinners(){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
@@ -71,6 +83,10 @@ public class BettingCentre implements IBettingCentre {
         return false;
     };
     
+    /**
+    *
+    * Method to allow the spectator to place a bet.
+    */
     @Override
     public synchronized void placeABet(){
         Spectators spectator = ((Spectators)Thread.currentThread());
@@ -91,6 +107,10 @@ public class BettingCentre implements IBettingCentre {
         }
     };
     
+    /**
+    *
+    * Method to the spectator go collect the gains and increase the bank.
+    */
     @Override
     public synchronized void goCollectTheGains(){
         Spectators spectator = ((Spectators)Thread.currentThread());

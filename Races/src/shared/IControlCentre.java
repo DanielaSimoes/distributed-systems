@@ -1,8 +1,8 @@
 package shared;
 
 /**
- *
- * @author Daniela
+ * This file contains the Interface implemented by the shared memory region Control Centre.
+ * @author Daniela Simões, 76771
  */
 public interface IControlCentre {
     public void reportResults();

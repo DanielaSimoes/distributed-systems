@@ -1,15 +1,15 @@
 package entities;
 
 /**
- *
- * @author Daniela
+ * This file contains an enum with the lifecycle states of the HorseJockey.
+ * @author Daniela Simões, 76771
  */
 public enum HorseJockeyState {
     
-    /*
-        AT THE STABLE = ATS
+    /**
+    * AT THE STABLE = ATS
     */
-    
+            
     AT_THE_STABLE{
         @Override
         public String toString(){
@@ -17,10 +17,10 @@ public enum HorseJockeyState {
         }
     },
     
-    /*
-        AT THE PADDOCK = ATP
+    /**
+    * AT THE PADDOCK = ATP
     */
-    
+           
     AT_THE_PADDOCK{
         @Override
         public String toString(){
@@ -28,10 +28,10 @@ public enum HorseJockeyState {
         }
     },
     
-    /*
-        AT THE START LINE = ATSL
+    /**
+    * AT THE START LINE = ATSL
     */
-    
+            
     AT_THE_START_LINE{
         @Override
         public String toString(){
@@ -39,10 +39,10 @@ public enum HorseJockeyState {
         }
     },
     
-    /*
-        RUNNNING = R
+    /**
+    * RUNNNING = R
     */
-    
+            
     RUNNNING{
         @Override
         public String toString(){
@@ -50,10 +50,10 @@ public enum HorseJockeyState {
         }
     },
     
-    /*
-        AT THE FINISH LINE = ATFL
+    /**
+    * AT THE FINISH LINE = ATFL
     */
-    
+            
     AT_THE_FINISH_LINE{
         @Override
         public String toString(){
