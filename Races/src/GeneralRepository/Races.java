@@ -38,7 +38,7 @@ public class Races {
     /**
      * Size of racing track.
      */
-    public static final int SIZE_OF_RACING_TRACK = 4;
+    public static final int SIZE_OF_RACING_TRACK = 20;
 
     /**
      * Horse maxium step size.

@@ -189,8 +189,11 @@ public class Race {
         
         Spectators spectator = ((Spectators)Thread.currentThread());
         
+        // get initial bank and divide with the maximum amount possible to bet
         double perception = spectator.getInitialBet() / Races.MAX_SPECTATOR_BET;
+        // the capacity of the user compared to the initial bank
         double capacity = spectator.getMoneyToBet() / spectator.getInitialBet();
+        // 
         double peek = perception * capacity * 100;
         
         double interval = 100 / this.nHorsesToRun;
@@ -303,14 +306,15 @@ public class Race {
                 winners.add(horseId);
             }else{
                 double pos_winner = this.horsesPosition.get(this.winners.getFirst());
+                double iteration_winner = this.horseIterations[this.winners.getFirst()];
                 
-                if(this.horsesPosition.get(horseId)>pos_winner){
+                if(this.horsesPosition.get(horseId)>pos_winner && this.horseIterations[horseId] <= iteration_winner){
                     while(!this.winners.isEmpty()){
                         this.winners.remove();
                     }
                     
                     this.winners.add(horseId);
-                }else if(this.horsesPosition.get(horseId)==pos_winner){
+                }else if(this.horsesPosition.get(horseId)==pos_winner && this.horseIterations[horseId] <= iteration_winner){
                     this.winners.add(horseId);
                 }
             }
@@ -626,7 +630,6 @@ public class Race {
                 allSpectatorsBetted = false;
                 synchronized (this.addedBet) {
                     this.betsOfSpectators.add(i);
-                    //System.out.println("Spectator Placed Bet S" + spectator.getSpectatorId());
                     this.addedBet.notifyAll();
                 }
             }
