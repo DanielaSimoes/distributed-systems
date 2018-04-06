@@ -212,7 +212,7 @@ public class Race {
             i++;
         }
         
-        double amountToBet = spectator.getMoneyToBet()*0.1;
+        int amountToBet = (int)(spectator.getMoneyToBet()*0.1);
         
         spectator.subtractMoneyToBet(amountToBet);
         
@@ -700,7 +700,7 @@ public class Race {
             for (Integer horseId : this.winners) {
                 for(Bet bet : this.bets){
                     if(bet.getHorseId() == horseId && bet.getSpectatorId()==spectator.getSpectatorId()){
-                        spectator.addMoneyToBet(bet.getAmount()*bet.getOdd());
+                        spectator.addMoneyToBet((int)(bet.getAmount()*bet.getOdd()));
                     }
                 }
             }

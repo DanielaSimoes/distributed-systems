@@ -35,7 +35,7 @@ public class Log {
     
     private static PrintWriter pw;
     
-    private double[] spectatorAmounts;
+    private int[] spectatorAmounts;
     
     private Log(String filename){
         if(filename.length()==0){
@@ -44,7 +44,7 @@ public class Log {
             filename = "AfternoonAtTheRaces.log";// + date.format(today) + ".log";
         }
         this.log = new File(filename);
-        this.spectatorAmounts = new double[Races.N_OF_SPECTATORS];
+        this.spectatorAmounts = new int[Races.N_OF_SPECTATORS];
         
         for (int i=0; i<Races.N_OF_SPECTATORS; i++){
             this.spectatorAmounts[i] = 0;
@@ -118,7 +118,7 @@ public class Log {
         String head = String.format("%4d %3.0f ", raceNumber+1, races.getCurrentRaceDistance());
 
         for(int i=0; i<Races.N_OF_SPECTATORS; i++){
-            head += String.format(" %3d %4.0f", this.races.getSpectatorBet(i).getHorseId(), this.races.getSpectatorBet(i).getAmount());
+            head += String.format(" %3d %4d", this.races.getSpectatorBet(i).getHorseId(), this.races.getSpectatorBet(i).getAmount());
         }
 
         head += " ";
@@ -143,7 +143,7 @@ public class Log {
         String head = "  " + this.races.getBrokerState() + " ";
 
         for(int i=0; i<Races.N_OF_SPECTATORS; i++){
-            head += " " + this.races.getSpectatorsState(i) + "  " + String.format("%3.0f", this.spectatorAmounts[i]) + " ";
+            head += " " + this.races.getSpectatorsState(i) + "  " + String.format("%3d", this.spectatorAmounts[i]) + " ";
         }
 
         head += (raceNumber+1);
@@ -166,7 +166,7 @@ public class Log {
      * @param spectatorId
      * @param amount
      */
-    public void setSpectatorAmount(int spectatorId, double amount){
+    public void setSpectatorAmount(int spectatorId, int amount){
         this.spectatorAmounts[spectatorId] = amount;
     }
     

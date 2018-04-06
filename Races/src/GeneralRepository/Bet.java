@@ -7,7 +7,7 @@ package GeneralRepository;
 public class Bet {
     
     private int horseId;
-    private double amount;
+    private int amount;
     private int spectatorId;
     private double odd;
     
@@ -18,7 +18,7 @@ public class Bet {
      * @param spectatorId
      * @param odd
      */
-    public Bet(int horseId, double amount, int spectatorId, double odd){
+    public Bet(int horseId, int amount, int spectatorId, double odd){
         this.horseId = horseId;
         this.amount = amount;
         this.spectatorId = spectatorId;
@@ -37,7 +37,7 @@ public class Bet {
      * Method to return the amount of the bet.
      * @return
      */
-    public double getAmount(){
+    public int getAmount(){
         return this.amount;
     }
     

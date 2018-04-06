@@ -10,8 +10,8 @@ import GeneralRepository.Races;
 public class Spectators extends Thread implements IEntity{
     
     private SpectatorsState state;
-    private double moneyToBet;
-    private double initialMoney;
+    private int moneyToBet;
+    private int initialMoney;
     private final Log log;
     private final Races races = Races.getInstace();
     
@@ -34,7 +34,7 @@ public class Spectators extends Thread implements IEntity{
     * @param moneyToBet The money the spectator has to bet.
     * @param id The ID of the spectator.
     */
-    public Spectators(shared.IControlCentre cc, shared.IBettingCentre bc, shared.IPaddock paddock, double moneyToBet, int id){
+    public Spectators(shared.IControlCentre cc, shared.IBettingCentre bc, shared.IPaddock paddock, int moneyToBet, int id){
         this.id = id;
         this.cc = cc;
         this.bc = bc;
@@ -167,7 +167,7 @@ public class Spectators extends Thread implements IEntity{
     *
     * Method to subtract spectators money in case of loss.
     */
-    public void subtractMoneyToBet(double money){
+    public void subtractMoneyToBet(int money){
         this.moneyToBet -= money;
         this.log.setSpectatorAmount(id, moneyToBet);
     }
@@ -176,7 +176,7 @@ public class Spectators extends Thread implements IEntity{
     *
     * Method to add spectators money in case of winning.
     */
-    public void addMoneyToBet(double money){
+    public void addMoneyToBet(int money){
         this.moneyToBet += money;
         this.log.setSpectatorAmount(id, moneyToBet);
     }
