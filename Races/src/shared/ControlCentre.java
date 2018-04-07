@@ -51,6 +51,7 @@ public class ControlCentre implements IControlCentre {
     */
     @Override
     public synchronized void waitForNextRace(){
+        ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WAITING_FOR_A_RACE_TO_START);
         while(!this.races.getProceedToPaddock() || this.races.horsesFinished()){
             try{
                 wait();

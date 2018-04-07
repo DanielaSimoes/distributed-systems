@@ -70,7 +70,7 @@ public class Race {
     private final HashMap<Integer, HorseJockey> horsesRunning;
     private final HashMap<Integer, Integer> horsesPosition;
     private final HashMap<Integer, Boolean> horsesFinished;
-    private final Map<Double, Integer> horsesOdds;
+    private final Map<Double, LinkedList<Integer>> horsesOdds;
     
     private int nHorsesFinished = 0;
     private final int[] selectedHorses;
@@ -159,22 +159,30 @@ public class Race {
      * Method to generate the odds - each bet is generated considering the maximum step size of each horse, the less the step size, the bigger the odd.
      */
     public synchronized void generateOdds(){
+        int horseJockeyStepSizeSum = 0;
+        
+        for(Entry<?, ?> e: horsesRunning.entrySet()){
+            horseJockeyStepSizeSum += ((HorseJockey)e.getValue()).getStepSize();
+        }
+        
+        
         for(Entry<?, ?> e: horsesRunning.entrySet()){
             int stepSize = ((HorseJockey)e.getValue()).getStepSize();
             int horseJockeyId = ((HorseJockey)e.getValue()).getHorseId();
             
-            // max = 5
-            // step = 5
-            // max-step*0,75=1,25
-            double percent = 0.75;
-            double odd = Races.HORSE_MAX_STEP_SIZE-stepSize*percent;
+            double odd = 1.0/(stepSize*1.0/horseJockeyStepSizeSum);
             
-            while(this.horsesOdds.containsKey(odd)){
-                percent += 0.01;
-                odd = Races.HORSE_MAX_STEP_SIZE-stepSize*percent;
+            LinkedList<Integer> horseJockeyIds;
+            
+            if(this.horsesOdds.containsKey(odd)){
+                horseJockeyIds = this.horsesOdds.get(odd);
+            }else{
+                horseJockeyIds = new LinkedList<>();
             }
             
-            this.horsesOdds.put(odd, horseJockeyId);
+            horseJockeyIds.add(horseJockeyId);
+            
+            this.horsesOdds.put(odd, horseJockeyIds);
         }
     }
     
@@ -204,10 +212,19 @@ public class Race {
         double odd = 1.0;
         int horseId = 0;
         
-        for(Map.Entry<Double, Integer> entry : this.horsesOdds.entrySet()) {
+        for(Map.Entry<Double, LinkedList<Integer>> entry : this.horsesOdds.entrySet()) {
             if(i==choosen_risk_interval){
                 odd = (double)entry.getKey();
-                horseId = (int)entry.getValue();
+                
+                // idxMin = 0
+                // idxMax = linkedlist size
+                LinkedList<Integer> horseJockeyIds = ((LinkedList<Integer>)entry.getValue());
+                
+                int idxMin = 0;
+                int idxMax = horseJockeyIds.size()-1;
+                int idx = (int) (Math.random() * (idxMax - idxMin) + idxMin);
+                        
+                horseId = ((LinkedList<Integer>)entry.getValue()).get(idx);
             }
             i++;
         }
@@ -239,9 +256,14 @@ public class Race {
      * @return
      */
     public double getHorseOdd(int horseId){
-        for(Map.Entry<Double, Integer> entry : this.horsesOdds.entrySet()) {
-            if((int)entry.getValue()==horseId){
-                return (double)entry.getKey();
+        for(Map.Entry<Double, LinkedList<Integer>> entry : this.horsesOdds.entrySet()) {
+            double odd = (double)entry.getKey();
+            LinkedList<Integer> horseJockeyIds = (LinkedList<Integer>)entry.getValue();
+            
+            for(Integer horseJockeyId : horseJockeyIds){
+                if(horseJockeyId==horseId){
+                    return odd;
+                }
             }
         }
         return 0.0;
