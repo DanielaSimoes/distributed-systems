@@ -43,7 +43,7 @@ public class Races {
     /**
      * Horse maxium step size.
      */
-    public static final int HORSE_MAX_STEP_SIZE = 5;
+    public static final int HORSE_MAX_STEP_SIZE = 8;
 
     /**
      * Maximum ammount each spectator can bet.
@@ -56,7 +56,7 @@ public class Races {
     private final HashMap<Integer, Integer> spectatorAmmount;
     
     private final HashMap<Integer, HorseJockeyState> horseJockeysState;
-    private final HashMap<Integer, Double> horseJockeyStepSize;
+    private final HashMap<Integer, Integer> horseJockeyStepSize;
     
     private BrokerState brokerState;
     private boolean allInitStatesRegistered = false;
@@ -155,7 +155,7 @@ public class Races {
      * @param id
      * @param stepSize
      */
-    public void setHorseJockeyStepSize(int id, double stepSize){
+    public void setHorseJockeyStepSize(int id, int stepSize){
         this.horseJockeyStepSize.put(id, stepSize);
     }
     
@@ -164,7 +164,7 @@ public class Races {
      * @param id
      * @return
      */
-    public double getHorseJockeyStepSize(int id){
+    public int getHorseJockeyStepSize(int id){
         return this.horseJockeyStepSize.get(id);
     }
     

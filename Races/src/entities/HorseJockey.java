@@ -24,7 +24,7 @@ public class HorseJockey extends Thread implements IEntity{
     private boolean entertainTheGuests;
     
     private int raceId = 0;
-    private final double stepSize;
+    private final int stepSize;
     
     /**
     *
@@ -36,7 +36,7 @@ public class HorseJockey extends Thread implements IEntity{
     * @param stepSize The step size of the horse.
     * @param id The ID of the horse.
     */
-    public HorseJockey(shared.IStable s, shared.IControlCentre cc, shared.IPaddock paddock, shared.IRacingTrack rt, double stepSize, int id){
+    public HorseJockey(shared.IStable s, shared.IControlCentre cc, shared.IPaddock paddock, shared.IRacingTrack rt, int stepSize, int id){
         this.stable = s;
         this.cc = cc;
         this.paddock = paddock;
@@ -158,7 +158,7 @@ public class HorseJockey extends Thread implements IEntity{
     * Method to get the HorseJockey step size.
     * @return 
     */
-    public double getStepSize(){
+    public int getStepSize(){
         return this.stepSize;
     }
 }

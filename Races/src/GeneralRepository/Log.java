@@ -149,7 +149,7 @@ public class Log {
         head += (raceNumber+1);
 
         for(int i=0; i<Races.N_OF_HORSES; i++){
-            head += "  " + this.races.getHorseJockeyState(i) + " " + String.format("%3.2f", this.races.getHorseJockeyStepSize(i));
+            head += "  " + this.races.getHorseJockeyState(i) + " " + String.format("%3d", this.races.getHorseJockeyStepSize(i));
         }
 
         if(head.contains("null")){

@@ -68,7 +68,7 @@ public class Race {
     private final int id;
     
     private final HashMap<Integer, HorseJockey> horsesRunning;
-    private final HashMap<Integer, Double> horsesPosition;
+    private final HashMap<Integer, Integer> horsesPosition;
     private final HashMap<Integer, Boolean> horsesFinished;
     private final Map<Double, Integer> horsesOdds;
     
@@ -146,7 +146,7 @@ public class Race {
         for(int i=0; i<this.nHorsesToRun; i++){
             if(this.selectedHorses[i]==horseJockey.getHorseId()){
                 this.horsesRunning.put(horseJockey.getHorseId(), horseJockey);
-                this.horsesPosition.put(horseJockey.getHorseId(), 0.0);
+                this.horsesPosition.put(horseJockey.getHorseId(), 0);
                 this.horsesFinished.put(horseJockey.getHorseId(), false);
                 return true;
             }
@@ -160,7 +160,7 @@ public class Race {
      */
     public synchronized void generateOdds(){
         for(Entry<?, ?> e: horsesRunning.entrySet()){
-            double stepSize = ((HorseJockey)e.getValue()).getStepSize();
+            int stepSize = ((HorseJockey)e.getValue()).getStepSize();
             int horseJockeyId = ((HorseJockey)e.getValue()).getHorseId();
             
             // max = 5
@@ -293,10 +293,10 @@ public class Race {
      * @param horseId
     */
     public void makeAMove(int horseId){
-        double start = 0;
-        double end = this.horsesRunning.get(horseId).getStepSize();
+        int start = 1;
+        int end = this.horsesRunning.get(horseId).getStepSize();
         double random = new Random().nextDouble();
-        double result = start + (random * (end - start));
+        int result = (int)(start + (random * (end - start)));
 
         this.horsesPosition.put(horseId, this.horsesPosition.get(horseId)+result);
 
@@ -362,13 +362,13 @@ public class Race {
         int pos = 0;
         
         if(this.horsesFinished()){
-            Stream<Map.Entry<Integer, Double>> entries = this.horsesPosition.entrySet().stream()
+            Stream<Map.Entry<Integer, Integer>> entries = this.horsesPosition.entrySet().stream()
                 .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()));
             
-            Iterator<Map.Entry<Integer, Double>> it = entries.iterator();
+            Iterator<Map.Entry<Integer, Integer>> it = entries.iterator();
             
             while (it.hasNext()) {
-                Map.Entry<Integer, Double> pair = it.next();
+                Map.Entry<Integer, Integer> pair = it.next();
                 
                 if(pair.getKey()==horseId){
                     return pos;
