@@ -23,12 +23,12 @@ public class Races {
     /**
      * Number of races.
      */
-    public static final int N_OF_RACES = 5;
+    public static final int N_OF_RACES = 2;
 
     /**
      * Number of horses.
      */
-    public static final int N_OF_HORSES = 4;
+    public static final int N_OF_HORSES = 8;
 
     /**
      * Number os spectators.
@@ -58,6 +58,7 @@ public class Races {
     private final HashMap<Integer, HorseJockeyState> horseJockeysState;
     private final HashMap<Integer, Integer> horseJockeyStepSize;
     
+    private final LinkedList<Integer> horseJockeySelected;
     private BrokerState brokerState;
     private boolean allInitStatesRegistered = false;
     
@@ -77,10 +78,11 @@ public class Races {
         this.horseJockeyStepSize = new HashMap<>();
         this.races = new Race[N_OF_RACES];
         
-        for(int i=0; i<N_OF_RACES; i++){
-            this.races[i] = new Race(i);
-        }
+        this.horseJockeySelected = new LinkedList<>();
         
+        for(int i=0; i<N_OF_RACES; i++){
+            this.races[i] = new Race(i, this.horseJockeySelected);
+        }
     }
     
     /**

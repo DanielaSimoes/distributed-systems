@@ -84,12 +84,12 @@ public class Race {
     * Race Constructor - this constructor inits the horses positions and select the horses that will participate in the race.
      * @param id - race id
     */
-    public Race(int id){
+    public Race(int id, LinkedList<Integer> horseJockeySelected){
         this.id = id;
         this.trackSize = Races.SIZE_OF_RACING_TRACK;
         
         // number of horses to run is between 2 and N of Horses available to run
-        this.nHorsesToRun = (int)(2 + (new Random().nextDouble() * (Races.N_OF_HORSES - 2)));
+        this.nHorsesToRun = 4;
         
         this.horsesRunning = new HashMap<>();
         this.horsesPosition = new HashMap<>();
@@ -101,20 +101,27 @@ public class Race {
         for(int i=0; i<this.nHorsesToRun; i++){
             boolean repeated;
             int selectedId;
+            this.selectedHorses[i] = -1;
             
             do{
                 repeated = false;
-                selectedId = (int)(new Random().nextDouble() * Races.N_OF_HORSES); 
+                selectedId = (int) (Math.random() * (Races.N_OF_HORSES));
                 
-                for(int j=0; j<this.nHorsesToRun; j++){
-                    if(this.selectedHorses[j]==selectedId){
-                        repeated = true;
-                        break;
-                    }
+                if(horseJockeySelected.contains(selectedId)){
+                    repeated = true;
+                }else{
+                    for(int j=0; j<this.nHorsesToRun; j++){
+                        if(this.selectedHorses[j]==selectedId){
+                            repeated = true;
+                            break;
+                        }
+                    }   
                 }
+                
             }while(repeated);
             
             this.selectedHorses[i] = selectedId;
+            horseJockeySelected.add(selectedId);
         }
         
         for(int i = 0; i < Races.N_OF_SPECTATORS; i++){
@@ -148,6 +155,16 @@ public class Race {
                 this.horsesRunning.put(horseJockey.getHorseId(), horseJockey);
                 this.horsesPosition.put(horseJockey.getHorseId(), 0);
                 this.horsesFinished.put(horseJockey.getHorseId(), false);
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean horseHasBeenSelectedToRace(int horseJockeyId){
+        for(int i=0; i<this.selectedHorses.length; i++){
+            if(this.selectedHorses[i]==horseJockeyId){
                 return true;
             }
         }
