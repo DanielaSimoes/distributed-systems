@@ -29,6 +29,11 @@ public class Races {
      * Number of horses.
      */
     public static final int N_OF_HORSES = 8;
+    
+    /**
+     * Number of horses.
+     */
+    public static final int N_OF_HORSES_TO_RUN = 4;
 
     /**
      * Number os spectators.
@@ -144,12 +149,11 @@ public class Races {
         return this.races[raceNumber].horseHasBeenSelectedToRace(horseJockey);
     }
     
-    /**
-     *
-     */
-    public synchronized void generateOdds(){
+    
+    public boolean horseHasBeenSelectedToRace(int horseJockey){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
-        this.races[raceNumber].generateOdds();
+        
+        return this.races[raceNumber].horseHasBeenSelectedToRace(horseJockey);
     }
     
     /**
@@ -159,6 +163,12 @@ public class Races {
      */
     public void setHorseJockeyStepSize(int id, int stepSize){
         this.horseJockeyStepSize.put(id, stepSize);
+        
+        if(this.horseJockeyStepSize.size()==Races.N_OF_HORSES){
+            for(int i=0; i<this.races.length; i++){
+                this.races[i].generateOdds(this.horseJockeyStepSize);
+            }
+        }
     }
     
     /**
@@ -354,7 +364,7 @@ public class Races {
      *
      * @return
      */
-    public synchronized double getCurrentRaceDistance(){
+    public synchronized int getCurrentRaceDistance(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         return this.races[raceNumber].getCurrentRaceDistance();
     }
@@ -666,7 +676,7 @@ public class Races {
      * @param horseId
      * @return
      */
-    public double getHorsePosition(int horseId){
+    public int getHorsePosition(int horseId){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
         return this.races[raceNumber].getHorsePosition(horseId);

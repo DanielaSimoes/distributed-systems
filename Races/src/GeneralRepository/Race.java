@@ -75,8 +75,7 @@ public class Race {
     private int nHorsesFinished = 0;
     private final int[] selectedHorses;
     
-    private final double trackSize;
-    private final int nHorsesToRun;
+    private final int trackSize;
     private int horseToMove = 0;
    
    /**
@@ -88,17 +87,14 @@ public class Race {
         this.id = id;
         this.trackSize = Races.SIZE_OF_RACING_TRACK;
         
-        // number of horses to run is between 2 and N of Horses available to run
-        this.nHorsesToRun = 4;
-        
         this.horsesRunning = new HashMap<>();
         this.horsesPosition = new HashMap<>();
         this.horsesFinished = new HashMap<>();
         this.horsesOdds = new TreeMap<>();
         
-        this.selectedHorses = new int[this.nHorsesToRun];
+        this.selectedHorses = new int[Races.N_OF_HORSES_TO_RUN];
         
-        for(int i=0; i<this.nHorsesToRun; i++){
+        for(int i=0; i<Races.N_OF_HORSES_TO_RUN; i++){
             boolean repeated;
             int selectedId;
             this.selectedHorses[i] = -1;
@@ -110,7 +106,7 @@ public class Race {
                 if(horseJockeySelected.contains(selectedId)){
                     repeated = true;
                 }else{
-                    for(int j=0; j<this.nHorsesToRun; j++){
+                    for(int j=0; j<Races.N_OF_HORSES_TO_RUN; j++){
                         if(this.selectedHorses[j]==selectedId){
                             repeated = true;
                             break;
@@ -150,7 +146,7 @@ public class Race {
      * @return if the horse has been selected to run and init its position.
     */
     public boolean horseHasBeenSelectedToRace(HorseJockey horseJockey){
-        for(int i=0; i<this.nHorsesToRun; i++){
+        for(int i=0; i<Races.N_OF_HORSES_TO_RUN; i++){
             if(this.selectedHorses[i]==horseJockey.getHorseId()){
                 this.horsesRunning.put(horseJockey.getHorseId(), horseJockey);
                 this.horsesPosition.put(horseJockey.getHorseId(), 0);
@@ -174,18 +170,18 @@ public class Race {
     
     /**
      * Method to generate the odds - each bet is generated considering the maximum step size of each horse, the less the step size, the bigger the odd.
+     * @param horseJockeyStepSize
      */
-    public synchronized void generateOdds(){
+    public synchronized void generateOdds(HashMap<Integer, Integer> horseJockeyStepSize){
         int horseJockeyStepSizeSum = 0;
         
-        for(Entry<?, ?> e: horsesRunning.entrySet()){
-            horseJockeyStepSizeSum += ((HorseJockey)e.getValue()).getStepSize();
+        for(int i=0; i<this.selectedHorses.length; i++){
+            horseJockeyStepSizeSum += horseJockeyStepSize.get(this.selectedHorses[i]);
         }
         
-        
-        for(Entry<?, ?> e: horsesRunning.entrySet()){
-            int stepSize = ((HorseJockey)e.getValue()).getStepSize();
-            int horseJockeyId = ((HorseJockey)e.getValue()).getHorseId();
+        for(int i=0; i<this.selectedHorses.length; i++){
+            int stepSize = horseJockeyStepSize.get(this.selectedHorses[i]);
+            int horseJockeyId = this.selectedHorses[i];
             
             double odd = 1.0/(stepSize*1.0/horseJockeyStepSizeSum);
             
@@ -208,10 +204,6 @@ public class Race {
      * @return
      */
     public synchronized Bet chooseBet(){
-        if(this.horsesOdds.size()!=this.nHorsesToRun){
-            this.generateOdds();
-        }
-        
         Spectators spectator = ((Spectators)Thread.currentThread());
         
         // get initial bank and divide with the maximum amount possible to bet
@@ -221,7 +213,7 @@ public class Race {
         // 
         double peek = perception * capacity * 100;
         
-        double interval = 100 / this.nHorsesToRun;
+        double interval = 100 / Races.N_OF_HORSES_TO_RUN;
         
         int choosen_risk_interval = Math.round((float)(peek / interval))-1;
         
@@ -283,7 +275,7 @@ public class Race {
                 }
             }
         }
-        return 0.0;
+        throw new java.lang.NullPointerException();
     }
     
     /**
@@ -362,10 +354,10 @@ public class Race {
             this.nHorsesFinished += 1;
         }
         
-        horseToMove = (horseToMove + 1) % this.nHorsesToRun;
+        horseToMove = (horseToMove + 1) % Races.N_OF_HORSES_TO_RUN;
 
         while(this.horsesFinished.get(this.selectedHorses[horseToMove]) && !this.horsesFinished()){
-            horseToMove = (horseToMove + 1) % this.nHorsesToRun;
+            horseToMove = (horseToMove + 1) % Races.N_OF_HORSES_TO_RUN;
         }
         
         this.horseIterations[horseId]++;
@@ -385,9 +377,9 @@ public class Race {
      * @param horseId
      * @return
      */
-    public double getHorsePosition(int horseId){
+    public int getHorsePosition(int horseId){
         if(!this.horsesPosition.containsKey(horseId)){
-            return 0.0;
+            return 0;
         }
         return this.horsesPosition.get(horseId);
     }
@@ -436,7 +428,7 @@ public class Race {
      * @return 
     */
     public boolean horsesFinished(){
-        return this.nHorsesFinished==this.nHorsesToRun;
+        return this.nHorsesFinished==Races.N_OF_HORSES_TO_RUN;
     }
     
     /**
@@ -455,14 +447,14 @@ public class Race {
      * @return 
     */
     public int getNRunningHorses(){
-        return this.nHorsesToRun;
+        return Races.N_OF_HORSES_TO_RUN;
     }
     
     /**
      * Method to retrieve the racing track size.
      * @return
      */
-    public double getCurrentRaceDistance(){
+    public int getCurrentRaceDistance(){
         return this.trackSize;
     }
     

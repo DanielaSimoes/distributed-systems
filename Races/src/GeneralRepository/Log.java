@@ -34,6 +34,7 @@ public class Log {
     private final File log;
     
     private static PrintWriter pw;
+    private boolean event_opened = false;
     
     private int[] spectatorAmounts;
     
@@ -80,13 +81,13 @@ public class Log {
             
             head += 0+1;
             
-            for(int i=0; i<Races.N_OF_HORSES; i++){
+            for(int i=0; i<Races.N_OF_HORSES_TO_RUN; i++){
                 head += "  St" + Integer.toString(i+1) + " Len" + Integer.toString(i+1);
             }
             
             head += "\n\t\t\t\t\t\t Race RN Status \n";
             
-            head += " RN DIST ";
+            head += "  RN Dist ";
             
             for(int i=0; i<Races.N_OF_SPECTATORS; i++){
                 head += " BS" + Integer.toString(i+1) + "  BA" + Integer.toString(i+1);
@@ -94,8 +95,8 @@ public class Log {
             
             head += " ";
             
-            for(int i=0; i<Races.N_OF_HORSES; i++){
-                head += " Od" + Integer.toString(i+1) + " N" + Integer.toString(i+1)  + " Ps" + Integer.toString(i+1)  + " SD" + Integer.toString(i+1);
+            for(int i=0; i<Races.N_OF_HORSES_TO_RUN; i++){
+                head += " Od" + Integer.toString(i+1) + "  N" + Integer.toString(i+1)  + "  Ps" + Integer.toString(i+1)  + "  SD" + Integer.toString(i+1);
             }
             
             head += " ";
@@ -115,16 +116,26 @@ public class Log {
         
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         
-        String head = String.format("%4d %3.0f ", raceNumber+1, races.getCurrentRaceDistance());
+        String head = String.format("   %d  %2d  ", raceNumber+1, races.getCurrentRaceDistance());
 
         for(int i=0; i<Races.N_OF_SPECTATORS; i++){
-            head += String.format(" %3d %4d", this.races.getSpectatorBet(i).getHorseId(), this.races.getSpectatorBet(i).getAmount());
+            try{
+                head += String.format("  %d  %4d", this.races.getSpectatorBet(i).getHorseId(), this.races.getSpectatorBet(i).getAmount());
+            }catch(java.lang.NullPointerException e){
+                head += " --- ----";
+            }
         }
 
         head += " ";
 
         for(int i=0; i<Races.N_OF_HORSES; i++){
-            head += String.format(" %2.1f %d %2.2f %d", this.races.getHorseOdd(i), this.races.getHorseIteration(i), this.races.getHorsePosition(i), this.races.getStandingPosition(i));
+            if(this.races.horseHasBeenSelectedToRace(i)){
+                try{
+                    head += String.format(" %2.1f %2d   %2d    %d ", this.races.getHorseOdd(i), this.races.getHorseIteration(i), this.races.getHorsePosition(i), this.races.getStandingPosition(i));
+                }catch(java.lang.NullPointerException e){
+                    head += " ---- --  --    - ";
+                }
+            }
         }
 
         head += " ";
@@ -149,7 +160,9 @@ public class Log {
         head += (raceNumber+1);
 
         for(int i=0; i<Races.N_OF_HORSES; i++){
-            head += "  " + this.races.getHorseJockeyState(i) + " " + String.format("%3d", this.races.getHorseJockeyStepSize(i));
+            if(this.races.horseHasBeenSelectedToRace(i)){
+                head += "  " + this.races.getHorseJockeyState(i) + " " + String.format("%3d", this.races.getHorseJockeyStepSize(i));
+            }
         }
 
         if(head.contains("null")){
@@ -159,6 +172,10 @@ public class Log {
         pw.println(head);
 
         pw.flush();
+        
+        if(this.event_opened){
+            this.writeLineRace();
+        }
     }
     
     /**
@@ -178,10 +195,6 @@ public class Log {
     public synchronized void setHorseJockeyState(int id, HorseJockeyState state){
         this.races.setHorseJockeyState(id, state);
         this.writeLineStatus();
-        
-        if(this.races.getStartTheRace()){
-            this.writeLineRace();
-        }
     }
 
     /**
@@ -192,8 +205,8 @@ public class Log {
         this.races.setBrokerState(state);
         this.writeLineStatus();
         
-        if(this.races.getStartTheRace()){
-            this.writeLineRace();
+        if(state==BrokerState.OPENING_THE_EVENT){
+            event_opened = true;
         }
     }
     
@@ -205,10 +218,6 @@ public class Log {
     public synchronized void setSpectatorState(int id, SpectatorsState state){
         this.races.setSpectatorState(id, state);
         this.writeLineStatus();
-        
-        if(this.races.getStartTheRace()){
-            this.writeLineRace();
-        }
     }
 
     /**
@@ -216,10 +225,6 @@ public class Log {
      */
     public synchronized void makeAMove(){
         this.writeLineStatus();
-        
-        if(this.races.getStartTheRace()){
-            this.writeLineRace();
-        }
     }
     
 }
