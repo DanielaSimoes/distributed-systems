@@ -8,5 +8,10 @@ package communication.message;
  * @author Daniela Simões, 76771
  */
 public enum MessageType {
-    
+    /* Broker messages */
+    summonHorsesToPaddock, acceptTheBets, startTheRace, reportResults, areThereAnyWinners, honourTheBets, entertainTheGuests,
+    /* Spectators messages */
+    waitForNextRace, goCheckHorses, placeABet, goWatchTheRace, haveIWon, goCollectTheGains, relaxABit,
+    /* HorseJockey messages */
+    proceedToStable, proceedToPaddock, proceedToStartLine, makeAMove, hasFinishLineBeenCrossed,
 }
