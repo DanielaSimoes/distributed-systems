@@ -1,5 +1,5 @@
 /*
- * This file is a message wrapper.
+ * This file is a message wrapper with getters and setters.
  */
 package communication.message;
 
