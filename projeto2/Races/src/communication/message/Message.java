@@ -9,20 +9,25 @@ package communication.message;
  *
  * @author Daniela
  */
-public class Message {
+public class Message{
     
-    private Message m;
+    private String message_s;
+    private boolean message_b;
+    private int message_i;
+    private MessageType type;
+        
+    public Message(MessageType type, int message){
+        this.message_i = message;
+        this.type = type; 
+    } 
     
-    public Message(){
-    
+    public Message(MessageType type, String message){
+        this.message_s = message;
+        this.type = type; 
     }
     
-    public void setMessage(Message m){
-        this.m = m;
+    public Message(MessageType type, boolean message){
+        this.message_b = message;
+        this.type = type; 
     }
-    
-    public Message getMessage(){
-        return this.m;
-    }
-    
 }
