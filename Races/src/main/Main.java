@@ -1,7 +1,7 @@
 package main;
 
 /**
- *
+ * This file is the main file.
  * @author Daniela
  */
 
