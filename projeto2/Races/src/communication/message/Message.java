@@ -69,6 +69,10 @@ public class Message{
         this(type);
         this.map = map;
     }
+
+    public Message(MessageType mt, int raceNumber, Bet bet) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     /**
      * Return Message Type
@@ -115,6 +119,10 @@ public class Message{
     }
 
     public LinkedList<Integer> getLinkedList() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public double getDouble() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

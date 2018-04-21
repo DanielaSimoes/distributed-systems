@@ -2,6 +2,7 @@ package entities;
 
 import GeneralRepository.Log;
 import GeneralRepository.Races;
+import GeneralRepository.RacesProxy;
 
 /**
  * This file contains the code that represents the Spectator lifecycle.
@@ -13,7 +14,7 @@ public class Spectators extends Thread implements IEntity{
     private int moneyToBet;
     private int initialMoney;
     private final Log log;
-    private final Races races = Races.getInstace();
+    private final RacesProxy races;
     
     /**
      *   Shared zones in which Spectators has actions
@@ -34,7 +35,7 @@ public class Spectators extends Thread implements IEntity{
     * @param moneyToBet The money the spectator has to bet.
     * @param id The ID of the spectator.
     */
-    public Spectators(shared.IControlCentre cc, shared.IBettingCentre bc, shared.IPaddock paddock, int moneyToBet, int id){
+    public Spectators(shared.IControlCentre cc, shared.IBettingCentre bc, shared.IPaddock paddock, RacesProxy races, int moneyToBet, int id){
         this.id = id;
         this.cc = cc;
         this.bc = bc;
@@ -44,6 +45,7 @@ public class Spectators extends Thread implements IEntity{
         this.log = Log.getInstance();
         this.log.setSpectatorAmount(id, moneyToBet);
         this.relaxABit = false;
+        this.races = races;
         this.setName("Spectator " + id);
     }
     

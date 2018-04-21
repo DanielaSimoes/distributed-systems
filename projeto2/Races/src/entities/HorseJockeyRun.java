@@ -5,6 +5,7 @@
  */
 package entities;
 
+import GeneralRepository.RacesProxy;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.Proxy.ClientProxy;
@@ -20,6 +21,7 @@ public class HorseJockeyRun {
     private static RacingTrackProxy racingTrack;
     private static PaddockProxy paddock;
     private static ControlCentreProxy controlCentre;
+    private static RacesProxy races;
     
     private static int N_OF_HORSES;
 
@@ -30,7 +32,7 @@ public class HorseJockeyRun {
         ArrayList<HorseJockey> horseJockey = new ArrayList<>(N_OF_HORSES);
 
         for(int i = 0; i < N_OF_HORSES; i++){
-            horseJockey.add(new HorseJockey((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IPaddock) paddock, (shared.IRacingTrack) racingTrack, (int) (Math.random() * (proxy.HORSE_MAX_STEP_SIZE() - 1)) + 1, i));
+            horseJockey.add(new HorseJockey((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IPaddock) paddock, (shared.IRacingTrack) racingTrack, races, (int) (Math.random() * (proxy.HORSE_MAX_STEP_SIZE() - 1)) + 1, i));
         }
         
         for (HorseJockey horse : horseJockey)

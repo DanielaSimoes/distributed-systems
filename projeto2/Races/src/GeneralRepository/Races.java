@@ -57,7 +57,6 @@ public class Races {
         
     private static Races instance = null;
     
-    private final HashMap<Integer, SpectatorsState> spectatorsState;
     private final HashMap<Integer, Integer> spectatorAmmount;
     
     
@@ -76,7 +75,6 @@ public class Races {
     * Races Constructor
     */
     private Races(){
-        this.spectatorsState = new HashMap<>();
         this.spectatorAmmount = new HashMap<>();
         this.horseJockeyStepSize = new HashMap<>();
         this.races = new Race[N_OF_RACES];

@@ -5,6 +5,7 @@
  */
 package entities;
 
+import GeneralRepository.RacesProxy;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.Proxy.ClientProxy;
@@ -22,6 +23,7 @@ public class BrokerRun {
     private static PaddockProxy paddock;
     private static ControlCentreProxy controlCentre;
     private static BettingCentreProxy bettingCentre;
+    private static RacesProxy races;
     
     private static Broker broker;
     
@@ -29,7 +31,7 @@ public class BrokerRun {
         LogProxy log = new LogProxy();
         NodeSettsProxy proxy = new NodeSettsProxy();
         
-        broker = new Broker((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre, (shared.IRacingTrack) racingTrack, (shared.IPaddock) paddock);
+        broker = new Broker((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre, (shared.IRacingTrack) racingTrack, (shared.IPaddock) paddock, races);
         
         broker.start();
         

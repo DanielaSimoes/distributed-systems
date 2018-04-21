@@ -2,6 +2,7 @@ package entities;
 
 import GeneralRepository.Log;
 import GeneralRepository.Races;
+import GeneralRepository.RacesProxy;
 
 /**
  * This file contains the code that represents the broker lifecycle.
@@ -25,7 +26,7 @@ public class Broker extends Thread implements IEntity{
     private final shared.IRacingTrack rt;
     private final shared.IPaddock paddock;
     private boolean entertainTheGuests = false;
-    private final Races races = Races.getInstace();
+    private final RacesProxy races;
     private int raceId = 0;
     
     /**
@@ -37,13 +38,14 @@ public class Broker extends Thread implements IEntity{
     * @param rt The Racing Track is a shared memory region where the broker will perform actions.
     * @param paddock The Paddock is a shared memory region where the broker will perform actions.
     */
-    public Broker(shared.IStable s, shared.IControlCentre cc, shared.IBettingCentre bc, shared.IRacingTrack rt, shared.IPaddock paddock){
+    public Broker(shared.IStable s, shared.IControlCentre cc, shared.IBettingCentre bc, shared.IRacingTrack rt, shared.IPaddock paddock, RacesProxy races){
         this.stable = s;
         this.cc = cc;
         this.bc = bc;
         this.rt = rt;
         this.paddock = paddock;
         this.log = Log.getInstance();
+        this.races = races;
         this.setName("Broker");
     }
     

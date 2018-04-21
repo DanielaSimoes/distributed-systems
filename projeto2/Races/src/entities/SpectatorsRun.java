@@ -5,6 +5,7 @@
  */
 package entities;
 
+import GeneralRepository.RacesProxy;
 import communication.Proxy.ClientProxy;
 import communication.message.Message;
 import communication.message.MessageType;
@@ -19,6 +20,7 @@ public class SpectatorsRun {
     private static PaddockProxy paddock;
     private static ControlCentreProxy controlCentre;
     private static BettingCentreProxy bettingCentre;
+    private static RacesProxy races;
     
     private static int N_OF_SPECTATORS;
 
@@ -35,7 +37,7 @@ public class SpectatorsRun {
         ArrayList<Spectators> spectators = new ArrayList<>(N_OF_SPECTATORS);
 
         for(int i = 0; i < N_OF_SPECTATORS; i++){
-            spectators.add(new Spectators((shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre , (shared.IPaddock) paddock, (int) (Math.random() * (proxy.MAX_SPECTATOR_BET() - 200)) + 200, i));
+            spectators.add(new Spectators((shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre , (shared.IPaddock) paddock, races, (int) (Math.random() * (proxy.MAX_SPECTATOR_BET() - 200)) + 200, i));
         }
         
         for (Spectators spectator : spectators)
