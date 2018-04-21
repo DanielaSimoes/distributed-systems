@@ -13,7 +13,6 @@ public class Spectators extends Thread implements IEntity{
     private SpectatorsState state;
     private int moneyToBet;
     private int initialMoney;
-    private final Log log;
     private final RacesProxy races;
     
     /**
