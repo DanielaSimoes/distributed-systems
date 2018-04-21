@@ -5,6 +5,7 @@
  */
 package shared;
 
+import GeneralRepository.RacesProxy;
 import communication.Proxy.ServerProxy;
 import communication.ServerChannel;
 import java.net.SocketException;
@@ -36,7 +37,9 @@ public class RacingTrackRun {
         schan = new ServerChannel(SERVER_PORT);    
         schan.start();
         
-        RacingTrackServer racingTrackServer = new RacingTrackServer();
+        RacesProxy races = new RacesProxy();
+        
+        RacingTrackServer racingTrackServer = new RacingTrackServer(races);
         System.out.println("Racing Track service has started!\nServer is listening.");
 
         /* processamento de pedidos */

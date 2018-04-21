@@ -5,6 +5,7 @@
  */
 package shared;
 
+import GeneralRepository.RacesProxy;
 import communication.Proxy.ServerInterface;
 import communication.ServerChannel;
 import communication.message.Message;
@@ -20,8 +21,8 @@ public class RacingTrackServer extends RacingTrack implements ServerInterface{
 
     private boolean serverEnded;
     
-    public RacingTrackServer() {
-        super();
+    public RacingTrackServer(RacesProxy races) {
+        super(races);
         this.serverEnded = false;
     }
 

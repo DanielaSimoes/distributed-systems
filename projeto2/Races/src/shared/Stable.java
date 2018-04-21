@@ -2,6 +2,7 @@ package shared;
 
 import GeneralRepository.Race;
 import GeneralRepository.Races;
+import GeneralRepository.RacesProxy;
 import entities.HorseJockey;
 import entities.HorseJockeyState;
 import entities.Broker;
@@ -16,7 +17,12 @@ import java.util.Map;
 public class Stable implements IStable {
     
     private boolean wakeEntertainTheGuests = false;
-    private final Races races = Races.getInstace();
+    
+    private RacesProxy races;
+    
+    public Stable(RacesProxy races){
+        this.races = races;
+    }
      
     /**
     *

@@ -5,6 +5,7 @@
  */
 package shared;
 
+import GeneralRepository.RacesProxy;
 import communication.Proxy.ServerProxy;
 import communication.ServerChannel;
 import java.net.SocketException;
@@ -36,7 +37,9 @@ public class PaddockRun {
         schan = new ServerChannel(SERVER_PORT);    
         schan.start();
         
-        PaddockServer paddockServer = new PaddockServer();
+        RacesProxy races = new RacesProxy();
+        
+        PaddockServer paddockServer = new PaddockServer(races);
         System.out.println("Paddock service has started!\nServer is listening.");
 
         /* processamento de pedidos */

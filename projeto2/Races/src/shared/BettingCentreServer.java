@@ -5,6 +5,7 @@
  */
 package shared;
 
+import GeneralRepository.RacesProxy;
 import communication.Proxy.ServerInterface;
 import communication.ServerChannel;
 import communication.message.Message;
@@ -20,8 +21,8 @@ public class BettingCentreServer extends BettingCentre implements ServerInterfac
     
     private boolean serverEnded;
     
-    public BettingCentreServer() {
-        super();
+    public BettingCentreServer(RacesProxy races) {
+        super(races);
         this.serverEnded = false;
     }
 

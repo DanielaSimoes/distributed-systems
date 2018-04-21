@@ -5,6 +5,7 @@
  */
 package shared;
 
+import GeneralRepository.RacesProxy;
 import communication.Proxy.ServerInterface;
 import communication.ServerChannel;
 import communication.message.Message;
@@ -20,8 +21,8 @@ public class ControlCentreServer extends ControlCentre implements ServerInterfac
     
     private boolean serverEnded;
     
-    public ControlCentreServer() {
-        super();
+    public ControlCentreServer(RacesProxy races) {
+        super(races);
         this.serverEnded = false;
     }
 

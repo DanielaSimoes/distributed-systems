@@ -5,6 +5,7 @@
  */
 package shared;
 
+import GeneralRepository.RacesProxy;
 import communication.Proxy.ServerInterface;
 import communication.ServerChannel;
 import communication.message.Message;
@@ -20,8 +21,8 @@ public class PaddockServer extends Paddock implements ServerInterface{
     
     private boolean serverEnded;
     
-    public PaddockServer() {
-        super();
+    public PaddockServer(RacesProxy races) {
+        super(races);
         this.serverEnded = false;
     }
 

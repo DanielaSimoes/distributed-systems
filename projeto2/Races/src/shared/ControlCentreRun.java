@@ -5,6 +5,7 @@
  */
 package shared;
 
+import GeneralRepository.RacesProxy;
 import communication.Proxy.ServerProxy;
 import communication.ServerChannel;
 import java.net.SocketException;
@@ -36,7 +37,9 @@ public class ControlCentreRun {
         schan = new ServerChannel(SERVER_PORT);    
         schan.start();
         
-        ControlCentreServer controlCentreServer = new ControlCentreServer();
+        RacesProxy races = new RacesProxy();
+        
+        ControlCentreServer controlCentreServer = new ControlCentreServer(races);
         System.out.println("Control Centre service has started!\nServer is listening.");
 
         /* processamento de pedidos */

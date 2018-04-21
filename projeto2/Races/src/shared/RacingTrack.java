@@ -6,6 +6,7 @@
 package shared;
 
 import GeneralRepository.Races;
+import GeneralRepository.RacesProxy;
 import entities.Broker;
 import entities.BrokerState;
 import entities.HorseJockey;
@@ -17,7 +18,11 @@ import entities.HorseJockeyState;
  */
 public class RacingTrack implements IRacingTrack {
     
-    private Races races = Races.getInstace();
+    private RacesProxy races;
+    
+    public RacingTrack(RacesProxy races){
+        this.races = races;
+    }
     
     /**
     *

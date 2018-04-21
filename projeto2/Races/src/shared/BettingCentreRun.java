@@ -3,6 +3,7 @@
  */
 package shared;
 
+import GeneralRepository.RacesProxy;
 import communication.Proxy.ServerProxy;
 import communication.ServerChannel;
 import java.net.SocketException;
@@ -35,7 +36,9 @@ public class BettingCentreRun {
         schan = new ServerChannel(SERVER_PORT);    
         schan.start();
         
-        BettingCentreServer bettingCentreServer = new BettingCentreServer();
+        RacesProxy races = new RacesProxy();
+        
+        BettingCentreServer bettingCentreServer = new BettingCentreServer(races);
         System.out.println("Betting Centre service has started!\nServer is listening.");
 
         /* processamento de pedidos */

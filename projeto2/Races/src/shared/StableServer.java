@@ -5,6 +5,7 @@
  */
 package shared;
 
+import GeneralRepository.RacesProxy;
 import communication.Proxy.ServerInterface;
 import communication.ServerChannel;
 import communication.message.Message;
@@ -19,8 +20,8 @@ import java.net.SocketException;
 public class StableServer extends Stable implements ServerInterface{
     private boolean serverEnded;
     
-    public StableServer() {
-        super();
+    public StableServer(RacesProxy races) {
+        super(races);
         this.serverEnded = false;
     }
 

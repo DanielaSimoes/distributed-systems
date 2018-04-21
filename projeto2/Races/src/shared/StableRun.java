@@ -5,6 +5,7 @@
  */
 package shared;
 
+import GeneralRepository.RacesProxy;
 import communication.Proxy.ServerProxy;
 import communication.ServerChannel;
 import java.net.SocketException;
@@ -36,7 +37,9 @@ public class StableRun {
         schan = new ServerChannel(SERVER_PORT);    
         schan.start();
         
-        StableServer stableServer = new StableServer();
+        RacesProxy races = new RacesProxy();
+        
+        StableServer stableServer = new StableServer(races);
         System.out.println("Stable service has started!\nServer is listening.");
 
         /* processamento de pedidos */
