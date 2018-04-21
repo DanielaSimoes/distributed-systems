@@ -15,5 +15,5 @@ public enum MessageType {
     /* HorseJockey messages */
     proceedToStable, proceedToPaddock, proceedToStartLine, makeAMove, hasFinishLineBeenCrossed,
     /* To compile */
-    ACK, 
+    ACK, TERMINATE,
 }

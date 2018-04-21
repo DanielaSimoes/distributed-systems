@@ -5,10 +5,47 @@
  */
 package entities;
 
+import communication.message.Message;
+import communication.message.MessageType;
+import communication.Proxy.ClientProxy;
+import java.util.ArrayList;
+import settings.NodeSettsProxy;
+
 /**
  *
  * @author Daniela
  */
 public class HorseJockeyRun {
+    private static StableProxy stable;
+    private static RacingTrackProxy racingTrack;
+    private static PaddockProxy paddock;
+    private static ControlCentreProxy controlCentre;
     
+    private static int N_OF_HORSES;
+
+    public static void main(String [] args) {
+        
+        NodeSettsProxy proxy = new NodeSettsProxy(); 
+        N_OF_HORSES = proxy.N_OF_HORSES();
+        ArrayList<HorseJockey> horseJockey = new ArrayList<>(N_OF_HORSES);
+
+        for(int i = 0; i < N_OF_HORSES; i++){
+            horseJockey.add(new HorseJockey((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IPaddock) paddock, (shared.IRacingTrack) racingTrack, (int) (Math.random() * (proxy.HORSE_MAX_STEP_SIZE() - 1)) + 1, i));
+        }
+        
+        for (HorseJockey horse : horseJockey)
+            horse.start();
+        
+        for (HorseJockey horse : horseJockey) { 
+            try { 
+                horse.join ();
+            } catch (InterruptedException e) {}
+        }
+                
+        /* SEND TO LOG THAT HORSEJOCKEY HAS FINISHED */
+        ClientProxy.connect(proxy.SERVER_HOSTS().get("Log"), 
+                proxy.SERVER_PORTS().get("Log"), 
+                new Message(MessageType.TERMINATE));
+        
+    }
 }
