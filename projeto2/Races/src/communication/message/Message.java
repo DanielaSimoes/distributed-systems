@@ -2,7 +2,9 @@
  * This file contains the messages constructors.
  */
 package communication.message;
+import GeneralRepository.Bet;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  *
@@ -28,6 +30,12 @@ public class Message{
     public Message(MessageType type, int message, int message2){
         this.message_i = message;
         this.message_i2 = message2;
+        this.type = type; 
+    }
+    
+    public Message(MessageType type, int message, boolean message2){
+        this.message_i = message;
+        this.message_b = message2;
         this.type = type; 
     }
     
@@ -100,5 +108,13 @@ public class Message{
      */
     public boolean getBoolean(){
         return this.message_b;
+    }
+
+    public Bet getBet() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public LinkedList<Integer> getLinkedList() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
