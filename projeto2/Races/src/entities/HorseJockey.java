@@ -15,12 +15,12 @@ public class HorseJockey extends Thread implements IEntity{
     /**
      *   Shared zones in which horsejockey has actions
      */
-    private final Log log;
     private final int id;
     private final shared.IStable stable;
     private final shared.IControlCentre cc;
     private final shared.IPaddock paddock;
     private final shared.IRacingTrack rt;
+    private final LogProxy log;
     private boolean entertainTheGuests;
     private RacesProxy races;
     private int raceId = 0;
@@ -37,14 +37,14 @@ public class HorseJockey extends Thread implements IEntity{
     * @param stepSize The step size of the horse.
     * @param id The ID of the horse.
     */
-    public HorseJockey(shared.IStable s, shared.IControlCentre cc, shared.IPaddock paddock, shared.IRacingTrack rt, GeneralRepository.RacesProxy races, int stepSize, int id){
+    public HorseJockey(shared.IStable s, shared.IControlCentre cc, shared.IPaddock paddock, shared.IRacingTrack rt, int stepSize, int id, GeneralRepository.RacesProxy races, LogProxy log){
         this.stable = s;
         this.cc = cc;
         this.paddock = paddock;
         this.rt = rt;
         this.stepSize = stepSize;
         this.id = id;
-        this.log = Log.getInstance();
+        this.log = log;
         this.setName("HorseJockey " + id);
         this.entertainTheGuests = false;
         this.races = races;

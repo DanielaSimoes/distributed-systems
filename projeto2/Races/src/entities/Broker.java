@@ -16,7 +16,6 @@ public class Broker extends Thread implements IEntity{
     */
     private BrokerState state;
     
-    private final Log log;
     /**
      *   Shared zones in which broker has actions
      */
@@ -25,6 +24,7 @@ public class Broker extends Thread implements IEntity{
     private final shared.IBettingCentre bc;
     private final shared.IRacingTrack rt;
     private final shared.IPaddock paddock;
+    private final LogProxy log;
     private boolean entertainTheGuests = false;
     private final RacesProxy races;
     private int raceId = 0;
@@ -37,14 +37,15 @@ public class Broker extends Thread implements IEntity{
     * @param bc The Betting Centre is a shared memory region where the broker will perform actions.
     * @param rt The Racing Track is a shared memory region where the broker will perform actions.
     * @param paddock The Paddock is a shared memory region where the broker will perform actions.
+     * @param log Log
     */
-    public Broker(shared.IStable s, shared.IControlCentre cc, shared.IBettingCentre bc, shared.IRacingTrack rt, shared.IPaddock paddock, RacesProxy races){
+    public Broker(shared.IStable s, shared.IControlCentre cc, shared.IBettingCentre bc, shared.IRacingTrack rt, shared.IPaddock paddock, LogProxy log, RacesProxy races){
         this.stable = s;
         this.cc = cc;
         this.bc = bc;
         this.rt = rt;
         this.paddock = paddock;
-        this.log = Log.getInstance();
+        this.log = log;
         this.races = races;
         this.setName("Broker");
     }

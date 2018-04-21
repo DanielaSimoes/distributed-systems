@@ -27,12 +27,13 @@ public class HorseJockeyRun {
 
     public static void main(String [] args) {
         
+        LogProxy log = new LogProxy();
         NodeSettsProxy proxy = new NodeSettsProxy(); 
         N_OF_HORSES = proxy.N_OF_HORSES();
         ArrayList<HorseJockey> horseJockey = new ArrayList<>(N_OF_HORSES);
 
         for(int i = 0; i < N_OF_HORSES; i++){
-            horseJockey.add(new HorseJockey((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IPaddock) paddock, (shared.IRacingTrack) racingTrack, races, (int) (Math.random() * (proxy.HORSE_MAX_STEP_SIZE() - 1)) + 1, i));
+            horseJockey.add(new HorseJockey((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IPaddock) paddock, (shared.IRacingTrack) racingTrack, (int) (Math.random() * (proxy.HORSE_MAX_STEP_SIZE() - 1)) + 1, i), racingTrack, races, log);
         }
         
         for (HorseJockey horse : horseJockey)

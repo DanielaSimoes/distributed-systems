@@ -22,6 +22,7 @@ public class Spectators extends Thread implements IEntity{
     private final shared.IControlCentre cc;
     private final shared.IBettingCentre bc;
     private final shared.IPaddock paddock;
+    private final LogProxy log;
     private final int id;
     private boolean relaxABit;
     private int raceId = 0;
@@ -34,15 +35,16 @@ public class Spectators extends Thread implements IEntity{
     * @param paddock The Paddock is a shared memory region where the Spectator will perform actions.
     * @param moneyToBet The money the spectator has to bet.
     * @param id The ID of the spectator.
+     * @param log
     */
-    public Spectators(shared.IControlCentre cc, shared.IBettingCentre bc, shared.IPaddock paddock, RacesProxy races, int moneyToBet, int id){
+    public Spectators(shared.IControlCentre cc, shared.IBettingCentre bc, shared.IPaddock paddock, int moneyToBet, int id, RacesProxy races, LogProxy log){
         this.id = id;
         this.cc = cc;
         this.bc = bc;
         this.paddock = paddock;
         this.moneyToBet = moneyToBet;
         this.initialMoney = moneyToBet;
-        this.log = Log.getInstance();
+        this.log = log;
         this.log.setSpectatorAmount(id, moneyToBet);
         this.relaxABit = false;
         this.races = races;

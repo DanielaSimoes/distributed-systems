@@ -3,6 +3,9 @@
  */
 package communication.message;
 import GeneralRepository.Bet;
+import entities.BrokerState;
+import entities.HorseJockeyState;
+import entities.SpectatorsState;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -18,8 +21,10 @@ public class Message{
     private int message_i2;
     private int message_i3;
     private MessageType type;
-    
-        private HashMap<?, ?> map = null;
+    private HorseJockeyState horseJockeyState;
+    private SpectatorsState spectatorsState;
+    private BrokerState brokerState;
+    private HashMap<?, ?> map = null;
 
         
     public Message(MessageType type, int message){
@@ -58,6 +63,23 @@ public class Message{
     
     public Message(MessageType type){
         this.type = type; 
+    }
+    
+    public Message(MessageType type, int message, HorseJockeyState horseJockeyState){
+        this.type = type;
+        this.message_i = message;
+        this.horseJockeyState = horseJockeyState;
+    }
+    
+    public Message(MessageType type, int message, SpectatorsState spectatorsState){
+        this.type = type;
+        this.message_i = message;
+        this.spectatorsState = spectatorsState;
+    }
+    
+    public Message(MessageType type, BrokerState brokerState){
+        this.type = type;
+        this.brokerState = brokerState;
     }
     
     /**

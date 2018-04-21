@@ -31,7 +31,7 @@ public class BrokerRun {
         LogProxy log = new LogProxy();
         NodeSettsProxy proxy = new NodeSettsProxy();
         
-        broker = new Broker((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre, (shared.IRacingTrack) racingTrack, (shared.IPaddock) paddock, races);
+        broker = new Broker((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre, (shared.IRacingTrack) racingTrack, (shared.IPaddock) paddock, log, races);
         
         broker.start();
         
