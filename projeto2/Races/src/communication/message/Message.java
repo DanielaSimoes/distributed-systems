@@ -28,4 +28,12 @@ public class Message{
         this.message_b = message;
         this.type = type; 
     }
+    
+    /**
+     * Return Message Type
+     * @return 
+     */
+    public MessageType getType(){
+        return this.type;
+    }
 }

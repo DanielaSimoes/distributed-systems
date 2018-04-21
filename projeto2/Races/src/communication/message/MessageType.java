@@ -14,4 +14,6 @@ public enum MessageType {
     waitForNextRace, goCheckHorses, placeABet, goWatchTheRace, haveIWon, goCollectTheGains, relaxABit,
     /* HorseJockey messages */
     proceedToStable, proceedToPaddock, proceedToStartLine, makeAMove, hasFinishLineBeenCrossed,
+    /* To compile */
+    ACK, 
 }

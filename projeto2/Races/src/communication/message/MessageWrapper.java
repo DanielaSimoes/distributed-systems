@@ -3,11 +3,13 @@
  */
 package communication.message;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Daniela
  */
-public class MessageWrapper {
+public class MessageWrapper implements Serializable{
     private Message m;
     
     public void setMessage(Message m){
