@@ -6,6 +6,7 @@ import entities.BrokerState;
 import entities.Spectators;
 import entities.SpectatorsState;
 import GeneralRepository.Races;
+import settings.NodeSettsProxy;
 
 /**
  * This file contains the shared memory region Betting Centre.
@@ -14,6 +15,11 @@ import GeneralRepository.Races;
 public class BettingCentre implements IBettingCentre {
     
     private Races races = Races.getInstace();
+    
+   
+    public BettingCentre(){
+        NodeSettsProxy proxy = new NodeSettsProxy();
+    }
     
     /**
     *

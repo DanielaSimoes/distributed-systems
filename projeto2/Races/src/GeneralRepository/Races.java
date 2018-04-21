@@ -312,9 +312,7 @@ public class Races {
      * @param horseId
      * @return
      */
-    public int getStandingPosition(int horseId){
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
-        
+    public int getStandingPosition(int horseId, int raceNumber){
         return this.races[raceNumber].getStandingPosition(horseId);
     }
     

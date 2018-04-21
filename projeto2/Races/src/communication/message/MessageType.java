@@ -15,5 +15,7 @@ public enum MessageType {
     /* HorseJockey messages */
     proceedToStable, proceedToPaddock, proceedToStartLine, makeAMove, hasFinishLineBeenCrossed,
     /* To compile */
-    ACK, TERMINATE,
+    ACK, TERMINATE, SERVER_PORTS, SERVER_HOSTS,
+    /* Vars */
+    N_OF_HORSES, HORSE_MAX_STEP_SIZE, N_OF_SPECTATORS, MAX_SPECTATOR_BET
 }

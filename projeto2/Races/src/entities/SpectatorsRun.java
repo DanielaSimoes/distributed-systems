@@ -23,9 +23,15 @@ public class SpectatorsRun {
     private static int N_OF_SPECTATORS;
 
     public static void main(String [] args) {
+        /* init proxies */
+        paddock = new PaddockProxy();
+        controlCentre = new ControlCentreProxy();
+        bettingCentre = new BettingCentreProxy();
+        /* end init proxies */
         
         NodeSettsProxy proxy = new NodeSettsProxy(); 
         N_OF_SPECTATORS = proxy.N_OF_SPECTATORS();
+        
         ArrayList<Spectators> spectators = new ArrayList<>(N_OF_SPECTATORS);
 
         for(int i = 0; i < N_OF_SPECTATORS; i++){

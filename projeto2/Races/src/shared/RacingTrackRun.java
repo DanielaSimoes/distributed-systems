@@ -5,10 +5,53 @@
  */
 package shared;
 
+import communication.Proxy.ServerProxy;
+import communication.ServerChannel;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import settings.NodeSettsProxy;
+
 /**
  *
  * @author Daniela
  */
 public class RacingTrackRun {
+    private static int SERVER_PORT;
     
+    public static void main(String[] args) throws SocketException {
+        NodeSettsProxy proxy = new NodeSettsProxy(); 
+        SERVER_PORT = proxy.SERVER_PORTS().get("RacingTrack");
+        
+        // canais de comunicação
+        ServerChannel schan, schani;
+        
+        // thread agente prestador do serviço
+        ServerProxy cliProxy;                               
+
+        /* estabelecimento do servico */
+        
+        // criação do canal de escuta e sua associação
+        schan = new ServerChannel(SERVER_PORT);    
+        schan.start();
+        
+        RacingTrackServer racingTrackServer = new RacingTrackServer();
+        System.out.println("Racing Track service has started!\nServer is listening.");
+
+        /* processamento de pedidos */
+        
+        while (true) {
+            
+            try {
+                // entrada em processo de escuta
+                schani = schan.accept();
+                // lançamento do agente prestador do serviço
+                cliProxy = new ServerProxy(schan, schani, racingTrackServer);
+                cliProxy.start();
+            } catch (SocketTimeoutException ex) {
+                Logger.getLogger(BettingCentreRun.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 }
