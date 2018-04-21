@@ -5,9 +5,9 @@ package shared;
  * @author Daniela Simões, 76771
  */
 public interface IBettingCentre {
-    public void acceptTheBets();
-    public void honourTheBets();
-    public boolean areThereAnyWinners();
-    public void placeABet();
-    public void goCollectTheGains();
+    public void acceptTheBets(int raceNumber);
+    public void honourTheBets(int raceNumber);
+    public boolean areThereAnyWinners(int raceNumber);
+    public void placeABet(int raceNumber);
+    public void goCollectTheGains(int raceNumber);
 }

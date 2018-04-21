@@ -37,30 +37,26 @@ public class RacingTrackProxy implements IRacingTrack {
     
 
     @Override
-    public void startTheRace() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void startTheRace(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
-    public void proceedToStartLine() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void proceedToStartLine(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
-    public boolean hasFinishLineBeenCrossed(int horseId) {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public boolean hasFinishLineBeenCrossed(int horseId, int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber, horseId));
         return result.getMessage().getBoolean();
     }
 
     @Override
-    public void makeAMove() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void makeAMove(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }

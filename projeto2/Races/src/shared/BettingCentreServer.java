@@ -31,19 +31,19 @@ public class BettingCentreServer extends BettingCentre implements ServerInterfac
             case TERMINATE:
                 this.serverEnded = true;
             case acceptTheBets:
-                super.acceptTheBets();
+                super.acceptTheBets(inMessage.getInteger());
                 break;
             case honourTheBets:
-                super.honourTheBets();
+                super.honourTheBets(inMessage.getInteger());
                 break;
             case areThereAnyWinners:
-                super.areThereAnyWinners();
+                super.areThereAnyWinners(inMessage.getInteger());
                 break;
             case placeABet:
-                super.placeABet();
+                super.placeABet(inMessage.getInteger());
                 break;
             case goCollectTheGains:
-                super.goCollectTheGains();
+                super.goCollectTheGains(inMessage.getInteger());
                 break;
         }
         

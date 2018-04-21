@@ -19,6 +19,11 @@ import java.net.SocketException;
 public class ControlCentreServer extends ControlCentre implements ServerInterface {
     
     private boolean serverEnded;
+    
+    public ControlCentreServer() {
+        super();
+        this.serverEnded = false;
+    }
 
     @Override
     public Message processAndReply(Message inMessage, ServerChannel scon) throws MessageException, SocketException {
@@ -26,19 +31,19 @@ public class ControlCentreServer extends ControlCentre implements ServerInterfac
             case TERMINATE:
                 this.serverEnded = true;
             case reportResults:
-                super.reportResults();
+                super.reportResults(inMessage.getInteger());
                 break;
             case proceedToPaddock:
-                super.proceedToPaddock();
+                super.proceedToPaddock(inMessage.getInteger());
                 break;
             case waitForNextRace:
-                super.waitForNextRace();
+                super.waitForNextRace(inMessage.getInteger());
                 break;
             case goWatchTheRace:
-                super.goWatchTheRace();
+                super.goWatchTheRace(inMessage.getInteger());
                 break;
             case haveIWon:
-                super.haveIWon();
+                super.haveIWon(inMessage.getInteger());
                 break;
             case relaxABit:
                 super.relaxABit();

@@ -30,10 +30,10 @@ public class StableServer extends Stable implements ServerInterface{
             case TERMINATE:
                 this.serverEnded = true;
             case summonHorsesToPaddock:
-                super.summonHorsesToPaddock();
+                super.summonHorsesToPaddock(inMessage.getInteger());
                 break;
             case proceedToStable:
-                super.proceedToStable();
+                super.proceedToStable(inMessage.getInteger(), inMessage.getInteger(), inMessage.getInteger());
                 break;
             case entertainTheGuests:
                 super.entertainTheGuests();

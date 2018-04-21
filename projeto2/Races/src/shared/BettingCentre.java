@@ -6,7 +6,6 @@ import entities.BrokerState;
 import entities.Spectators;
 import entities.SpectatorsState;
 import GeneralRepository.Races;
-import settings.NodeSettsProxy;
 
 /**
  * This file contains the shared memory region Betting Centre.
@@ -16,27 +15,22 @@ public class BettingCentre implements IBettingCentre {
     
     private Races races = Races.getInstace();
     
-   
-    public BettingCentre(){
-        NodeSettsProxy proxy = new NodeSettsProxy();
-    }
-    
     /**
     *
     * Method to the broker accept the bets of the spectators.
     */
     @Override
-    public void acceptTheBets(){
+    public void acceptTheBets(int raceNumber){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.WAITING_FOR_BETS);
         
         while(true){
-            Integer spectatorId = this.races.waitAddedBet();
+            Integer spectatorId = this.races.waitAddedBet(raceNumber);
 
             if(spectatorId!=null){
-                this.races.acceptBet(spectatorId);
+                this.races.acceptBet(spectatorId, raceNumber);
             }
         
-            if(this.races.allSpectatorsBetted() && this.races.allSpectatorsBettsAceppted()){
+            if(this.races.allSpectatorsBetted(raceNumber) && this.races.allSpectatorsBettsAceppted(raceNumber)){
                 break;
             }
         }
@@ -47,23 +41,23 @@ public class BettingCentre implements IBettingCentre {
     * Method to get the broker to honour the winners of the bets.
     */
     @Override
-    public synchronized void honourTheBets(){
+    public synchronized void honourTheBets(int raceNumber){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SETTLING_ACCOUNTS);
         
         Integer spectatorId;
         
         while(true){
-            spectatorId = this.races.poolWaitingToBePaidSpectators();
+            spectatorId = this.races.poolWaitingToBePaidSpectators(raceNumber);
             
-            if(this.races.allSpectatorsPaid() && spectatorId == null){
+            if(this.races.allSpectatorsPaid(raceNumber) && spectatorId == null){
                 break;
-            }else if(this.races.allSpectatorsPaid() && spectatorId != null){
-                this.races.setPaidSpectators(spectatorId, true);
+            }else if(this.races.allSpectatorsPaid(raceNumber) && spectatorId != null){
+                this.races.setPaidSpectators(spectatorId, true, raceNumber);
                 notifyAll();
-            }else if(!this.races.allSpectatorsPaid() && spectatorId != null){
-                this.races.setPaidSpectators(spectatorId, true);
+            }else if(!this.races.allSpectatorsPaid(raceNumber) && spectatorId != null){
+                this.races.setPaidSpectators(spectatorId, true, raceNumber);
                 notifyAll();
-            }else if(!this.races.allSpectatorsPaid() && spectatorId == null){
+            }else if(!this.races.allSpectatorsPaid(raceNumber) && spectatorId == null){
                 try{
                     wait();
                 }catch (InterruptedException ex){
@@ -78,9 +72,9 @@ public class BettingCentre implements IBettingCentre {
     * Method to verify if are spectators who have won the bets.
     */
     @Override
-    public synchronized boolean areThereAnyWinners(){
+    public synchronized boolean areThereAnyWinners(int raceNumber){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
-        return this.races.areThereAnyWinners();
+        return this.races.areThereAnyWinners(raceNumber);
     };
     
     /**
@@ -88,14 +82,14 @@ public class BettingCentre implements IBettingCentre {
     * Method to allow the spectator to place a bet.
     */
     @Override
-    public void placeABet(){
+    public void placeABet(int raceNumber){
         Spectators spectator = ((Spectators)Thread.currentThread());
         spectator.setSpectatorsState(SpectatorsState.PLACING_A_BET);
         
-        Bet spectator_bet = this.races.chooseBet();
-        this.races.addBetOfSpectator(spectator_bet);
+        Bet spectator_bet = this.races.chooseBet(raceNumber);
+        this.races.addBetOfSpectator(spectator_bet, raceNumber);
 
-        this.races.waitAcceptedTheBet();
+        this.races.waitAcceptedTheBet(raceNumber);
     };
     
     /**
@@ -103,17 +97,17 @@ public class BettingCentre implements IBettingCentre {
     * Method to the spectator go collect the gains and increase the bank.
     */
     @Override
-    public synchronized void goCollectTheGains(){
+    public synchronized void goCollectTheGains(int raceNumber){
         Spectators spectator = ((Spectators)Thread.currentThread());
         spectator.setSpectatorsState(SpectatorsState.COLLECTING_THE_GAINS);
         
-        this.races.addWaitingToBePaidSpectator(spectator.getSpectatorId());
+        this.races.addWaitingToBePaidSpectator(spectator.getSpectatorId(), raceNumber);
         
         // wake broker because spectator is waiting to be Paid
         // and broker must pay the honours
         notifyAll();
         
-        while(!this.races.getPaidSpectators(spectator.getSpectatorId())){
+        while(!this.races.getPaidSpectators(spectator.getSpectatorId(), raceNumber)){
             try{
                 wait();
             }catch (InterruptedException ex){

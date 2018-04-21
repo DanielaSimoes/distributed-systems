@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.sun.javafx.binding.Logging;
 import entities.IEntity;
-import entities.Spectators;
+import java.util.HashMap;
 
 /**
  * This file contains the code to generate a log file.
@@ -37,15 +37,22 @@ public class Log {
     private boolean event_opened = false;
     
     private int[] spectatorAmounts;
+    private BrokerState brokerState;
+    private final HashMap<Integer, HorseJockeyState> horseJockeysState;
+    private final HashMap<Integer, SpectatorsState> spectatorsState;
+
     
-    private Log(String filename){
+    
+    public Log(String filename){
         if(filename.length()==0){
             Date today = Calendar.getInstance().getTime();
             SimpleDateFormat date = new SimpleDateFormat("yyyyMMddhhmmss");
-            filename = "AfternoonAtTheRaces.log";// + date.format(today) + ".log";
+            filename = "AfternoonAtTheRaces.log";
         }
         this.log = new File(filename);
         this.spectatorAmounts = new int[Races.N_OF_SPECTATORS];
+        this.horseJockeysState = new HashMap<>();
+        this.spectatorsState = new HashMap<>();
         
         for (int i=0; i<Races.N_OF_SPECTATORS; i++){
             this.spectatorAmounts[i] = 0;
@@ -112,15 +119,13 @@ public class Log {
     /**
      *
      */
-    public synchronized void writeLineRace(){
-        
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
-        
-        String head = String.format("   %d  %2d  ", raceNumber+1, races.getCurrentRaceDistance());
+    public synchronized void writeLineRace(int raceNumber){
+                
+        String head = String.format("   %d  %2d  ", raceNumber+1, races.getCurrentRaceDistance(raceNumber));
 
         for(int i=0; i<Races.N_OF_SPECTATORS; i++){
             try{
-                head += String.format("  %d  %4d", this.races.getSpectatorBet(i).getHorseId(), this.races.getSpectatorBet(i).getAmount());
+                head += String.format("  %d  %4d", this.races.getSpectatorBet(i, raceNumber).getHorseId(), this.races.getSpectatorBet(i,raceNumber).getAmount());
             }catch(java.lang.NullPointerException e){
                 head += " --- ----";
             }
@@ -129,9 +134,9 @@ public class Log {
         head += " ";
 
         for(int i=0; i<Races.N_OF_HORSES; i++){
-            if(this.races.horseHasBeenSelectedToRace(i)){
+            if(this.races.horseHasBeenSelectedToRace(i, raceNumber)){
                 try{
-                    head += String.format(" %2.1f %2d   %2d    %d ", this.races.getHorseOdd(i), this.races.getHorseIteration(i), this.races.getHorsePosition(i), this.races.getStandingPosition(i));
+                    head += String.format(" %2.1f %2d   %2d    %d ", this.races.getHorseOdd(i, raceNumber), this.races.getHorseIteration(i, raceNumber), this.races.getHorsePosition(i, raceNumber), this.races.getStandingPosition(i, raceNumber));
                 }catch(java.lang.NullPointerException e){
                     head += " ---- --  --    - ";
                 }
@@ -151,17 +156,17 @@ public class Log {
     public synchronized void writeLineStatus(){
         int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
 
-        String head = "  " + this.races.getBrokerState() + " ";
+        String head = "  " + this.brokerState + " ";
 
         for(int i=0; i<Races.N_OF_SPECTATORS; i++){
-            head += " " + this.races.getSpectatorsState(i) + "  " + String.format("%3d", this.spectatorAmounts[i]) + " ";
+            head += " " + spectatorsState.get(i) + "  " + String.format("%3d", this.spectatorAmounts[i]) + " ";
         }
 
         head += (raceNumber+1);
 
         for(int i=0; i<Races.N_OF_HORSES; i++){
-            if(this.races.horseHasBeenSelectedToRace(i)){
-                head += "  " + this.races.getHorseJockeyState(i) + " " + String.format("%3d", this.races.getHorseJockeyStepSize(i));
+            if(this.races.horseHasBeenSelectedToRace(i, raceNumber)){
+                head += "  " + horseJockeysState.get(i) + " " + String.format("%3d", this.races.getHorseJockeyStepSize(i));
             }
         }
 
@@ -174,7 +179,7 @@ public class Log {
         pw.flush();
         
         if(this.event_opened){
-            this.writeLineRace();
+            this.writeLineRace(raceNumber);
         }
     }
     
@@ -186,23 +191,13 @@ public class Log {
     public void setSpectatorAmount(int spectatorId, int amount){
         this.spectatorAmounts[spectatorId] = amount;
     }
-    
-    /**
-     *
-     * @param id
-     * @param state
-     */
-    public synchronized void setHorseJockeyState(int id, HorseJockeyState state){
-        this.races.setHorseJockeyState(id, state);
-        this.writeLineStatus();
-    }
 
     /**
      *
      * @param state
      */
     public synchronized void setBrokerState(BrokerState state){
-        this.races.setBrokerState(state);
+        this.brokerState = state;
         this.writeLineStatus();
         
         if(state==BrokerState.OPENING_THE_EVENT){
@@ -210,21 +205,62 @@ public class Log {
         }
     }
     
-    /**
-     *
-     * @param id
-     * @param state
-     */
-    public synchronized void setSpectatorState(int id, SpectatorsState state){
-        this.races.setSpectatorState(id, state);
-        this.writeLineStatus();
-    }
 
     /**
      *
      */
     public synchronized void makeAMove(){
         this.writeLineStatus();
+    }
+    
+     /**
+    *
+    * Method to set the state of a HorseJockey.
+    * @param id
+    * @param state The state to be assigned.
+    */
+    public void setHorseJockeyState(int id, HorseJockeyState state){
+        if(this.horseJockeysState.containsKey(id)){
+            this.horseJockeysState.replace(id, state);
+        }else{
+            this.horseJockeysState.put(id, state);
+        }
+        this.writeLineStatus();
+    }
+    
+     /**
+    *
+    * Method to get the state of a HorseJockey.
+     * @param id
+     * @return 
+    */
+    public HorseJockeyState getHorseJockeyState(int id){
+        return this.horseJockeysState.get(id);
+    }
+
+    /**
+    *
+    * Method to set the state of a Spectator.
+     * @param id
+    * @param state The state to be assigned.
+    */
+    public void setSpectatorState(int id, SpectatorsState state){
+        if(this.spectatorsState.containsKey(id)){
+            this.spectatorsState.replace(id, state);
+        }else{
+            this.spectatorsState.put(id, state);
+        }
+        this.writeLineStatus();
+    }
+    
+    /**
+    *
+    * Method to get the state of a Spectator.
+     * @param id
+     * @return 
+    */
+    public SpectatorsState getSpectatorsState(int id){
+        return this.spectatorsState.get(id);
     }
     
 }

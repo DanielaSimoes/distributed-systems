@@ -1,113 +1,55 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package GeneralRepository;
 
-/**
- * This file describes the set of the Races.
- * @author Daniela Simões, 76771
- */
-
-import java.util.HashMap;
-
+import communication.Proxy.ClientProxy;
+import communication.Proxy.ServerInterface;
+import communication.Proxy.ServerProxy;
+import communication.ServerChannel;
+import communication.message.Message;
+import communication.message.MessageException;
+import communication.message.MessageType;
+import communication.message.MessageWrapper;
 import entities.BrokerState;
 import entities.HorseJockeyState;
 import entities.SpectatorsState;
-import entities.HorseJockey;
-import entities.IEntity;
+import java.net.SocketException;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import settings.NodeSettsProxy;
 
 /**
  *
  * @author Daniela
  */
-public class Races {
+public class RacesProxy{
     
-    /**
-     * Number of races.
-     */
-    public static final int N_OF_RACES = 2;
+    private final String SERVER_HOST;
+    private final int SERVER_PORT;
 
-    /**
-     * Number of horses.
-     */
-    public static final int N_OF_HORSES = 8;
-    
-    /**
-     * Number of horses.
-     */
-    public static final int N_OF_HORSES_TO_RUN = 4;
-
-    /**
-     * Number os spectators.
-     */
-    public static final int N_OF_SPECTATORS = 4;
-
-    /**
-     * Size of racing track.
-     */
-    public static final int SIZE_OF_RACING_TRACK = 20;
-
-    /**
-     * Horse maxium step size.
-     */
-    public static final int HORSE_MAX_STEP_SIZE = 8;
-
-    /**
-     * Maximum ammount each spectator can bet.
-     */
-    public static final int MAX_SPECTATOR_BET = 2000;
-        
-    private static Races instance = null;
-    
-    private final HashMap<Integer, SpectatorsState> spectatorsState;
-    private final HashMap<Integer, Integer> spectatorAmmount;
-    
-    
-    private final HashMap<Integer, Integer> horseJockeyStepSize;
-    
-    private final LinkedList<Integer> horseJockeySelected;
-    private boolean allInitStatesRegistered = false;
-    
-    /**
-     * Race array.
-     */
-    public Race[] races;
-    
-    /**
-    *
-    * Races Constructor
-    */
-    private Races(){
-        this.spectatorsState = new HashMap<>();
-        this.spectatorAmmount = new HashMap<>();
-        this.horseJockeyStepSize = new HashMap<>();
-        this.races = new Race[N_OF_RACES];
-        
-        this.horseJockeySelected = new LinkedList<>();
-        
-        for(int i=0; i<N_OF_RACES; i++){
-            this.races[i] = new Race(i, this.horseJockeySelected);
-        }
+    public RacesProxy(){
+        NodeSettsProxy proxy = new NodeSettsProxy(); 
+        SERVER_HOST = proxy.SERVER_HOSTS().get("Races");
+        SERVER_PORT = proxy.SERVER_PORTS().get("Races");
     }
     
-    /**
-    *
-    * Method to retrieve an instance of Races
-     * @return 
-    */
-    public static Races getInstace(){
-        if (instance == null){
-            instance = new Races();
-        }
-        
-        return instance;
+    private MessageWrapper communicate(Message m){
+        return ClientProxy.connect(SERVER_HOST,  SERVER_PORT, m);
     }
-   
    
     /**
      *
      * @return
      */
     public synchronized Bet chooseBet(int raceNumber){        
-        return this.races[raceNumber].chooseBet();
+        MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
+        MessageWrapper result = communicate(new Message(mt, raceNumber));
+        return result.getMessage().getBet();
     }
 
     /**
@@ -117,12 +59,9 @@ public class Races {
      * @return 
     */
     public boolean horseHasBeenSelectedToRace(int horseJockeyID, int horseStepSize, int raceNumber){        
-        return this.races[raceNumber].horseHasBeenSelectedToRace(horseJockeyID, horseStepSize);
-    }
-    
-    
-    public boolean horseHasBeenSelectedToRace(int horseJockey, int raceNumber){        
-        return this.races[raceNumber].horseHasBeenSelectedToRace(horseJockey);
+        MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
+        MessageWrapper result = communicate(new Message(mt, horseJockeyID, horseStepSize, raceNumber));
+        return result.getMessage().getBoolean();
     }
     
     /**
@@ -131,13 +70,8 @@ public class Races {
      * @param stepSize
      */
     public void setHorseJockeyStepSize(int id, int stepSize){
-        this.horseJockeyStepSize.put(id, stepSize);
-        
-        if(this.horseJockeyStepSize.size()==Races.N_OF_HORSES){
-            for(int i=0; i<this.races.length; i++){
-                this.races[i].generateOdds(this.horseJockeyStepSize);
-            }
-        }
+        MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
+        MessageWrapper result = communicate(new Message(mt, id, stepSize));
     }
     
     /**
@@ -146,7 +80,9 @@ public class Races {
      * @return
      */
     public int getHorseJockeyStepSize(int id){
-        return this.horseJockeyStepSize.get(id);
+        MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
+        MessageWrapper result = communicate(new Message(mt, id));
+        return result.getMessage().getInteger();
     }
     
     /**
@@ -154,7 +90,9 @@ public class Races {
      * @return
      */
     public synchronized boolean areThereAnyWinners(int raceNumber){
-        return this.races[raceNumber].areThereAnyWinners();
+        MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
+        MessageWrapper result = communicate(new Message(mt, raceNumber));
+        return result.getMessage().getBoolean();
     };
     
     /**
@@ -162,7 +100,9 @@ public class Races {
      * @return
      */
     public synchronized boolean haveIWon(int raceNumber){
-        return this.races[raceNumber].haveIWon();
+        MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
+        MessageWrapper result = communicate(new Message(mt, raceNumber));
+        return result.getMessage().getBoolean();
     };
     
     /**
@@ -510,4 +450,5 @@ public class Races {
         return this.races[raceNumber].getHorsePosition(horseId);
     }
     /* end condition states */
+    
 }

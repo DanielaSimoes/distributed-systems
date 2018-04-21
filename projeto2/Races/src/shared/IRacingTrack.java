@@ -5,8 +5,8 @@ package shared;
  * @author Daniela Simões, 76771
  */
 public interface IRacingTrack {
-    public void startTheRace();
-    public void proceedToStartLine();
-    public boolean hasFinishLineBeenCrossed(int horseId);
-    public void makeAMove();
+    public void startTheRace(int raceNumber);
+    public void proceedToStartLine(int raceNumber);
+    public boolean hasFinishLineBeenCrossed(int horseId, int raceNumber);
+    public void makeAMove(int raceNumber);
 }

@@ -23,9 +23,9 @@ public class Stable implements IStable {
     * Method to get the broker to announce the next race.
     */
     @Override
-    public synchronized void summonHorsesToPaddock(){
+    public synchronized void summonHorsesToPaddock(int raceNumber){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
-        this.races.setAnnouncedNextRace(true);
+        this.races.setAnnouncedNextRace(true, raceNumber);
         notifyAll();
     };
     
@@ -34,23 +34,23 @@ public class Stable implements IStable {
     * Method to get the horses to proceed to stable.
     */
     @Override
-    public synchronized void proceedToStable(){
+    public synchronized void proceedToStable(int raceNumber, int horseID, int horseStepSize){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
 
-        while(!((races.getAnnouncedNextRace() && this.races.getWakedHorsesToPaddock()!=races.getNRunningHorses() && races.horseHasBeenSelectedToRace((HorseJockey)Thread.currentThread())) || wakeEntertainTheGuests)){
+        while(!((races.getAnnouncedNextRace(raceNumber) && this.races.getWakedHorsesToPaddock(raceNumber)!=races.getNRunningHorses(raceNumber) && races.horseHasBeenSelectedToRace(horseID, horseStepSize, raceNumber)) || wakeEntertainTheGuests)){
             try{
                 wait();
             }catch (InterruptedException ex){
                     // do something in the future
             } 
             
-            if(((HorseJockey)Thread.currentThread()).getCurrentRace()<Races.N_OF_RACES && races.horsesFinished() && races.hasMoreRaces()){
+            if(((HorseJockey)Thread.currentThread()).getCurrentRace()<Races.N_OF_RACES && races.horsesFinished(raceNumber) && races.hasMoreRaces()){
                 ((HorseJockey)Thread.currentThread()).nextRace();
             }
         }
         
         if(!wakeEntertainTheGuests){
-            this.races.addWakedHorsesToPaddock();
+            this.races.addWakedHorsesToPaddock(raceNumber);
         }
     };
     

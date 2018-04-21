@@ -5,8 +5,8 @@ package shared;
  * @author Daniela Simões, 76771
  */
 public interface IPaddock {
-    public void proceedToPaddock();
-    public void proceedToStartLine();
-    public void goCheckHorses();
-    public void summonHorsesToPaddock();
+    public void proceedToPaddock(int raceNumber);
+    public void proceedToStartLine(int raceNumber);
+    public void goCheckHorses(int raceNumber);
+    public void summonHorsesToPaddock(int raceNumber);
 }

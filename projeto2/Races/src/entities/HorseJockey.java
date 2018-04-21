@@ -20,7 +20,6 @@ public class HorseJockey extends Thread implements IEntity{
     private final shared.IControlCentre cc;
     private final shared.IPaddock paddock;
     private final shared.IRacingTrack rt;
-    private final Races races = Races.getInstace();
     private boolean entertainTheGuests;
     
     private int raceId = 0;
@@ -58,38 +57,38 @@ public class HorseJockey extends Thread implements IEntity{
     public void run(){  
         this.races.setHorseJockeyStepSize(id, stepSize);
         this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
-        stable.proceedToStable();
+        stable.proceedToStable(raceId, this.id, this.stepSize);
                     
         while(!this.entertainTheGuests){
             switch(this.state){
                 case AT_THE_STABLE:
                     if(races.hasMoreRaces()){
-                        cc.proceedToPaddock();
-                        paddock.proceedToPaddock();
+                        cc.proceedToPaddock(raceId);
+                        paddock.proceedToPaddock(raceId);
                     }else{
                         this.entertainTheGuests = true;
                     }
                     break;
                 case AT_THE_PADDOCK:
-                    paddock.proceedToStartLine();
-                    rt.proceedToStartLine();
+                    paddock.proceedToStartLine(raceId);
+                    rt.proceedToStartLine(raceId);
                     break;
                 case AT_THE_START_LINE:
-                    rt.makeAMove();
+                    rt.makeAMove(raceId);
                     this.log.makeAMove();
                     break;
                 case RUNNNING:
-                    while(!rt.hasFinishLineBeenCrossed(this.id)){
-                        rt.makeAMove();
+                    while(!rt.hasFinishLineBeenCrossed(this.id, raceId)){
+                        rt.makeAMove(raceId);
                         this.log.makeAMove();
                     }
                     break;
                 case AT_THE_FINISH_LINE:
                     if(races.hasMoreRaces()){
                         this.nextRace();
-                        stable.proceedToStable();
+                        stable.proceedToStable(raceId, this.id, this.stepSize);
                     }else{
-                        stable.proceedToStable();
+                        stable.proceedToStable(raceId, this.id, this.stepSize);
                     }
                     
                     if(!races.hasMoreRaces()){

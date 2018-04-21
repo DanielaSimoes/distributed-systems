@@ -35,37 +35,32 @@ public class BettingCentreProxy implements IBettingCentre{
     }
     
     @Override
-    public void acceptTheBets() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void acceptTheBets(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
-    public void honourTheBets() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void honourTheBets(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
-    public boolean areThereAnyWinners() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public boolean areThereAnyWinners(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber));
         return result.getMessage().getBoolean();
     }
 
     @Override
-    public void placeABet() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void placeABet(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
-    public void goCollectTheGains() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void goCollectTheGains(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }

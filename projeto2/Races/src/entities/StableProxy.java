@@ -35,24 +35,21 @@ public class StableProxy implements IStable {
     }
     
     @Override
-    public void summonHorsesToPaddock() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void summonHorsesToPaddock(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
-    public void proceedToStable() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void proceedToStable(int raceNumber, int horseID, int horseStepSize) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        communicate(new Message(mt, raceNumber));
+        communicate(new Message(mt, raceNumber, horseID, horseStepSize));
     }
 
     @Override
     public void entertainTheGuests() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        communicate(new Message(mt, raceNumber));
+        communicate(new Message(mt));
     }
     
 }

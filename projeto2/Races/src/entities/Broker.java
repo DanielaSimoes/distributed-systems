@@ -62,29 +62,29 @@ public class Broker extends Thread implements IEntity{
             switch(this.state){
 
                 case OPENING_THE_EVENT:
-                    stable.summonHorsesToPaddock();
-                    paddock.summonHorsesToPaddock();
+                    stable.summonHorsesToPaddock(raceId);
+                    paddock.summonHorsesToPaddock(raceId);
                     break;
 
                 case ANNOUNCING_NEXT_RACE:
-                    bc.acceptTheBets();
+                    bc.acceptTheBets(raceId);
                     break;
 
                 case WAITING_FOR_BETS:
-                    rt.startTheRace();
+                    rt.startTheRace(raceId);
                     break;
 
                 case SUPERVISING_THE_RACE:
-                    cc.reportResults();
+                    cc.reportResults(raceId);
                     
-                    if(bc.areThereAnyWinners()){ 
-                        bc.honourTheBets();
+                    if(bc.areThereAnyWinners(raceId)){ 
+                        bc.honourTheBets(raceId);
                     }
                     
                     if(races.hasMoreRaces()){
                         this.nextRace();
-                        stable.summonHorsesToPaddock();
-                        paddock.summonHorsesToPaddock();
+                        stable.summonHorsesToPaddock(raceId);
+                        paddock.summonHorsesToPaddock(raceId);
                     }else{
                         this.entertainTheGuests = true;
                     }
@@ -94,8 +94,8 @@ public class Broker extends Thread implements IEntity{
                 case SETTLING_ACCOUNTS:
                     if(races.hasMoreRaces()){
                         this.nextRace();
-                        stable.summonHorsesToPaddock();
-                        paddock.summonHorsesToPaddock();
+                        stable.summonHorsesToPaddock(raceId);
+                        paddock.summonHorsesToPaddock(raceId);
                     }else{
                         this.entertainTheGuests = true;
                     }

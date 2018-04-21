@@ -14,6 +14,7 @@ public class Message{
     private boolean message_b;
     private int message_i;
     private int message_i2;
+    private int message_i3;
     private MessageType type;
     
         private HashMap<?, ?> map = null;
@@ -27,6 +28,13 @@ public class Message{
     public Message(MessageType type, int message, int message2){
         this.message_i = message;
         this.message_i2 = message2;
+        this.type = type; 
+    }
+    
+    public Message(MessageType type, int message, int message2, int message3){
+        this.message_i = message;
+        this.message_i2 = message2;
+        this.message_i3 = message3;
         this.type = type; 
     }
     

@@ -36,29 +36,25 @@ public class PaddockProxy implements IPaddock {
     }
     
     @Override
-    public void proceedToPaddock() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void proceedToPaddock(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
-    public void proceedToStartLine() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void proceedToStartLine(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
-    public void goCheckHorses() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void goCheckHorses(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
-    public void summonHorsesToPaddock() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void summonHorsesToPaddock(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }

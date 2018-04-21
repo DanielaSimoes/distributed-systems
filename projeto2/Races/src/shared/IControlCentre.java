@@ -5,10 +5,10 @@ package shared;
  * @author Daniela Simões, 76771
  */
 public interface IControlCentre {
-    public void reportResults();
-    public void proceedToPaddock();
-    public void waitForNextRace();
-    public void goWatchTheRace();
-    public boolean haveIWon();
+    public void reportResults(int raceNumber);
+    public void proceedToPaddock(int raceNumber);
+    public void waitForNextRace(int raceNumber);
+    public void goWatchTheRace(int raceNumber);
+    public boolean haveIWon(int raceNumber);
     public void relaxABit();
 }

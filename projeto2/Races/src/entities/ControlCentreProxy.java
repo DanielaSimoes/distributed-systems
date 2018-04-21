@@ -36,36 +36,31 @@ public class ControlCentreProxy implements IControlCentre{
     }
     
     @Override
-    public void reportResults() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void reportResults(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
-    public void proceedToPaddock() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void proceedToPaddock(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
-    public void waitForNextRace() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void waitForNextRace(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
-    public void goWatchTheRace() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public void goWatchTheRace(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
-    public boolean haveIWon() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
+    public boolean haveIWon(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber));
         return result.getMessage().getBoolean();

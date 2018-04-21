@@ -24,13 +24,13 @@ public class RacingTrack implements IRacingTrack {
     * Method to start the race.
     */
     @Override
-    public synchronized void startTheRace(){
+    public synchronized void startTheRace(int raceNumber){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
        
-        races.setStartTheRace(true);
+        races.setStartTheRace(true, raceNumber);
         notifyAll();
         
-        while(!races.horsesFinished()){
+        while(!races.horsesFinished(raceNumber)){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -38,7 +38,7 @@ public class RacingTrack implements IRacingTrack {
             }
         }
         
-        races.setStartTheRace(false);
+        races.setStartTheRace(false, raceNumber);
     };
     
     /**
@@ -46,10 +46,10 @@ public class RacingTrack implements IRacingTrack {
     * Method to get the horses to proceed to the start line.
     */
     @Override
-    public synchronized void proceedToStartLine(){
+    public synchronized void proceedToStartLine(int raceNumber){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
         
-        while(!(races.getStartTheRace() || !this.races.nextMovingHorse(((HorseJockey)Thread.currentThread()).getHorseId()))){
+        while(!(races.getStartTheRace(raceNumber) || !this.races.nextMovingHorse(((HorseJockey)Thread.currentThread()).getHorseId(), raceNumber))){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -66,8 +66,8 @@ public class RacingTrack implements IRacingTrack {
     * @param horseId The HorseJockey ID.
     */
     @Override
-    public synchronized boolean hasFinishLineBeenCrossed(int horseId){  
-        return races.horseFinished(horseId);
+    public synchronized boolean hasFinishLineBeenCrossed(int horseId, int raceNumber){  
+        return races.horseFinished(horseId, raceNumber);
     };
     
     /**
@@ -75,10 +75,10 @@ public class RacingTrack implements IRacingTrack {
     * Method to make a move - an iteration in the racing track.
     */
     @Override
-    public synchronized void makeAMove(){
+    public synchronized void makeAMove(int raceNumber){
         int horseId = ((HorseJockey)Thread.currentThread()).getHorseId();
         
-        while(!this.races.nextMovingHorse(horseId)){
+        while(!this.races.nextMovingHorse(horseId, raceNumber)){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -86,9 +86,9 @@ public class RacingTrack implements IRacingTrack {
             }
         }
         
-        races.makeAMove(horseId);
+        races.makeAMove(horseId, raceNumber);
         
-        if(this.hasFinishLineBeenCrossed(horseId)){
+        if(this.hasFinishLineBeenCrossed(horseId, raceNumber)){
             ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_FINISH_LINE);
         }else{
             ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.RUNNNING);

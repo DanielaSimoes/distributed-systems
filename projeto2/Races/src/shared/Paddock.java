@@ -21,10 +21,10 @@ public class Paddock implements IPaddock {
     * Method to send the horses to paddock.
     */
     @Override
-    public synchronized void proceedToPaddock(){
+    public synchronized void proceedToPaddock(int raceNumber){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
         
-        while(!this.races.allSpectatorsArrivedAtPaddock()){
+        while(!this.races.allSpectatorsArrivedAtPaddock(raceNumber)){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -38,12 +38,12 @@ public class Paddock implements IPaddock {
     * Method to send the horses to the start line.
     */
     @Override
-    public synchronized void proceedToStartLine(){
+    public synchronized void proceedToStartLine(int raceNumber){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
         
-        this.races.addNHorseJockeyLeftThePadock();
+        this.races.addNHorseJockeyLeftThePadock(raceNumber);
         
-        if(this.races.allHorseJockeyLeftThePadock()){
+        if(this.races.allHorseJockeyLeftThePadock(raceNumber)){
             notifyAll();
         }
     };
@@ -53,10 +53,10 @@ public class Paddock implements IPaddock {
     * Method to get the broker to announce the next race.
     */
     @Override
-    public synchronized void summonHorsesToPaddock(){
+    public synchronized void summonHorsesToPaddock(int raceNumber){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
         
-        while(!this.races.allSpectatorsArrivedAtPaddock()){
+        while(!this.races.allSpectatorsArrivedAtPaddock(raceNumber)){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -70,13 +70,13 @@ public class Paddock implements IPaddock {
     * Method to get spectators to go check the horses.
     */
     @Override
-    public synchronized void goCheckHorses(){
+    public synchronized void goCheckHorses(int raceNumber){
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.APPRAISING_THE_HORSES);
         
-        this.races.addNSpectatorsArrivedAtPaddock();
+        this.races.addNSpectatorsArrivedAtPaddock(raceNumber);
         notifyAll();
     
-        while(!this.races.allHorseJockeyLeftThePadock()){
+        while(!this.races.allHorseJockeyLeftThePadock(raceNumber)){
             try{
                 wait();
             }catch (InterruptedException ex){

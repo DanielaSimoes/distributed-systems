@@ -61,27 +61,27 @@ public class Spectators extends Thread implements IEntity{
             switch(this.state){
 
                 case WAITING_FOR_A_RACE_TO_START:
-                    cc.waitForNextRace();
-                    paddock.goCheckHorses();
+                    cc.waitForNextRace(raceId);
+                    paddock.goCheckHorses(raceId);
                     break;
 
                 case APPRAISING_THE_HORSES:
-                    bc.placeABet();
+                    bc.placeABet(raceId);
                     break;
 
                 case PLACING_A_BET:
-                    cc.goWatchTheRace();
+                    cc.goWatchTheRace(raceId);
                     break;
 
                 case WATCHING_A_RACE:
-                    if(cc.haveIWon()){
-                        bc.goCollectTheGains();
+                    if(cc.haveIWon(raceId)){
+                        bc.goCollectTheGains(raceId);
                     }
                     
                     if(races.hasMoreRaces()){
                         this.nextRace();
-                        cc.waitForNextRace();
-                        paddock.goCheckHorses();
+                        cc.waitForNextRace(raceId);
+                        paddock.goCheckHorses(raceId);
                     }else{
                         this.relaxABit = true;
                     }
@@ -90,8 +90,8 @@ public class Spectators extends Thread implements IEntity{
                 case COLLECTING_THE_GAINS:
                     if(races.hasMoreRaces()){
                         this.nextRace();
-                        cc.waitForNextRace();
-                        paddock.goCheckHorses();
+                        cc.waitForNextRace(raceId);
+                        paddock.goCheckHorses(raceId);
                     }else{
                         this.relaxABit = true;
                     }

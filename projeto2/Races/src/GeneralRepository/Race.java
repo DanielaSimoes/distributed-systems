@@ -67,7 +67,7 @@ public class Race {
     LinkedList<Integer> winners = new LinkedList();
     private final int id;
     
-    private final HashMap<Integer, HorseJockey> horsesRunning;
+    private final HashMap<Integer, Integer> horsesStepSize;
     private final HashMap<Integer, Integer> horsesPosition;
     private final HashMap<Integer, Boolean> horsesFinished;
     private final Map<Double, LinkedList<Integer>> horsesOdds;
@@ -87,7 +87,7 @@ public class Race {
         this.id = id;
         this.trackSize = Races.SIZE_OF_RACING_TRACK;
         
-        this.horsesRunning = new HashMap<>();
+        this.horsesStepSize = new HashMap<>();
         this.horsesPosition = new HashMap<>();
         this.horsesFinished = new HashMap<>();
         this.horsesOdds = new TreeMap<>();
@@ -145,12 +145,12 @@ public class Race {
      * @param horseJockey
      * @return if the horse has been selected to run and init its position.
     */
-    public boolean horseHasBeenSelectedToRace(HorseJockey horseJockey){
+    public boolean horseHasBeenSelectedToRace(int horseJockeyID, int stepSize){
         for(int i=0; i<Races.N_OF_HORSES_TO_RUN; i++){
-            if(this.selectedHorses[i]==horseJockey.getHorseId()){
-                this.horsesRunning.put(horseJockey.getHorseId(), horseJockey);
-                this.horsesPosition.put(horseJockey.getHorseId(), 0);
-                this.horsesFinished.put(horseJockey.getHorseId(), false);
+            if(this.selectedHorses[i]==horseJockeyID){
+                this.horsesStepSize.put(horseJockeyID, stepSize);
+                this.horsesPosition.put(horseJockeyID, 0);
+                this.horsesFinished.put(horseJockeyID, false);
                 return true;
             }
         }
@@ -325,7 +325,7 @@ public class Race {
     */
     public void makeAMove(int horseId){
         int start = 1;
-        int end = this.horsesRunning.get(horseId).getStepSize();
+        int end = this.horsesStepSize.get(horseId);
         double random = new Random().nextDouble();
         int result = (int)(start + (random * (end - start)));
 

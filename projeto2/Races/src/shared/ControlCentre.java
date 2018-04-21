@@ -21,10 +21,10 @@ public class ControlCentre implements IControlCentre {
     * Method to report the bet results to the spectators.
     */
     @Override
-    public synchronized void reportResults(){
+    public synchronized void reportResults(int raceNumber){
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
         
-        this.races.setReportResults(true);
+        this.races.setReportResults(true, raceNumber);
         notifyAll();
     };
     
@@ -33,13 +33,13 @@ public class ControlCentre implements IControlCentre {
     * Method to move the horses to paddock.
     */
     @Override
-    public synchronized void proceedToPaddock(){
+    public synchronized void proceedToPaddock(int raceNumber){
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
         
-        this.races.addNHorsesInPaddock();
+        this.races.addNHorsesInPaddock(raceNumber);
         
-        if (this.races.allNHorsesInPaddock()){
-            this.races.setProceedToPaddock(true);
+        if (this.races.allNHorsesInPaddock(raceNumber)){
+            this.races.setProceedToPaddock(true, raceNumber);
             notifyAll();
         }
     };
@@ -50,9 +50,9 @@ public class ControlCentre implements IControlCentre {
     * Method to wait for the next race.
     */
     @Override
-    public synchronized void waitForNextRace(){
+    public synchronized void waitForNextRace(int raceNumber){
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WAITING_FOR_A_RACE_TO_START);
-        while(!this.races.getProceedToPaddock() || this.races.horsesFinished()){
+        while(!this.races.getProceedToPaddock(raceNumber) || this.races.horsesFinished(raceNumber)){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -66,10 +66,10 @@ public class ControlCentre implements IControlCentre {
     * Method to send the spectators watch the race.
     */
     @Override
-    public synchronized void goWatchTheRace(){
+    public synchronized void goWatchTheRace(int raceNumber){
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
         
-        while(!this.races.getReportResults()){
+        while(!this.races.getReportResults(raceNumber)){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -83,9 +83,9 @@ public class ControlCentre implements IControlCentre {
     * Method to verify if a spectator has won the bet.
     */
     @Override
-    public synchronized boolean haveIWon(){
+    public synchronized boolean haveIWon(int raceNumber){
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
-        return this.races.haveIWon();
+        return this.races.haveIWon(raceNumber);
     };
    
     /**

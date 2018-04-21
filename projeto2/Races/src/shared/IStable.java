@@ -5,7 +5,7 @@ package shared;
  * @author Daniela Simões, 76771
  */
 public interface IStable {
-    public void summonHorsesToPaddock();
-    public void proceedToStable();
+    public void summonHorsesToPaddock(int raceNumber);
+    public void proceedToStable(int raceNumber, int horseID, int horseStepSize);
     public void entertainTheGuests();
 }
