@@ -135,7 +135,7 @@ public class Log {
         head += " ";
 
         for(int i=0; i<Races.N_OF_HORSES; i++){
-            if(this.races.horseHasBeenSelectedToRace(i, raceNumber)){
+            if(this.races.horseHasBeenSelectedToRace(i, -1, raceNumber)){
                 try{
                     head += String.format(" %2.1f %2d   %2d    %d ", this.races.getHorseOdd(i, raceNumber), this.races.getHorseIteration(i, raceNumber), this.races.getHorsePosition(i, raceNumber), this.races.getStandingPosition(i, raceNumber));
                 }catch(java.lang.NullPointerException e){
@@ -166,7 +166,7 @@ public class Log {
         head += (raceNumber+1);
 
         for(int i=0; i<Races.N_OF_HORSES; i++){
-            if(this.races.horseHasBeenSelectedToRace(i, raceNumber)){
+            if(this.races.horseHasBeenSelectedToRace(i, -1, raceNumber)){
                 head += "  " + horseJockeysState.get(i) + " " + String.format("%3d", this.races.getHorseJockeyStepSize(i));
             }
         }

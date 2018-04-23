@@ -7,11 +7,6 @@ package GeneralRepository;
 
 import java.util.HashMap;
 
-import entities.BrokerState;
-import entities.HorseJockeyState;
-import entities.SpectatorsState;
-import entities.HorseJockey;
-import entities.IEntity;
 import java.util.LinkedList;
 
 /**
@@ -74,7 +69,7 @@ public class Races {
     *
     * Races Constructor
     */
-    private Races(){
+    public Races(){
         this.spectatorAmmount = new HashMap<>();
         this.horseJockeyStepSize = new HashMap<>();
         this.races = new Race[N_OF_RACES];
@@ -102,6 +97,7 @@ public class Races {
    
     /**
      *
+     * @param raceNumber
      * @return
      */
     public synchronized Bet chooseBet(int raceNumber){        
@@ -111,16 +107,17 @@ public class Races {
     /**
     *
     * Method to verify if a given horse was selected to a race.
-    * @param horseJockey The HorseJockey object.
+     * @param horseJockeyID
+     * @param horseStepSize
+     * @param raceNumber
      * @return 
     */
-    public boolean horseHasBeenSelectedToRace(int horseJockeyID, int horseStepSize, int raceNumber){        
-        return this.races[raceNumber].horseHasBeenSelectedToRace(horseJockeyID, horseStepSize);
-    }
-    
-    
-    public boolean horseHasBeenSelectedToRace(int horseJockey, int raceNumber){        
-        return this.races[raceNumber].horseHasBeenSelectedToRace(horseJockey);
+    public boolean horseHasBeenSelectedToRace(int horseJockeyID, int horseStepSize, int raceNumber){    
+        if(horseStepSize==-1){
+            return this.races[raceNumber].horseHasBeenSelectedToRace(horseJockeyID);
+        }else{
+            return this.races[raceNumber].horseHasBeenSelectedToRace(horseJockeyID, horseStepSize);
+        }
     }
     
     /**
@@ -132,8 +129,8 @@ public class Races {
         this.horseJockeyStepSize.put(id, stepSize);
         
         if(this.horseJockeyStepSize.size()==Races.N_OF_HORSES){
-            for(int i=0; i<this.races.length; i++){
-                this.races[i].generateOdds(this.horseJockeyStepSize);
+            for (Race race : this.races) {
+                race.generateOdds(this.horseJockeyStepSize);
             }
         }
     }
@@ -149,6 +146,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      * @return
      */
     public synchronized boolean areThereAnyWinners(int raceNumber){
@@ -157,6 +155,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      * @return
      */
     public synchronized boolean haveIWon(int raceNumber){
@@ -166,6 +165,7 @@ public class Races {
     /**
     *
     * Method to get the winner of the race.
+     * @param raceNumber
      * @return 
     */
     public LinkedList<Integer> getWinner(int raceNumber){        
@@ -185,6 +185,7 @@ public class Races {
     *
     * Method to allow the HorseJockey to make a move in the race.
     * @param horseId The ID of the HorseJockey.
+     * @param raceNumber
     */
     public void makeAMove(int horseId, int raceNumber){        
         this.races[raceNumber].makeAMove(horseId);
@@ -193,6 +194,7 @@ public class Races {
     /**
      *
      * @param horseId
+     * @param raceNumber
      * @return
      */
     public int getHorseIteration(int horseId, int raceNumber){        
@@ -202,6 +204,7 @@ public class Races {
     /**
      *
      * @param horseId
+     * @param raceNumber
      * @return
      */
     public int getStandingPosition(int horseId, int raceNumber){
@@ -211,6 +214,7 @@ public class Races {
     /**
      *
      * @param horseJockeyId
+     * @param raceNumber
      * @return
      */
     public boolean nextMovingHorse(int horseJockeyId, int raceNumber){        
@@ -220,22 +224,16 @@ public class Races {
     /**
      *
      * @param horseId
+     * @param raceNumber
      * @return
      */
     public boolean horseFinished(int horseId, int raceNumber){        
         return this.races[raceNumber].horseFinished(horseId);
     }
-    
+   
     /**
      *
-     * @return
-     */
-    public boolean horsesFinished(int raceNumber){        
-        return this.races[raceNumber].horsesFinished();
-    }
-    
-    /**
-     *
+     * @param raceNumber
      * @return
      */
     public int getNRunningHorses(int raceNumber){        
@@ -244,6 +242,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      * @return
      */
     public synchronized int getCurrentRaceDistance(int raceNumber){
@@ -255,6 +254,7 @@ public class Races {
 
     /**
      *
+     * @param raceNumber
      * @return
      */
 
@@ -265,6 +265,7 @@ public class Races {
     /**
      *
      * @param startTheRace
+     * @param raceNumber
      */
     public synchronized void setStartTheRace(boolean startTheRace, int raceNumber){        
         this.races[raceNumber].setStartTheRace(startTheRace);
@@ -273,6 +274,7 @@ public class Races {
 
     /**
      *
+     * @param raceNumber
      * @return
      */
 
@@ -282,6 +284,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      */
     public synchronized void addWakedHorsesToPaddock(int raceNumber){        
         this.races[raceNumber].addWakedHorsesToPaddock();
@@ -289,6 +292,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      * @return
      */
     public synchronized boolean getAnnouncedNextRace(int raceNumber){        
@@ -302,6 +306,7 @@ public class Races {
     /**
      *
      * @param annuncedNextRace
+     * @param raceNumber
      */
     public synchronized void setAnnouncedNextRace(boolean annuncedNextRace, int raceNumber){        
         this.races[raceNumber].setAnnuncedNextRace(annuncedNextRace);
@@ -310,6 +315,7 @@ public class Races {
 
     /**
      *
+     * @param raceNumber
      * @return
      */
 
@@ -319,6 +325,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      */
     public void addNSpectatorsArrivedAtPaddock(int raceNumber){        
         this.races[raceNumber].addNSpectatorsArrivedAtPaddock();
@@ -326,6 +333,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      * @return
      */
     public boolean allHorseJockeyLeftThePadock(int raceNumber){        
@@ -334,6 +342,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      */
     public void addNHorseJockeyLeftThePadock(int raceNumber){        
         this.races[raceNumber].addNHorseJockeyLeftThePadock();
@@ -344,6 +353,7 @@ public class Races {
     /**
      *
      * @param set
+     * @param raceNumber
      */
 
     public synchronized void setReportResults(boolean set, int raceNumber){        
@@ -352,6 +362,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      * @return
      */
     public synchronized boolean getReportResults(int raceNumber){        
@@ -361,6 +372,7 @@ public class Races {
     /**
      *
      * @param set
+     * @param raceNumber
      */
     public synchronized void setProceedToPaddock(boolean set, int raceNumber){        
         this.races[raceNumber].setProceedToPaddock(set);
@@ -368,6 +380,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      * @return
      */
     public synchronized boolean getProceedToPaddock(int raceNumber){        
@@ -376,6 +389,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      * @return
      */
     public synchronized boolean allNHorsesInPaddock(int raceNumber){        
@@ -384,6 +398,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      */
     public synchronized void addNHorsesInPaddock(int raceNumber){        
         this.races[raceNumber].addNHorsesInPaddock();
@@ -393,6 +408,7 @@ public class Races {
 
     /**
      *
+     * @param raceNumber
      * @return
      */
 
@@ -402,6 +418,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      * @return
      */
     public boolean allSpectatorsBettsAceppted(int raceNumber){        
@@ -411,6 +428,7 @@ public class Races {
     /**
      *
      * @param bet
+     * @param raceNumber
      */
     public void addBetOfSpectator(Bet bet, int raceNumber){        
         this.races[raceNumber].addBetOfSpectator(bet);
@@ -418,6 +436,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      * @return
      */
     public boolean allSpectatorsBetted(int raceNumber){        
@@ -426,6 +445,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      */
     public void waitAcceptedTheBet(int raceNumber){
         this.races[raceNumber].waitAcceptedTheBet();
@@ -434,6 +454,7 @@ public class Races {
     /**
      *
      * @param i
+     * @param raceNumber
      */
     public void acceptBet(int i, int raceNumber){
         this.races[raceNumber].acceptBet(i);
@@ -441,6 +462,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      * @return
      */
     public Integer poolWaitingToBePaidSpectators(int raceNumber){
@@ -450,6 +472,7 @@ public class Races {
     /**
      *
      * @param i
+     * @param raceNumber
      */
     public void addWaitingToBePaidSpectator(int i, int raceNumber){
         this.races[raceNumber].addWaitingToBePaidSpectator(i);
@@ -457,6 +480,7 @@ public class Races {
     
     /**
      *
+     * @param raceNumber
      * @return
      */
     public boolean allSpectatorsPaid(int raceNumber){
@@ -466,6 +490,7 @@ public class Races {
     /**
      *
      * @param i
+     * @param raceNumber
      * @return
      */
     public synchronized boolean getPaidSpectators(int i, int raceNumber){        
@@ -476,6 +501,7 @@ public class Races {
      *
      * @param i
      * @param set
+     * @param raceNumber
      */
     public synchronized void setPaidSpectators(int i, boolean set, int raceNumber){        
         this.races[raceNumber].setPaidSpectators(i, set);
@@ -484,6 +510,7 @@ public class Races {
     /**
      *
      * @param spectatorId
+     * @param raceNumber
      * @return
      */
     public Bet getSpectatorBet(int spectatorId, int raceNumber){        
@@ -493,6 +520,7 @@ public class Races {
     /**
      *
      * @param horseId
+     * @param raceNumber
      * @return
      */
     public double getHorseOdd(int horseId, int raceNumber){        
@@ -502,6 +530,7 @@ public class Races {
     /**
      *
      * @param horseId
+     * @param raceNumber
      * @return
      */
     public int getHorsePosition(int horseId, int raceNumber){        
