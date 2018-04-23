@@ -63,7 +63,7 @@ public class Races {
     private final HashMap<Integer, Integer> horseJockeyStepSize;
     
     private final LinkedList<Integer> horseJockeySelected;
-    private boolean allInitStatesRegistered = false;
+    private final boolean allInitStatesRegistered = false;
     
     /**
      * Race array.

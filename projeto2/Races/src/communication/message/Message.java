@@ -32,6 +32,12 @@ public class Message{
         this.type = type; 
     }
     
+    /**
+     *
+     * @param type
+     * @param message
+     * @param message2
+     */
     public Message(MessageType type, int message, int message2){
         this.message_i = message;
         this.message_i2 = message2;

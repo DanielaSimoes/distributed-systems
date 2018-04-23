@@ -5,7 +5,6 @@
  */
 package shared;
 
-import GeneralRepository.Races;
 import GeneralRepository.RacesProxy;
 import entities.Broker;
 import entities.BrokerState;
@@ -18,7 +17,7 @@ import entities.HorseJockeyState;
  */
 public class RacingTrack implements IRacingTrack {
     
-    private RacesProxy races;
+    private final RacesProxy races;
     
     public RacingTrack(RacesProxy races){
         this.races = races;
@@ -27,6 +26,7 @@ public class RacingTrack implements IRacingTrack {
     /**
     *
     * Method to start the race.
+     * @param raceNumber
     */
     @Override
     public synchronized void startTheRace(int raceNumber){
@@ -49,6 +49,7 @@ public class RacingTrack implements IRacingTrack {
     /**
     *
     * Method to get the horses to proceed to the start line.
+     * @param raceNumber
     */
     @Override
     public synchronized void proceedToStartLine(int raceNumber){
@@ -69,6 +70,8 @@ public class RacingTrack implements IRacingTrack {
     *
     * Method to verify if a given horse crossed the finish line.
     * @param horseId The HorseJockey ID.
+     * @param raceNumber
+     * @return 
     */
     @Override
     public synchronized boolean hasFinishLineBeenCrossed(int horseId, int raceNumber){  
@@ -78,6 +81,7 @@ public class RacingTrack implements IRacingTrack {
     /**
     *
     * Method to make a move - an iteration in the racing track.
+     * @param raceNumber
     */
     @Override
     public synchronized void makeAMove(int raceNumber){

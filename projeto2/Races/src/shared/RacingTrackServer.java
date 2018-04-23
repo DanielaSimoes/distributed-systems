@@ -38,8 +38,8 @@ public class RacingTrackServer extends RacingTrack implements ServerInterface{
                 super.proceedToStartLine(inMessage.getInteger());
                 break;
             case hasFinishLineBeenCrossed:
-                super.hasFinishLineBeenCrossed(inMessage.getInteger(), inMessage.getInteger());
-                break;
+                boolean response = super.hasFinishLineBeenCrossed(inMessage.getInteger(), inMessage.getInteger());   
+                return new Message(MessageType.ACK, response);
             case makeAMove:
                 super.makeAMove(inMessage.getInteger());
                 break;

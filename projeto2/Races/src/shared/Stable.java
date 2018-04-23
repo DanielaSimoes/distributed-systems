@@ -1,14 +1,11 @@
 package shared;
 
-import GeneralRepository.Race;
 import GeneralRepository.Races;
 import GeneralRepository.RacesProxy;
 import entities.HorseJockey;
 import entities.HorseJockeyState;
 import entities.Broker;
 import entities.BrokerState;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * This file contains the shared memory region Stable.
@@ -18,7 +15,7 @@ public class Stable implements IStable {
     
     private boolean wakeEntertainTheGuests = false;
     
-    private RacesProxy races;
+    private final RacesProxy races;
     
     public Stable(RacesProxy races){
         this.races = races;
@@ -27,6 +24,7 @@ public class Stable implements IStable {
     /**
     *
     * Method to get the broker to announce the next race.
+     * @param raceNumber
     */
     @Override
     public synchronized void summonHorsesToPaddock(int raceNumber){
@@ -38,6 +36,9 @@ public class Stable implements IStable {
     /**
     *
     * Method to get the horses to proceed to stable.
+     * @param raceNumber
+     * @param horseID
+     * @param horseStepSize
     */
     @Override
     public synchronized void proceedToStable(int raceNumber, int horseID, int horseStepSize){

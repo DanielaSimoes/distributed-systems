@@ -15,7 +15,7 @@ import entities.SpectatorsState;
  */
 public class ControlCentre implements IControlCentre {
     
-    private RacesProxy races;
+    private final RacesProxy races;
     
     public ControlCentre(RacesProxy races){
         this.races = races;
@@ -24,6 +24,7 @@ public class ControlCentre implements IControlCentre {
     /**
     *
     * Method to report the bet results to the spectators.
+     * @param raceNumber
     */
     @Override
     public synchronized void reportResults(int raceNumber){
@@ -36,6 +37,7 @@ public class ControlCentre implements IControlCentre {
     /**
     *
     * Method to move the horses to paddock.
+     * @param raceNumber
     */
     @Override
     public synchronized void proceedToPaddock(int raceNumber){
@@ -53,6 +55,7 @@ public class ControlCentre implements IControlCentre {
     /**
     *
     * Method to wait for the next race.
+     * @param raceNumber
     */
     @Override
     public synchronized void waitForNextRace(int raceNumber){
@@ -69,6 +72,7 @@ public class ControlCentre implements IControlCentre {
     /**
     *
     * Method to send the spectators watch the race.
+     * @param raceNumber
     */
     @Override
     public synchronized void goWatchTheRace(int raceNumber){
@@ -86,6 +90,8 @@ public class ControlCentre implements IControlCentre {
     /**
     *
     * Method to verify if a spectator has won the bet.
+     * @param raceNumber
+     * @return 
     */
     @Override
     public synchronized boolean haveIWon(int raceNumber){

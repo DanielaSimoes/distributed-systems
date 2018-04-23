@@ -13,7 +13,7 @@ import GeneralRepository.RacesProxy;
  */
 public class BettingCentre implements IBettingCentre {
     
-    private RacesProxy races;
+    private final RacesProxy races;
     
     public BettingCentre(RacesProxy races){
         this.races = races;
@@ -22,6 +22,7 @@ public class BettingCentre implements IBettingCentre {
     /**
     *
     * Method to the broker accept the bets of the spectators.
+     * @param raceNumber
     */
     @Override
     public void acceptTheBets(int raceNumber){
@@ -74,6 +75,8 @@ public class BettingCentre implements IBettingCentre {
     /**
     *
     * Method to verify if are spectators who have won the bets.
+     * @param raceNumber
+     * @return 
     */
     @Override
     public synchronized boolean areThereAnyWinners(int raceNumber){
@@ -84,6 +87,7 @@ public class BettingCentre implements IBettingCentre {
     /**
     *
     * Method to allow the spectator to place a bet.
+     * @param raceNumber
     */
     @Override
     public void placeABet(int raceNumber){
@@ -99,6 +103,7 @@ public class BettingCentre implements IBettingCentre {
     /**
     *
     * Method to the spectator go collect the gains and increase the bank.
+     * @param raceNumber
     */
     @Override
     public synchronized void goCollectTheGains(int raceNumber){

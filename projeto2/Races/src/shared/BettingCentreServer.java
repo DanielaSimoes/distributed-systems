@@ -38,8 +38,8 @@ public class BettingCentreServer extends BettingCentre implements ServerInterfac
                 super.honourTheBets(inMessage.getInteger());
                 break;
             case areThereAnyWinners:
-                super.areThereAnyWinners(inMessage.getInteger());
-                break;
+                boolean response = super.areThereAnyWinners(inMessage.getInteger());
+                return new Message(MessageType.ACK, response);
             case placeABet:
                 super.placeABet(inMessage.getInteger());
                 break;

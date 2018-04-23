@@ -44,8 +44,8 @@ public class ControlCentreServer extends ControlCentre implements ServerInterfac
                 super.goWatchTheRace(inMessage.getInteger());
                 break;
             case haveIWon:
-                super.haveIWon(inMessage.getInteger());
-                break;
+                boolean response = super.haveIWon(inMessage.getInteger());
+                return new Message(MessageType.ACK, response);
             case relaxABit:
                 super.relaxABit();
                 break;

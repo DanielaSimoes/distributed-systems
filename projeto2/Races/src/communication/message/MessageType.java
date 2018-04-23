@@ -19,5 +19,13 @@ public enum MessageType {
     /* Vars */
     N_OF_HORSES, HORSE_MAX_STEP_SIZE, N_OF_SPECTATORS, MAX_SPECTATOR_BET,
     /* Log messages */
-    setSpectatorAmount, setBrokerState, setHorseJockeyState, setSpectatorState
+    setSpectatorAmount, setBrokerState, setHorseJockeyState, setSpectatorState,
+    /* Races messages */
+    chooseBet, horseHasBeenSelectedToRace, setHorseJockeyStepSize, getHorseJockeyStepSize, getWinner, hasMoreRaces, getHorseIteration,
+    getStandingPosition, nextMovingHorse, horseFinished, horsesFinished, getNRunningHorses, getCurrentRaceDistance, getStartTheRace,
+    setStartTheRace, getWakedHorsesToPaddock, addWakedHorsesToPaddock, getAnnouncedNextRace, setAnnouncedNextRace, allSpectatorsArrivedAtPaddock,
+    addNSpectatorsArrivedAtPaddock, allHorseJockeyLeftThePadock, addNHorseJockeyLeftThePadock, setReportResults, getReportResults,
+    setProceedToPaddock, getProceedToPaddock, allNHorsesInPaddock, addNHorsesInPaddock, waitAddedBet, allSpectatorsBettsAceppted,
+    addBetOfSpectator, allSpectatorsBetted, waitAcceptedTheBet, acceptBet, poolWaitingToBePaidSpectators, addWaitingToBePaidSpectator,
+    allSpectatorsPaid, getPaidSpectators, setPaidSpectators, getSpectatorBet, getHorseOdd, getHorsePosition
 }

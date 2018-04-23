@@ -36,7 +36,7 @@ public class Log {
     private static PrintWriter pw;
     private boolean event_opened = false;
     
-    private int[] spectatorAmounts;
+    private final int[] spectatorAmounts;
     private BrokerState brokerState;
     private final HashMap<Integer, HorseJockeyState> horseJockeysState;
     private final HashMap<Integer, SpectatorsState> spectatorsState;
@@ -118,6 +118,7 @@ public class Log {
     
     /**
      *
+     * @param raceNumber
      */
     public synchronized void writeLineRace(int raceNumber){
                 
