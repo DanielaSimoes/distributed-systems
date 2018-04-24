@@ -201,15 +201,16 @@ public class Race {
     
     /**
      * Method to choose the bet to each spectator.
+     * @param spectatorId
+     * @param initialBet
+     * @param moneyToBet
      * @return
      */
-    public synchronized Bet chooseBet(){
-        Spectators spectator = ((Spectators)Thread.currentThread());
-        
+    public synchronized Bet chooseBet(int spectatorId, int initialBet, int moneyToBet){
         // get initial bank and divide with the maximum amount possible to bet
-        double perception = spectator.getInitialBet() / Races.MAX_SPECTATOR_BET;
+        double perception = initialBet / Races.MAX_SPECTATOR_BET;
         // the capacity of the user compared to the initial bank
-        double capacity = spectator.getMoneyToBet() / spectator.getInitialBet();
+        double capacity = moneyToBet / initialBet;
         // 
         double peek = perception * capacity * 100;
         
@@ -238,11 +239,9 @@ public class Race {
             i++;
         }
         
-        int amountToBet = (int)(spectator.getMoneyToBet()*0.1);
+        int amountToBet = (int)(moneyToBet*0.1);
         
-        spectator.subtractMoneyToBet(amountToBet);
-        
-        return new Bet(horseId, amountToBet, spectator.getSpectatorId(), odd);
+        return new Bet(horseId, amountToBet, spectatorId, odd);
     }
     
     /**
@@ -300,16 +299,15 @@ public class Race {
     
     /**
      * Method to verify if a spectator has won the bet.
+     * @param spectatorId
      * @return
      */
-    public synchronized boolean haveIWon(){
-        Spectators spectator = ((Spectators)Thread.currentThread());
-        
+    public synchronized boolean haveIWon(int spectatorId){
         boolean haveIWon = false;
         
         for (Integer horseId : this.winners) {
             for(Bet bet : this.bets){
-                if(bet.getHorseId() == horseId && bet.getSpectatorId()==spectator.getSpectatorId()){
+                if(bet.getHorseId() == horseId && bet.getSpectatorId()==spectatorId){
                     haveIWon = true;
                 }
             }
@@ -635,13 +633,11 @@ public class Race {
     /**
      * Method to add the bet of the spectator.
      * @param bet
+     * @param spectatorId
      */
-    protected void addBetOfSpectator(Bet bet){
-        Spectators spectator = ((Spectators)Thread.currentThread());
-        
+    protected void addBetOfSpectator(Bet bet, int spectatorId){
         synchronized (this.addedBet) {
             this.bets.add(bet);
-            Integer spectatorId = (Integer)spectator.getSpectatorId();
             
             this.betsOfSpectators.add(spectatorId);
             //System.out.println("Spectator Placed Bet S" + spectator.getSpectatorId());
@@ -671,14 +667,13 @@ public class Race {
     
     /**
      * Method wait for the spectator bet to be accepted by the broker.
+     * @param spectatorId
      */
-    protected void waitAcceptedTheBet(){
-        Spectators spectator = ((Spectators)Thread.currentThread());
-        
-        synchronized (this.waitingAcceptedTheBet[spectator.getSpectatorId()]) {
+    protected void waitAcceptedTheBet(int spectatorId){
+        synchronized (this.waitingAcceptedTheBet[spectatorId]) {
             try {
-                this.waitingAcceptedTheBet[spectator.getSpectatorId()].wait();
-                this.acceptedBet[spectator.getSpectatorId()] = true;
+                this.waitingAcceptedTheBet[spectatorId].wait();
+                this.acceptedBet[spectatorId] = true;
             } catch (Exception e) {}
         }
     }
@@ -719,26 +714,24 @@ public class Race {
     
     /**
      * Method to verify if a given spectator has been paid.
-     * @param i
+     * @param spectatorId
      * @return
      */
-    protected synchronized boolean getPaidSpectators(int i){
-        boolean pay = this.paidSpectators[i];
+    protected synchronized Integer getPaidSpectators(int spectatorId){
+        boolean pay = this.paidSpectators[spectatorId];
         
         if(pay){
-            Spectators spectator = ((Spectators)Thread.currentThread());
-
             for (Integer horseId : this.winners) {
                 for(Bet bet : this.bets){
-                    if(bet.getHorseId() == horseId && bet.getSpectatorId()==spectator.getSpectatorId()){
-                        spectator.addMoneyToBet((int)(bet.getAmount()*bet.getOdd()));
+                    if(bet.getHorseId() == horseId && bet.getSpectatorId()==spectatorId){
+                        return (int)(bet.getAmount()*bet.getOdd());
                     }
                 }
             }
             
         }
         
-        return pay;
+        return -1;
     }
     
     /**

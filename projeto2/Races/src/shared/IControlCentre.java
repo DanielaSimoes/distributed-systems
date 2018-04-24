@@ -9,6 +9,6 @@ public interface IControlCentre {
     public void proceedToPaddock(int raceNumber);
     public void waitForNextRace(int raceNumber);
     public void goWatchTheRace(int raceNumber);
-    public boolean haveIWon(int raceNumber);
+    public boolean haveIWon(int raceNumber, int spectatorId);
     public void relaxABit();
 }

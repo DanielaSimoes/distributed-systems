@@ -59,8 +59,9 @@ public class HorseJockey extends Thread implements IEntity{
     @Override
     public void run(){  
         this.races.setHorseJockeyStepSize(id, stepSize);
+        
         this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
-        stable.proceedToStable(raceId, this.id, this.stepSize);
+        this.raceId = stable.proceedToStable(raceId, this.id, this.stepSize);
                     
         while(!this.entertainTheGuests){
             switch(this.state){
@@ -74,24 +75,24 @@ public class HorseJockey extends Thread implements IEntity{
                     break;
                 case AT_THE_PADDOCK:
                     paddock.proceedToStartLine(raceId);
-                    rt.proceedToStartLine(raceId);
+                    rt.proceedToStartLine(raceId, this.id);
                     break;
                 case AT_THE_START_LINE:
-                    rt.makeAMove(raceId);
+                    rt.makeAMove(raceId, this.id);
                     this.log.makeAMove();
                     break;
                 case RUNNNING:
                     while(!rt.hasFinishLineBeenCrossed(this.id, raceId)){
-                        rt.makeAMove(raceId);
+                        rt.makeAMove(raceId, this.id);
                         this.log.makeAMove();
                     }
                     break;
                 case AT_THE_FINISH_LINE:
                     if(races.hasMoreRaces()){
                         this.nextRace();
-                        stable.proceedToStable(raceId, this.id, this.stepSize);
+                        this.raceId = stable.proceedToStable(raceId, this.id, this.stepSize);
                     }else{
-                        stable.proceedToStable(raceId, this.id, this.stepSize);
+                        this.raceId = stable.proceedToStable(raceId, this.id, this.stepSize);
                     }
                     
                     if(!races.hasMoreRaces()){

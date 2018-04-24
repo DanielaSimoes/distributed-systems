@@ -1,5 +1,6 @@
 package entities;
 
+import GeneralRepository.Bet;
 import GeneralRepository.Log;
 import GeneralRepository.Races;
 import GeneralRepository.RacesProxy;
@@ -69,7 +70,8 @@ public class Spectators extends Thread implements IEntity{
                     break;
 
                 case APPRAISING_THE_HORSES:
-                    bc.placeABet(raceId);
+                    Bet bet = bc.placeABet(raceId, this.id, this.initialMoney, this.moneyToBet);
+                    this.subtractMoneyToBet(bet.getAmount());
                     break;
 
                 case PLACING_A_BET:
@@ -77,8 +79,9 @@ public class Spectators extends Thread implements IEntity{
                     break;
 
                 case WATCHING_A_RACE:
-                    if(cc.haveIWon(raceId)){
-                        bc.goCollectTheGains(raceId);
+                    if(cc.haveIWon(raceId, this.id)){
+                        int gains = bc.goCollectTheGains(raceId, this.id);
+                        this.addMoneyToBet(gains);
                     }
                     
                     if(races.hasMoreRaces()){

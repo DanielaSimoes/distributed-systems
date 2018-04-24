@@ -6,6 +6,6 @@ package shared;
  */
 public interface IStable {
     public void summonHorsesToPaddock(int raceNumber);
-    public void proceedToStable(int raceNumber, int horseID, int horseStepSize);
+    public int proceedToStable(int raceNumber, int horseID, int horseStepSize);
     public void entertainTheGuests();
 }

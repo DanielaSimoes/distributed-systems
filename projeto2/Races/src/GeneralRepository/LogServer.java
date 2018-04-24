@@ -28,79 +28,20 @@ public class LogServer extends Log implements ServerInterface{
     @Override
     public Message processAndReply(Message inMessage, ServerChannel scon) throws MessageException, SocketException {
         switch(inMessage.getType()){
-            case newGame:
-                if(inMessage.getInteger()== -1){
-                    super.newGame();
-                }else{
-                    super.newGame(inMessage.getInteger());
-                }
+            case setSpectatorState:
+                super.setSpectatorState(inMessage.getInteger1(), inMessage.getSpectatorState(), inMessage.getInteger2());
                 break;
-            case writeEnd:
-                super.writeEnd();
+            case setHorseJockeyState:
+                super.setHorseJockeyState(inMessage.getInteger1(), inMessage.getHorseJockeyState(), inMessage.getInteger2());
                 break;
-            case newTrial:
-                super.newTrial();
+            case setBrokerState:
+                super.setBrokerState(inMessage.getBrokerState(), inMessage.getInteger1());
                 break;
-            case getNumberOfGames:
-                return new Message(MessageType.ACK, super.getNumberOfGames());
-            case declareMatchWinner:
-                super.declareMatchWinner();
+            case setSpectatorAmount:
+                super.setSpectatorAmount(inMessage.getInteger1(), inMessage.getInteger2());
                 break;
-            case getTotalNumberOfGames:
-                return new Message(MessageType.ACK, super.getTotalNumberOfGames());
-            case updateRope:
-                String t = inMessage.getString();
-                int i = inMessage.getInteger();
-                super.updateRope(t, i);
-                break;
-            case assertTrialDecision:
-                return new Message(MessageType.ACK, super.assertTrialDecision());
-            case initContestant:
-                super.initContestant(inMessage.getContestantState(), 
-                        inMessage.getString(), 
-                        inMessage.getInteger());
-                break;
-            case setContestantState:
-                super.setContestantState(inMessage.getContestantState(), 
-                        inMessage.getString(),
-                        inMessage.getInteger());
-                break;
-            case initCoachState:
-                super.initCoachState(inMessage.getString(), inMessage.getCoachState());
-                break;
-            case setCoachState:
-                super.setCoachState(inMessage.getString(), inMessage.getCoachState());
-                break;
-            case initRefereeState:
-                super.initRefereeState(inMessage.getRefereeState());
-                break;
-            case setRefereeState:
-                super.setRefereeState(inMessage.getRefereeState());
-                break;
-            case setContestantLastTrial:
-                super.setContestantLastTrial(inMessage.getString(), inMessage.getInteger());
-                break;
-            case refreshStrengths:
-                super.refreshStrengths(inMessage.getString());
-                break;
-            case setPosition:
-                super.setPosition(inMessage.getString(), inMessage.getInteger());
-                break;
-            case removePosition:
-                super.removePosition(inMessage.getString(), inMessage.getInteger());
-                break;
-            case printGameWinner:
-                super.printGameWinner();
-                break;
-            case TERMINATE:
-                this.numberOfClientsRunning--;
-                
-                if(this.numberOfClientsRunning<=0){
-                    super.terminateServers();
-                    System.out.println("Terminating servers...");
-                    serverEnded = true;
-                    super.writeEnd();
-                }
+            case makeAMove:
+                super.makeAMove(inMessage.getInteger1());
                 break;
         }
         

@@ -1,13 +1,6 @@
 package shared;
 
-import GeneralRepository.Races;
 import GeneralRepository.RacesProxy;
-import entities.Broker;
-import entities.BrokerState;
-import entities.HorseJockey;
-import entities.HorseJockeyState;
-import entities.Spectators;
-import entities.SpectatorsState;
 
 /**
  * This file contains the shared memory region Paddock.
@@ -28,8 +21,6 @@ public class Paddock implements IPaddock {
     */
     @Override
     public synchronized void proceedToPaddock(int raceNumber){
-        ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
-        
         while(!this.races.allSpectatorsArrivedAtPaddock(raceNumber)){
             try{
                 wait();
@@ -46,8 +37,6 @@ public class Paddock implements IPaddock {
     */
     @Override
     public synchronized void proceedToStartLine(int raceNumber){
-        ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
-        
         this.races.addNHorseJockeyLeftThePadock(raceNumber);
         
         if(this.races.allHorseJockeyLeftThePadock(raceNumber)){
@@ -62,8 +51,6 @@ public class Paddock implements IPaddock {
     */
     @Override
     public synchronized void summonHorsesToPaddock(int raceNumber){
-        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
-        
         while(!this.races.allSpectatorsArrivedAtPaddock(raceNumber)){
             try{
                 wait();
@@ -80,8 +67,6 @@ public class Paddock implements IPaddock {
     */
     @Override
     public synchronized void goCheckHorses(int raceNumber){
-        ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.APPRAISING_THE_HORSES);
-        
         this.races.addNSpectatorsArrivedAtPaddock(raceNumber);
         notifyAll();
     

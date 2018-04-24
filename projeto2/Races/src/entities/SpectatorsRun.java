@@ -5,6 +5,9 @@
  */
 package entities;
 
+import shared.PaddockProxy;
+import shared.ControlCentreProxy;
+import shared.BettingCentreProxy;
 import GeneralRepository.RacesProxy;
 import communication.Proxy.ClientProxy;
 import communication.message.Message;
@@ -17,15 +20,16 @@ import settings.NodeSettsProxy;
  * @author Daniela
  */
 public class SpectatorsRun {
-    private static PaddockProxy paddock;
-    private static ControlCentreProxy controlCentre;
-    private static BettingCentreProxy bettingCentre;
-    private static RacesProxy races;
+    private static PaddockProxy paddock = new PaddockProxy();
+    private static ControlCentreProxy controlCentre = new ControlCentreProxy();
+    private static BettingCentreProxy bettingCentre = new BettingCentreProxy();
+    private static RacesProxy races = new RacesProxy();
     
     private static int N_OF_SPECTATORS;
 
     public static void main(String [] args) {
         LogProxy log = new LogProxy();
+        
         /* init proxies */
         paddock = new PaddockProxy();
         controlCentre = new ControlCentreProxy();

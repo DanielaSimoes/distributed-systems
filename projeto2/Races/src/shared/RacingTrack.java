@@ -6,10 +6,6 @@
 package shared;
 
 import GeneralRepository.RacesProxy;
-import entities.Broker;
-import entities.BrokerState;
-import entities.HorseJockey;
-import entities.HorseJockeyState;
 
 /**
  * This file contains the shared memory region Racing Track.
@@ -30,8 +26,6 @@ public class RacingTrack implements IRacingTrack {
     */
     @Override
     public synchronized void startTheRace(int raceNumber){
-        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
-       
         races.setStartTheRace(true, raceNumber);
         notifyAll();
         
@@ -50,12 +44,11 @@ public class RacingTrack implements IRacingTrack {
     *
     * Method to get the horses to proceed to the start line.
      * @param raceNumber
+     * @param horseId
     */
     @Override
-    public synchronized void proceedToStartLine(int raceNumber){
-        ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
-        
-        while(!(races.getStartTheRace(raceNumber) || !this.races.nextMovingHorse(((HorseJockey)Thread.currentThread()).getHorseId(), raceNumber))){
+    public synchronized void proceedToStartLine(int raceNumber, int horseId){
+        while(!(races.getStartTheRace(raceNumber) || !this.races.nextMovingHorse(horseId, raceNumber))){
             try{
                 wait();
             }catch (InterruptedException ex){
@@ -82,11 +75,10 @@ public class RacingTrack implements IRacingTrack {
     *
     * Method to make a move - an iteration in the racing track.
      * @param raceNumber
+     * @param horseId
     */
     @Override
-    public synchronized void makeAMove(int raceNumber){
-        int horseId = ((HorseJockey)Thread.currentThread()).getHorseId();
-        
+    public synchronized void makeAMove(int raceNumber, int horseId){
         while(!this.races.nextMovingHorse(horseId, raceNumber)){
             try{
                 wait();
@@ -96,12 +88,6 @@ public class RacingTrack implements IRacingTrack {
         }
         
         races.makeAMove(horseId, raceNumber);
-        
-        if(this.hasFinishLineBeenCrossed(horseId, raceNumber)){
-            ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_FINISH_LINE);
-        }else{
-            ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.RUNNNING);
-        }
         
         notifyAll();
     };   

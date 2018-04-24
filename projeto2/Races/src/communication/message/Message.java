@@ -8,23 +8,28 @@ import entities.HorseJockeyState;
 import entities.SpectatorsState;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.io.Serializable;
 
 /**
  *
  * @author Daniela
  */
-public class Message{
+public class Message implements Serializable {
     
-    private String message_s;
+    private static final long serialVersionUID = 1001L;
     private boolean message_b;
+    private double message_d;
     private int message_i;
     private int message_i2;
     private int message_i3;
+    private int message_i4;
     private MessageType type;
     private HorseJockeyState horseJockeyState;
     private SpectatorsState spectatorsState;
     private BrokerState brokerState;
     private HashMap<?, ?> map = null;
+    private Bet bet;
+    private LinkedList<Integer> linked;
 
         
     public Message(MessageType type, int message){
@@ -57,8 +62,11 @@ public class Message{
         this.type = type; 
     }
     
-    public Message(MessageType type, String message){
-        this.message_s = message;
+    public Message(MessageType type, int message, int message2, int message3, int message4){
+        this.message_i = message;
+        this.message_i2 = message2;
+        this.message_i3 = message3;
+        this.message_i4 = message4;
         this.type = type; 
     }
     
@@ -98,8 +106,26 @@ public class Message{
         this.map = map;
     }
 
-    public Message(MessageType mt, int raceNumber, Bet bet) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Message(MessageType mt, int raceNumber, int spectatorId, Bet bet) {
+        this.type = mt;
+        this.message_i = raceNumber;
+        this.message_i2 = spectatorId;
+        this.bet = bet;
+    }
+
+    public Message(MessageType messageType, Bet bet) {
+        this.type = messageType;
+        this.bet = bet;
+    }
+
+    public Message(MessageType messageType, LinkedList<Integer> linked) {
+        this.type = messageType;
+        this.linked = linked;
+    }
+
+    public Message(MessageType messageType, double response_double) {
+        this.type = messageType;
+        this.message_d = response_double;
     }
     
     /**
@@ -130,8 +156,32 @@ public class Message{
      * Return Integer
      * @return 
      */
-    public int getInteger(){
+    public int getInteger1(){
         return this.message_i;
+    }
+    
+    /**
+     * Return Integer
+     * @return 
+     */
+    public int getInteger2(){
+        return this.message_i2;
+    }
+    
+    /**
+     * Return Integer
+     * @return 
+     */
+    public int getInteger3(){
+        return this.message_i3;
+    }
+    
+    /**
+     * Return Integer
+     * @return 
+     */
+    public int getInteger4(){
+        return this.message_i4;
     }
     
     /**
@@ -143,14 +193,26 @@ public class Message{
     }
 
     public Bet getBet() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.bet;
     }
 
     public LinkedList<Integer> getLinkedList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.linked;
     }
 
     public double getDouble() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.message_d;
+    }
+
+    public SpectatorsState getSpectatorState() {
+        return this.spectatorsState;
+    }
+
+    public HorseJockeyState getHorseJockeyState() {
+        return this.horseJockeyState;
+    }
+    
+    public BrokerState getBrokerState() {
+        return this.brokerState;
     }
 }

@@ -66,7 +66,7 @@ public class NodeSettsProxy {
     public int N_OF_HORSES() {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper wp = communicate(new Message(mt));
-        return wp.getMessage().getInteger();
+        return wp.getMessage().getInteger1();
     }
     
     /**
@@ -76,7 +76,7 @@ public class NodeSettsProxy {
     public int HORSE_MAX_STEP_SIZE() {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper wp = communicate(new Message(mt));
-        return wp.getMessage().getInteger();
+        return wp.getMessage().getInteger1();
     }
     
     /**
@@ -86,7 +86,7 @@ public class NodeSettsProxy {
     public int N_OF_SPECTATORS() {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper wp = communicate(new Message(mt));
-        return wp.getMessage().getInteger();
+        return wp.getMessage().getInteger1();
     }
     
     /**
@@ -96,7 +96,7 @@ public class NodeSettsProxy {
     public int MAX_SPECTATOR_BET() {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper wp = communicate(new Message(mt));
-        return wp.getMessage().getInteger();
+        return wp.getMessage().getInteger1();
     }
     
 }

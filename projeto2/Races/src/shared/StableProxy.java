@@ -1,11 +1,16 @@
 /*
  * This file contains the stable proxy.
  */
-package entities;
+package shared;
 
 import communication.Proxy.ClientProxy;
 import communication.message.Message;
 import communication.message.MessageType;
+import communication.message.MessageWrapper;
+import entities.Broker;
+import entities.BrokerState;
+import entities.HorseJockey;
+import entities.HorseJockeyState;
 import settings.NodeSettsProxy;
 import shared.IStable;
 
@@ -30,24 +35,28 @@ public class StableProxy implements IStable {
     /**
     * Method to communicate with the RacingTrack.
     */
-    private void communicate(Message m){
-        ClientProxy.connect(SERVER_HOST,  SERVER_PORT, m);
+    private MessageWrapper communicate(Message m){
+        return ClientProxy.connect(SERVER_HOST,  SERVER_PORT, m);
     }
     
     @Override
     public void summonHorsesToPaddock(int raceNumber) {
+        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
-    public void proceedToStable(int raceNumber, int horseID, int horseStepSize) {
+    public int proceedToStable(int raceNumber, int horseID, int horseStepSize) {
+        ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        communicate(new Message(mt, raceNumber, horseID, horseStepSize));
+        MessageWrapper result = communicate(new Message(mt, raceNumber, horseID, horseStepSize));
+        return result.getMessage().getInteger1();
     }
 
     @Override
     public void entertainTheGuests() {
+        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.PLAYING_HOST_AT_THE_BAR);
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt));
     }

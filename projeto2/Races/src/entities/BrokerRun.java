@@ -5,6 +5,11 @@
  */
 package entities;
 
+import shared.RacingTrackProxy;
+import shared.PaddockProxy;
+import shared.ControlCentreProxy;
+import shared.BettingCentreProxy;
+import shared.StableProxy;
 import GeneralRepository.RacesProxy;
 import communication.message.Message;
 import communication.message.MessageType;
@@ -18,12 +23,12 @@ import settings.NodeSettsProxy;
  */
 public class BrokerRun {
     
-    private static StableProxy stable;
-    private static RacingTrackProxy racingTrack;
-    private static PaddockProxy paddock;
-    private static ControlCentreProxy controlCentre;
-    private static BettingCentreProxy bettingCentre;
-    private static RacesProxy races;
+    private static StableProxy stable = new StableProxy();
+    private static RacingTrackProxy racingTrack = new RacingTrackProxy();
+    private static PaddockProxy paddock = new PaddockProxy();
+    private static ControlCentreProxy controlCentre = new ControlCentreProxy();
+    private static BettingCentreProxy bettingCentre = new BettingCentreProxy();
+    private static RacesProxy races = new RacesProxy();
     
     private static Broker broker;
     

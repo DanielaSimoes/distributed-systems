@@ -5,6 +5,10 @@
  */
 package entities;
 
+import shared.RacingTrackProxy;
+import shared.PaddockProxy;
+import shared.ControlCentreProxy;
+import shared.StableProxy;
 import GeneralRepository.RacesProxy;
 import communication.message.Message;
 import communication.message.MessageType;
@@ -17,18 +21,18 @@ import settings.NodeSettsProxy;
  * @author Daniela
  */
 public class HorseJockeyRun {
-    private static StableProxy stable;
-    private static RacingTrackProxy racingTrack;
-    private static PaddockProxy paddock;
-    private static ControlCentreProxy controlCentre;
-    private static RacesProxy races;
+    private static StableProxy stable = new StableProxy();
+    private static RacingTrackProxy racingTrack = new RacingTrackProxy();
+    private static PaddockProxy paddock = new PaddockProxy();
+    private static ControlCentreProxy controlCentre = new ControlCentreProxy();
+    private static RacesProxy races = new RacesProxy();
     
     private static int N_OF_HORSES;
 
     public static void main(String [] args) {
-        
         LogProxy log = new LogProxy();
         NodeSettsProxy proxy = new NodeSettsProxy(); 
+        
         N_OF_HORSES = proxy.N_OF_HORSES();
         ArrayList<HorseJockey> horseJockey = new ArrayList<>(N_OF_HORSES);
 

@@ -17,7 +17,7 @@ public enum MessageType {
     /* To compile */
     ACK, TERMINATE, SERVER_PORTS, SERVER_HOSTS,
     /* Vars */
-    N_OF_HORSES, HORSE_MAX_STEP_SIZE, N_OF_SPECTATORS, MAX_SPECTATOR_BET,
+    N_OF_HORSES, HORSE_MAX_STEP_SIZE, N_OF_SPECTATORS, MAX_SPECTATOR_BET, SIZE_OF_RACING_TRACK, N_OF_HORSES_TO_RUN, N_OF_RACES,
     /* Log messages */
     setSpectatorAmount, setBrokerState, setHorseJockeyState, setSpectatorState,
     /* Races messages */

@@ -5,6 +5,7 @@
  */
 package shared;
 
+import GeneralRepository.Bet;
 import GeneralRepository.RacesProxy;
 import communication.Proxy.ServerInterface;
 import communication.ServerChannel;
@@ -32,20 +33,20 @@ public class BettingCentreServer extends BettingCentre implements ServerInterfac
             case TERMINATE:
                 this.serverEnded = true;
             case acceptTheBets:
-                super.acceptTheBets(inMessage.getInteger());
+                super.acceptTheBets(inMessage.getInteger1());
                 break;
             case honourTheBets:
-                super.honourTheBets(inMessage.getInteger());
+                super.honourTheBets(inMessage.getInteger1());
                 break;
             case areThereAnyWinners:
-                boolean response = super.areThereAnyWinners(inMessage.getInteger());
+                boolean response = super.areThereAnyWinners(inMessage.getInteger1());
                 return new Message(MessageType.ACK, response);
             case placeABet:
-                super.placeABet(inMessage.getInteger());
-                break;
+                Bet bet = super.placeABet(inMessage.getInteger1(), inMessage.getInteger2(), inMessage.getInteger3(), inMessage.getInteger4());
+                return new Message(MessageType.ACK, bet);
             case goCollectTheGains:
-                super.goCollectTheGains(inMessage.getInteger());
-                break;
+                int response_integer = super.goCollectTheGains(inMessage.getInteger1(), inMessage.getInteger2());
+                return new Message(MessageType.ACK, response_integer);
         }
         
         return new Message(MessageType.ACK);

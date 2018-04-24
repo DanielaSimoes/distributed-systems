@@ -21,7 +21,7 @@ import java.util.HashMap;
  */
 public class Log {
     
-    private final Races races = Races.getInstace();
+    private final RacesProxy races = new RacesProxy();
     
     /**
      * This will be a singleton
@@ -154,9 +154,7 @@ public class Log {
     /**
      *
      */
-    public synchronized void writeLineStatus(){
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
-
+    public synchronized void writeLineStatus(int raceNumber){
         String head = "  " + this.brokerState + " ";
 
         for(int i=0; i<Races.N_OF_SPECTATORS; i++){
@@ -196,10 +194,11 @@ public class Log {
     /**
      *
      * @param state
+     * @param raceNumber
      */
-    public synchronized void setBrokerState(BrokerState state){
+    public synchronized void setBrokerState(BrokerState state, int raceNumber){
         this.brokerState = state;
-        this.writeLineStatus();
+        this.writeLineStatus(raceNumber);
         
         if(state==BrokerState.OPENING_THE_EVENT){
             event_opened = true;
@@ -210,8 +209,8 @@ public class Log {
     /**
      *
      */
-    public synchronized void makeAMove(){
-        this.writeLineStatus();
+    public synchronized void makeAMove(int raceNumber){
+        this.writeLineStatus(raceNumber);
     }
     
      /**
@@ -219,14 +218,15 @@ public class Log {
     * Method to set the state of a HorseJockey.
     * @param id
     * @param state The state to be assigned.
+     * @param raceNumber
     */
-    public void setHorseJockeyState(int id, HorseJockeyState state){
+    public void setHorseJockeyState(int id, HorseJockeyState state, int raceNumber){
         if(this.horseJockeysState.containsKey(id)){
             this.horseJockeysState.replace(id, state);
         }else{
             this.horseJockeysState.put(id, state);
         }
-        this.writeLineStatus();
+        this.writeLineStatus(raceNumber);
     }
     
      /**
@@ -245,13 +245,13 @@ public class Log {
      * @param id
     * @param state The state to be assigned.
     */
-    public void setSpectatorState(int id, SpectatorsState state){
+    public void setSpectatorState(int id, SpectatorsState state, int raceNumber){
         if(this.spectatorsState.containsKey(id)){
             this.spectatorsState.replace(id, state);
         }else{
             this.spectatorsState.put(id, state);
         }
-        this.writeLineStatus();
+        this.writeLineStatus(raceNumber);
     }
     
     /**

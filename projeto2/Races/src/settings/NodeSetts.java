@@ -81,13 +81,16 @@ public class NodeSetts {
             Logger.getLogger(NodeSetts.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        // 22120 - 22129
+        // 22440 - 22449
         SERVER_PORTS = new HashMap<>();
-        SERVER_PORTS.put("NodeSetts", 22124);
-        SERVER_PORTS.put("Log", 22123);
-        SERVER_PORTS.put("Bench", 22122);
-        SERVER_PORTS.put("Playground", 22121);
-        SERVER_PORTS.put("RefereeSite", 22120);
-    
+        SERVER_PORTS.put("BettingCentre", 22440);
+        SERVER_PORTS.put("Log", 22441);
+        SERVER_PORTS.put("RacingTrack", 22442);
+        SERVER_PORTS.put("ControlCentre", 22443);
+        SERVER_PORTS.put("Paddock", 22444);
+        SERVER_PORTS.put("Stable", 22445);
+        SERVER_PORTS.put("Races", 2246);
+        SERVER_PORTS.put("NodeSetts", 2247);
+        
     }
 }

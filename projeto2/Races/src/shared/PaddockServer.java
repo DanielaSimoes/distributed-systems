@@ -32,16 +32,16 @@ public class PaddockServer extends Paddock implements ServerInterface{
             case TERMINATE:
                 this.serverEnded = true;
             case proceedToPaddock:
-                super.proceedToPaddock(inMessage.getInteger());
+                super.proceedToPaddock(inMessage.getInteger1());
                 break;
             case proceedToStartLine:
-                super.proceedToStartLine(inMessage.getInteger());
+                super.proceedToStartLine(inMessage.getInteger1());
                 break;
             case summonHorsesToPaddock:
-                super.summonHorsesToPaddock(inMessage.getInteger());
+                super.summonHorsesToPaddock(inMessage.getInteger1());
                 break;
             case goCheckHorses:
-                super.goCheckHorses(inMessage.getInteger());
+                super.goCheckHorses(inMessage.getInteger1());
                 break;
         }
         

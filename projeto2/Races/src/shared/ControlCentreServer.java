@@ -32,19 +32,19 @@ public class ControlCentreServer extends ControlCentre implements ServerInterfac
             case TERMINATE:
                 this.serverEnded = true;
             case reportResults:
-                super.reportResults(inMessage.getInteger());
+                super.reportResults(inMessage.getInteger1());
                 break;
             case proceedToPaddock:
-                super.proceedToPaddock(inMessage.getInteger());
+                super.proceedToPaddock(inMessage.getInteger1());
                 break;
             case waitForNextRace:
-                super.waitForNextRace(inMessage.getInteger());
+                super.waitForNextRace(inMessage.getInteger1());
                 break;
             case goWatchTheRace:
-                super.goWatchTheRace(inMessage.getInteger());
+                super.goWatchTheRace(inMessage.getInteger1());
                 break;
             case haveIWon:
-                boolean response = super.haveIWon(inMessage.getInteger());
+                boolean response = super.haveIWon(inMessage.getInteger1(), inMessage.getInteger2());
                 return new Message(MessageType.ACK, response);
             case relaxABit:
                 super.relaxABit();

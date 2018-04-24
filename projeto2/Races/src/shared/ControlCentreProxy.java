@@ -1,12 +1,18 @@
 /*
  * This file contains the control centre proxy.
  */
-package entities;
+package shared;
 
 import communication.Proxy.ClientProxy;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.message.MessageWrapper;
+import entities.Broker;
+import entities.BrokerState;
+import entities.HorseJockey;
+import entities.HorseJockeyState;
+import entities.Spectators;
+import entities.SpectatorsState;
 import settings.NodeSettsProxy;
 import shared.IControlCentre;
 
@@ -37,40 +43,43 @@ public class ControlCentreProxy implements IControlCentre{
     
     @Override
     public void reportResults(int raceNumber) {
+        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
     public void proceedToPaddock(int raceNumber) {
+        ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
     public void waitForNextRace(int raceNumber) {
+        ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WAITING_FOR_A_RACE_TO_START);
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
     public void goWatchTheRace(int raceNumber) {
+        ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, raceNumber));
     }
 
     @Override
-    public boolean haveIWon(int raceNumber) {
+    public boolean haveIWon(int raceNumber, int spectatorId) {
+        ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber));
+        MessageWrapper result = communicate(new Message(mt, raceNumber, spectatorId));
         return result.getMessage().getBoolean();
     }
 
     @Override
     public void relaxABit() {
-        int raceNumber = ((IEntity)Thread.currentThread()).getCurrentRace();
-        MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        communicate(new Message(mt, raceNumber));
+        ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.CELEBRATING);
     }
     
 }

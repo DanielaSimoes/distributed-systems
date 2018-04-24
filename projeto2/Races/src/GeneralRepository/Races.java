@@ -98,10 +98,13 @@ public class Races {
     /**
      *
      * @param raceNumber
+     * @param spectatorId
+     * @param initialBet
+     * @param moneyToBet
      * @return
      */
-    public synchronized Bet chooseBet(int raceNumber){        
-        return this.races[raceNumber].chooseBet();
+    public synchronized Bet chooseBet(int raceNumber, int spectatorId, int initialBet, int moneyToBet){        
+        return this.races[raceNumber].chooseBet(spectatorId, initialBet, moneyToBet);
     }
 
     /**
@@ -156,10 +159,11 @@ public class Races {
     /**
      *
      * @param raceNumber
+     * @param spectatorId
      * @return
      */
-    public synchronized boolean haveIWon(int raceNumber){
-        return this.races[raceNumber].haveIWon();
+    public synchronized boolean haveIWon(int raceNumber, int spectatorId){
+        return this.races[raceNumber].haveIWon(spectatorId);
     };
     
     /**
@@ -429,9 +433,10 @@ public class Races {
      *
      * @param bet
      * @param raceNumber
+     * @param spectatorId
      */
-    public void addBetOfSpectator(Bet bet, int raceNumber){        
-        this.races[raceNumber].addBetOfSpectator(bet);
+    public void addBetOfSpectator(Bet bet, int raceNumber, int spectatorId){        
+        this.races[raceNumber].addBetOfSpectator(bet, spectatorId);
     }
     
     /**
@@ -446,9 +451,10 @@ public class Races {
     /**
      *
      * @param raceNumber
+     * @param spectatorId
      */
-    public void waitAcceptedTheBet(int raceNumber){
-        this.races[raceNumber].waitAcceptedTheBet();
+    public void waitAcceptedTheBet(int raceNumber, int spectatorId){
+        this.races[raceNumber].waitAcceptedTheBet(spectatorId);
     }
    
     /**
@@ -493,7 +499,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
-    public synchronized boolean getPaidSpectators(int i, int raceNumber){        
+    public synchronized Integer getPaidSpectators(int i, int raceNumber){        
         return this.races[raceNumber].getPaidSpectators(i);
     }
     

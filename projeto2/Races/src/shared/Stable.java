@@ -2,10 +2,6 @@ package shared;
 
 import GeneralRepository.Races;
 import GeneralRepository.RacesProxy;
-import entities.HorseJockey;
-import entities.HorseJockeyState;
-import entities.Broker;
-import entities.BrokerState;
 
 /**
  * This file contains the shared memory region Stable.
@@ -28,7 +24,6 @@ public class Stable implements IStable {
     */
     @Override
     public synchronized void summonHorsesToPaddock(int raceNumber){
-        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
         this.races.setAnnouncedNextRace(true, raceNumber);
         notifyAll();
     };
@@ -39,11 +34,10 @@ public class Stable implements IStable {
      * @param raceNumber
      * @param horseID
      * @param horseStepSize
+     * @return 
     */
     @Override
-    public synchronized void proceedToStable(int raceNumber, int horseID, int horseStepSize){
-        ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
-
+    public synchronized int proceedToStable(int raceNumber, int horseID, int horseStepSize){
         while(!((races.getAnnouncedNextRace(raceNumber) && this.races.getWakedHorsesToPaddock(raceNumber)!=races.getNRunningHorses(raceNumber) && races.horseHasBeenSelectedToRace(horseID, horseStepSize, raceNumber)) || wakeEntertainTheGuests)){
             try{
                 wait();
@@ -51,14 +45,16 @@ public class Stable implements IStable {
                     // do something in the future
             } 
             
-            if(((HorseJockey)Thread.currentThread()).getCurrentRace()<Races.N_OF_RACES && races.horsesFinished(raceNumber) && races.hasMoreRaces()){
-                ((HorseJockey)Thread.currentThread()).nextRace();
+            if(raceNumber<Races.N_OF_RACES && races.horsesFinished(raceNumber) && races.hasMoreRaces()){
+                raceNumber++;
             }
         }
         
         if(!wakeEntertainTheGuests){
             this.races.addWakedHorsesToPaddock(raceNumber);
         }
+        
+        return raceNumber;
     };
     
     /**
@@ -67,7 +63,6 @@ public class Stable implements IStable {
     */
     @Override
     public synchronized void entertainTheGuests(){
-        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.PLAYING_HOST_AT_THE_BAR);
         wakeEntertainTheGuests = true;
         notifyAll();
     }

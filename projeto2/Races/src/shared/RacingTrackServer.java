@@ -32,16 +32,16 @@ public class RacingTrackServer extends RacingTrack implements ServerInterface{
             case TERMINATE:
                 this.serverEnded = true;
             case startTheRace:
-                super.startTheRace(inMessage.getInteger());
+                super.startTheRace(inMessage.getInteger1());
                 break;
             case proceedToStartLine:
-                super.proceedToStartLine(inMessage.getInteger());
+                super.proceedToStartLine(inMessage.getInteger1(), inMessage.getInteger2());
                 break;
             case hasFinishLineBeenCrossed:
-                boolean response = super.hasFinishLineBeenCrossed(inMessage.getInteger(), inMessage.getInteger());   
+                boolean response = super.hasFinishLineBeenCrossed(inMessage.getInteger1(), inMessage.getInteger2());   
                 return new Message(MessageType.ACK, response);
             case makeAMove:
-                super.makeAMove(inMessage.getInteger());
+                super.makeAMove(inMessage.getInteger1(), inMessage.getInteger2());
                 break;
         }
         

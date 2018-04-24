@@ -1,10 +1,6 @@
 package shared;
 
 import GeneralRepository.Bet;
-import entities.Broker;
-import entities.BrokerState;
-import entities.Spectators;
-import entities.SpectatorsState;
 import GeneralRepository.RacesProxy;
 
 /**
@@ -26,8 +22,6 @@ public class BettingCentre implements IBettingCentre {
     */
     @Override
     public void acceptTheBets(int raceNumber){
-        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.WAITING_FOR_BETS);
-        
         while(true){
             Integer spectatorId = this.races.waitAddedBet(raceNumber);
 
@@ -44,11 +38,10 @@ public class BettingCentre implements IBettingCentre {
     /**
     *
     * Method to get the broker to honour the winners of the bets.
+     * @param raceNumber
     */
     @Override
     public synchronized void honourTheBets(int raceNumber){
-        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SETTLING_ACCOUNTS);
-        
         Integer spectatorId;
         
         while(true){
@@ -80,7 +73,6 @@ public class BettingCentre implements IBettingCentre {
     */
     @Override
     public synchronized boolean areThereAnyWinners(int raceNumber){
-        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
         return this.races.areThereAnyWinners(raceNumber);
     };
     
@@ -88,40 +80,47 @@ public class BettingCentre implements IBettingCentre {
     *
     * Method to allow the spectator to place a bet.
      * @param raceNumber
+     * @param spectatorId
+     * @param initialBet
+     * @param moneyToBet
+     * @return 
     */
     @Override
-    public void placeABet(int raceNumber){
-        Spectators spectator = ((Spectators)Thread.currentThread());
-        spectator.setSpectatorsState(SpectatorsState.PLACING_A_BET);
-        
-        Bet spectator_bet = this.races.chooseBet(raceNumber);
-        this.races.addBetOfSpectator(spectator_bet, raceNumber);
+    public Bet placeABet(int raceNumber, int spectatorId, int initialBet, int moneyToBet){
+        Bet spectator_bet = this.races.chooseBet(raceNumber, spectatorId, initialBet, moneyToBet);
+        this.races.addBetOfSpectator(spectator_bet, raceNumber, spectatorId);
 
-        this.races.waitAcceptedTheBet(raceNumber);
+        this.races.waitAcceptedTheBet(raceNumber, spectatorId);
+        return spectator_bet;
     };
     
     /**
     *
     * Method to the spectator go collect the gains and increase the bank.
      * @param raceNumber
+     * @param spectatorId
+     * @return 
     */
     @Override
-    public synchronized void goCollectTheGains(int raceNumber){
-        Spectators spectator = ((Spectators)Thread.currentThread());
-        spectator.setSpectatorsState(SpectatorsState.COLLECTING_THE_GAINS);
-        
-        this.races.addWaitingToBePaidSpectator(spectator.getSpectatorId(), raceNumber);
+    public synchronized int goCollectTheGains(int raceNumber, int spectatorId){
+        this.races.addWaitingToBePaidSpectator(spectatorId, raceNumber);
         
         // wake broker because spectator is waiting to be Paid
         // and broker must pay the honours
         notifyAll();
         
-        while(!this.races.getPaidSpectators(spectator.getSpectatorId(), raceNumber)){
+        int gains = this.races.getPaidSpectators(spectatorId, raceNumber);
+        
+        while(gains == -1){
             try{
                 wait();
             }catch (InterruptedException ex){
                 // do something in the future
             }
+            
+            gains = this.races.getPaidSpectators(spectatorId, raceNumber);
         }
+        
+        return gains;
     };
 }

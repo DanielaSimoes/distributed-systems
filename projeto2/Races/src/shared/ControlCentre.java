@@ -1,13 +1,6 @@
 package shared;
 
-import GeneralRepository.Races;
 import GeneralRepository.RacesProxy;
-import entities.Broker;
-import entities.BrokerState;
-import entities.HorseJockey;
-import entities.HorseJockeyState;
-import entities.Spectators;
-import entities.SpectatorsState;
 
 /**
  * This file contains the shared memory region Control Centre.
@@ -28,8 +21,6 @@ public class ControlCentre implements IControlCentre {
     */
     @Override
     public synchronized void reportResults(int raceNumber){
-        ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
-        
         this.races.setReportResults(true, raceNumber);
         notifyAll();
     };
@@ -41,8 +32,6 @@ public class ControlCentre implements IControlCentre {
     */
     @Override
     public synchronized void proceedToPaddock(int raceNumber){
-        ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
-        
         this.races.addNHorsesInPaddock(raceNumber);
         
         if (this.races.allNHorsesInPaddock(raceNumber)){
@@ -59,7 +48,6 @@ public class ControlCentre implements IControlCentre {
     */
     @Override
     public synchronized void waitForNextRace(int raceNumber){
-        ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WAITING_FOR_A_RACE_TO_START);
         while(!this.races.getProceedToPaddock(raceNumber) || this.races.horsesFinished(raceNumber)){
             try{
                 wait();
@@ -76,8 +64,6 @@ public class ControlCentre implements IControlCentre {
     */
     @Override
     public synchronized void goWatchTheRace(int raceNumber){
-        ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
-        
         while(!this.races.getReportResults(raceNumber)){
             try{
                 wait();
@@ -91,12 +77,12 @@ public class ControlCentre implements IControlCentre {
     *
     * Method to verify if a spectator has won the bet.
      * @param raceNumber
+     * @param spectatorId
      * @return 
     */
     @Override
-    public synchronized boolean haveIWon(int raceNumber){
-        ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
-        return this.races.haveIWon(raceNumber);
+    public synchronized boolean haveIWon(int raceNumber, int spectatorId){
+        return this.races.haveIWon(raceNumber, spectatorId);
     };
    
     /**
@@ -104,7 +90,5 @@ public class ControlCentre implements IControlCentre {
     * Method to get the spectator to relax a bit - death state.
     */
     @Override
-    public synchronized void relaxABit(){
-        ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.CELEBRATING);
-    };
+    public synchronized void relaxABit(){};
 }
