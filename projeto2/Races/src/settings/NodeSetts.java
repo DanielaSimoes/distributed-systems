@@ -28,7 +28,7 @@ public class NodeSetts {
     /**
      * Number of races.
      */
-    public static final int N_OF_RACES = 10;
+    public static final int N_OF_RACES = 2;
 
     /**
      * Number of horses.
@@ -65,6 +65,8 @@ public class NodeSetts {
      * @param jsonfilepath
      */
     public NodeSetts(String jsonfilepath){
+        assert N_OF_HORSES>=N_OF_HORSES_TO_RUN*N_OF_RACES;
+        
         JSONParser parser = new JSONParser();
         
         try {     
