@@ -61,26 +61,27 @@ jars = [
         "order": 8,
         "command": "java -cp 'Races.jar:libs/*' {} &"
     },
+]
+
+"""
+
+
     {
         "class": "HorseJockey",
         "package": "entities",
         "type": "client",
         "order": 9,
         "command": "java -cp 'Races.jar:libs/*' {} &"
-    }
-]
-
-"""
-,
+    },
     {
-        "class": "Broker",
+        "class": "Spectators",
         "package": "entities",
         "type": "client",
         "order": 10,
         "command": "java -cp 'Races.jar:libs/*' {} &"
     },
     {
-        "class": "Spectators",
+        "class": "Broker",
         "package": "entities",
         "type": "client",
         "order": 11,
@@ -88,7 +89,10 @@ jars = [
     }
 """
 
+
 if __name__ == '__main__':
+    os.system("cp dist/Races.jar Races.jar")
+
     jars_hosts = sorted(jars, key=lambda jar_host: jar_host["order"])
 
     for jar in jars_hosts:

@@ -51,6 +51,7 @@ public class SpectatorsRun {
         for (Spectators spectator : spectators) { 
             try { 
                 spectator.join ();
+                System.out.printf("Spectator %d died!\n", spectator.getSpectatorId()); 
             } catch (InterruptedException e) {}
         }
                 

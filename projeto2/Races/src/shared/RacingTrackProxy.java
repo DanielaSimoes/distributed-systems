@@ -12,7 +12,6 @@ import entities.BrokerState;
 import entities.HorseJockey;
 import entities.HorseJockeyState;
 import settings.NodeSettsProxy;
-import shared.IRacingTrack;
 
 /**
  * Class that implements racing track proxy.
@@ -57,14 +56,14 @@ public class RacingTrackProxy implements IRacingTrack {
     @Override
     public boolean hasFinishLineBeenCrossed(int horseId, int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber, horseId));
+        MessageWrapper result = communicate(new Message(mt, horseId, raceNumber));
         return result.getMessage().getBoolean();
     }
 
     @Override
     public void makeAMove(int raceNumber, int horseId) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        communicate(new Message(mt, raceNumber));
+        communicate(new Message(mt, raceNumber, horseId));
         
         if(this.hasFinishLineBeenCrossed(horseId, raceNumber)){
             ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_FINISH_LINE);

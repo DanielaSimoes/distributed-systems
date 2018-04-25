@@ -12,8 +12,12 @@ import entities.SpectatorsState;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.sun.javafx.binding.Logging;
-import entities.IEntity;
+import communication.Proxy.ClientProxy;
+import communication.message.Message;
+import communication.message.MessageType;
 import java.util.HashMap;
+import settings.NodeSetts;
+import settings.NodeSettsProxy;
 
 /**
  * This file contains the code to generate a log file.
@@ -50,11 +54,11 @@ public class Log {
             filename = "AfternoonAtTheRaces.log";
         }
         this.log = new File(filename);
-        this.spectatorAmounts = new int[Races.N_OF_SPECTATORS];
+        this.spectatorAmounts = new int[NodeSetts.N_OF_SPECTATORS];
         this.horseJockeysState = new HashMap<>();
         this.spectatorsState = new HashMap<>();
         
-        for (int i=0; i<Races.N_OF_SPECTATORS; i++){
+        for (int i=0; i<NodeSetts.N_OF_SPECTATORS; i++){
             this.spectatorAmounts[i] = 0;
         }
     }
@@ -68,7 +72,7 @@ public class Log {
      *
      * @return
      */
-    public synchronized static Log getInstance(){
+    public static Log getInstance(){
         return instance;
     }
     
@@ -82,13 +86,13 @@ public class Log {
             
             String head = "  Stat";
             
-            for(int i=0; i<Races.N_OF_SPECTATORS; i++){
+            for(int i=0; i<NodeSetts.N_OF_SPECTATORS; i++){
                 head += " St" + Integer.toString(i+1) + "  Am" + Integer.toString(i+1) + " ";
             }
             
             head += 0+1;
             
-            for(int i=0; i<Races.N_OF_HORSES_TO_RUN; i++){
+            for(int i=0; i<NodeSetts.N_OF_HORSES_TO_RUN; i++){
                 head += "  St" + Integer.toString(i+1) + " Len" + Integer.toString(i+1);
             }
             
@@ -96,13 +100,13 @@ public class Log {
             
             head += "  RN Dist ";
             
-            for(int i=0; i<Races.N_OF_SPECTATORS; i++){
+            for(int i=0; i<NodeSetts.N_OF_SPECTATORS; i++){
                 head += " BS" + Integer.toString(i+1) + "  BA" + Integer.toString(i+1);
             }
             
             head += " ";
             
-            for(int i=0; i<Races.N_OF_HORSES_TO_RUN; i++){
+            for(int i=0; i<NodeSetts.N_OF_HORSES_TO_RUN; i++){
                 head += " Od" + Integer.toString(i+1) + "  N" + Integer.toString(i+1)  + "  Ps" + Integer.toString(i+1)  + "  SD" + Integer.toString(i+1);
             }
             
@@ -120,11 +124,11 @@ public class Log {
      *
      * @param raceNumber
      */
-    public synchronized void writeLineRace(int raceNumber){
+    public void writeLineRace(int raceNumber){
                 
         String head = String.format("   %d  %2d  ", raceNumber+1, races.getCurrentRaceDistance(raceNumber));
 
-        for(int i=0; i<Races.N_OF_SPECTATORS; i++){
+        for(int i=0; i<NodeSetts.N_OF_SPECTATORS; i++){
             try{
                 head += String.format("  %d  %4d", this.races.getSpectatorBet(i, raceNumber).getHorseId(), this.races.getSpectatorBet(i,raceNumber).getAmount());
             }catch(java.lang.NullPointerException e){
@@ -134,7 +138,7 @@ public class Log {
 
         head += " ";
 
-        for(int i=0; i<Races.N_OF_HORSES; i++){
+        for(int i=0; i<NodeSetts.N_OF_HORSES; i++){
             if(this.races.horseHasBeenSelectedToRace(i, -1, raceNumber)){
                 try{
                     head += String.format(" %2.1f %2d   %2d    %d ", this.races.getHorseOdd(i, raceNumber), this.races.getHorseIteration(i, raceNumber), this.races.getHorsePosition(i, raceNumber), this.races.getStandingPosition(i, raceNumber));
@@ -154,16 +158,16 @@ public class Log {
     /**
      *
      */
-    public synchronized void writeLineStatus(int raceNumber){
+    public void writeLineStatus(int raceNumber){
         String head = "  " + this.brokerState + " ";
 
-        for(int i=0; i<Races.N_OF_SPECTATORS; i++){
+        for(int i=0; i<NodeSetts.N_OF_SPECTATORS; i++){
             head += " " + spectatorsState.get(i) + "  " + String.format("%3d", this.spectatorAmounts[i]) + " ";
         }
 
         head += (raceNumber+1);
 
-        for(int i=0; i<Races.N_OF_HORSES; i++){
+        for(int i=0; i<NodeSetts.N_OF_HORSES; i++){
             if(this.races.horseHasBeenSelectedToRace(i, -1, raceNumber)){
                 head += "  " + horseJockeysState.get(i) + " " + String.format("%3d", this.races.getHorseJockeyStepSize(i));
             }
@@ -196,7 +200,7 @@ public class Log {
      * @param state
      * @param raceNumber
      */
-    public synchronized void setBrokerState(BrokerState state, int raceNumber){
+    public void setBrokerState(BrokerState state, int raceNumber){
         this.brokerState = state;
         this.writeLineStatus(raceNumber);
         
@@ -209,7 +213,7 @@ public class Log {
     /**
      *
      */
-    public synchronized void makeAMove(int raceNumber){
+    public void makeAMove(int raceNumber){
         this.writeLineStatus(raceNumber);
     }
     
@@ -262,6 +266,26 @@ public class Log {
     */
     public SpectatorsState getSpectatorsState(int id){
         return this.spectatorsState.get(id);
+    }
+    
+    public void terminateServers(){
+        NodeSettsProxy proxy = new NodeSettsProxy(); 
+        
+        ClientProxy.connect(proxy.SERVER_HOSTS().get("Bench"), 
+                proxy.SERVER_PORTS().get("Bench"), 
+                new Message(MessageType.TERMINATE));
+         
+        ClientProxy.connect(proxy.SERVER_HOSTS().get("Playground"), 
+                proxy.SERVER_PORTS().get("Playground"), 
+                new Message(MessageType.TERMINATE));
+        
+        ClientProxy.connect(proxy.SERVER_HOSTS().get("RefereeSite"), 
+                proxy.SERVER_PORTS().get("RefereeSite"), 
+                new Message(MessageType.TERMINATE));
+        
+        ClientProxy.connect(proxy.SERVER_HOSTS().get("NodeSetts"), 
+                proxy.SERVER_PORTS().get("NodeSetts"), 
+                new Message(MessageType.TERMINATE));
     }
     
 }

@@ -1,16 +1,13 @@
 package GeneralRepository;
-import entities.HorseJockey;
-import entities.Spectators;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Random;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Stream;
+import settings.NodeSetts;
 
 /**
  * This file describes the Race itself.
@@ -47,17 +44,17 @@ public class Race {
      * Number of horses in paddock.
      */
     protected int nHorsesInPaddock = 0;
-    private int[] horseIterations = new int[Races.N_OF_HORSES];
+    private int[] horseIterations = new int[NodeSetts.N_OF_HORSES];
     
     /* BettingCentre */
     Queue<Integer> betsOfSpectators = new LinkedList<>();
-    private final Object[] waitingAcceptedTheBet = new Object[Races.N_OF_SPECTATORS];
-    private final boolean[] acceptedBet = new boolean[Races.N_OF_SPECTATORS];
+    private final Object[] waitingAcceptedTheBet = new Object[NodeSetts.N_OF_SPECTATORS];
+    private final boolean[] acceptedBet = new boolean[NodeSetts.N_OF_SPECTATORS];
     LinkedList<Bet> bets = new LinkedList();
     private Object addedBet = new Object();
     
     Queue<Integer> waitingToBePaidSpectators = new LinkedList<>();
-    private final boolean[] paidSpectators = new boolean[Races.N_OF_SPECTATORS];
+    private final boolean[] paidSpectators = new boolean[NodeSetts.N_OF_SPECTATORS];
     private int nPaidSpectators = 0;
     LinkedList<Integer> spectatorsWinners = new LinkedList();
     
@@ -85,28 +82,28 @@ public class Race {
     */
     public Race(int id, LinkedList<Integer> horseJockeySelected){
         this.id = id;
-        this.trackSize = Races.SIZE_OF_RACING_TRACK;
+        this.trackSize = NodeSetts.SIZE_OF_RACING_TRACK;
         
         this.horsesStepSize = new HashMap<>();
         this.horsesPosition = new HashMap<>();
         this.horsesFinished = new HashMap<>();
         this.horsesOdds = new TreeMap<>();
         
-        this.selectedHorses = new int[Races.N_OF_HORSES_TO_RUN];
+        this.selectedHorses = new int[NodeSetts.N_OF_HORSES_TO_RUN];
         
-        for(int i=0; i<Races.N_OF_HORSES_TO_RUN; i++){
+        for(int i=0; i<NodeSetts.N_OF_HORSES_TO_RUN; i++){
             boolean repeated;
             int selectedId;
             this.selectedHorses[i] = -1;
             
             do{
                 repeated = false;
-                selectedId = (int) (Math.random() * (Races.N_OF_HORSES));
+                selectedId = (int) (Math.random() * (NodeSetts.N_OF_HORSES));
                 
                 if(horseJockeySelected.contains(selectedId)){
                     repeated = true;
                 }else{
-                    for(int j=0; j<Races.N_OF_HORSES_TO_RUN; j++){
+                    for(int j=0; j<NodeSetts.N_OF_HORSES_TO_RUN; j++){
                         if(this.selectedHorses[j]==selectedId){
                             repeated = true;
                             break;
@@ -120,7 +117,7 @@ public class Race {
             horseJockeySelected.add(selectedId);
         }
         
-        for(int i = 0; i < Races.N_OF_SPECTATORS; i++){
+        for(int i = 0; i < NodeSetts.N_OF_SPECTATORS; i++){
             this.paidSpectators[i] = false;
             this.waitingAcceptedTheBet[i] = new Object();
             this.acceptedBet[i] = false;
@@ -146,7 +143,7 @@ public class Race {
      * @return if the horse has been selected to run and init its position.
     */
     public boolean horseHasBeenSelectedToRace(int horseJockeyID, int stepSize){
-        for(int i=0; i<Races.N_OF_HORSES_TO_RUN; i++){
+        for(int i=0; i<NodeSetts.N_OF_HORSES_TO_RUN; i++){
             if(this.selectedHorses[i]==horseJockeyID){
                 this.horsesStepSize.put(horseJockeyID, stepSize);
                 this.horsesPosition.put(horseJockeyID, 0);
@@ -208,13 +205,13 @@ public class Race {
      */
     public synchronized Bet chooseBet(int spectatorId, int initialBet, int moneyToBet){
         // get initial bank and divide with the maximum amount possible to bet
-        double perception = initialBet / Races.MAX_SPECTATOR_BET;
+        double perception = initialBet / NodeSetts.MAX_SPECTATOR_BET;
         // the capacity of the user compared to the initial bank
         double capacity = moneyToBet / initialBet;
         // 
         double peek = perception * capacity * 100;
         
-        double interval = 100 / Races.N_OF_HORSES_TO_RUN;
+        double interval = 100 / NodeSetts.N_OF_HORSES_TO_RUN;
         
         int choosen_risk_interval = Math.round((float)(peek / interval))-1;
         
@@ -352,10 +349,10 @@ public class Race {
             this.nHorsesFinished += 1;
         }
         
-        horseToMove = (horseToMove + 1) % Races.N_OF_HORSES_TO_RUN;
+        horseToMove = (horseToMove + 1) % NodeSetts.N_OF_HORSES_TO_RUN;
 
         while(this.horsesFinished.get(this.selectedHorses[horseToMove]) && !this.horsesFinished()){
-            horseToMove = (horseToMove + 1) % Races.N_OF_HORSES_TO_RUN;
+            horseToMove = (horseToMove + 1) % NodeSetts.N_OF_HORSES_TO_RUN;
         }
         
         this.horseIterations[horseId]++;
@@ -426,7 +423,7 @@ public class Race {
      * @return 
     */
     public boolean horsesFinished(){
-        return this.nHorsesFinished==Races.N_OF_HORSES_TO_RUN;
+        return this.nHorsesFinished==NodeSetts.N_OF_HORSES_TO_RUN;
     }
     
     /**
@@ -445,7 +442,7 @@ public class Race {
      * @return 
     */
     public int getNRunningHorses(){
-        return Races.N_OF_HORSES_TO_RUN;
+        return NodeSetts.N_OF_HORSES_TO_RUN;
     }
     
     /**
@@ -520,7 +517,7 @@ public class Race {
      * @return 
     */
     protected boolean allSpectatorsArrivedAtPaddock(){
-        return this.nSpectatorsArrivedAtPaddock == Races.N_OF_SPECTATORS;
+        return this.nSpectatorsArrivedAtPaddock == NodeSetts.N_OF_SPECTATORS;
     }
     
     /**
@@ -640,7 +637,6 @@ public class Race {
             this.bets.add(bet);
             
             this.betsOfSpectators.add(spectatorId);
-            //System.out.println("Spectator Placed Bet S" + spectator.getSpectatorId());
             this.addedBet.notifyAll();
         }
     }
@@ -652,7 +648,7 @@ public class Race {
     protected boolean allSpectatorsBetted(){
         boolean allSpectatorsBetted = true;
         
-        for(int i=0; i<Races.N_OF_SPECTATORS; i++){
+        for(int i=0; i<NodeSetts.N_OF_SPECTATORS; i++){
             if(!this.acceptedBet[i]){
                 allSpectatorsBetted = false;
                 synchronized (this.addedBet) {

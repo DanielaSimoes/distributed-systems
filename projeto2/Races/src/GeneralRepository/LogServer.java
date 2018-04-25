@@ -28,6 +28,9 @@ public class LogServer extends Log implements ServerInterface{
     @Override
     public Message processAndReply(Message inMessage, ServerChannel scon) throws MessageException, SocketException {
         switch(inMessage.getType()){
+            case TERMINATE:
+                this.serverEnded = true;
+                super.terminateServers();
             case setSpectatorState:
                 super.setSpectatorState(inMessage.getInteger1(), inMessage.getSpectatorState(), inMessage.getInteger2());
                 break;

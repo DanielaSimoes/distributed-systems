@@ -41,7 +41,7 @@ public class RacesRun {
         schan = new ServerChannel(SERVER_PORT);    
         schan.start();
         
-        LogServer logServer = new LogServer();
+        RacesServer server = new RacesServer();
         System.out.println("Races service has started!\nServer is listening.");
 
         /* processamento de pedidos */
@@ -52,7 +52,7 @@ public class RacesRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                cliProxy = new ServerProxy(schan, schani, logServer);
+                cliProxy = new ServerProxy(schan, schani, server);
                 cliProxy.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(LogRun.class.getName()).log(Level.SEVERE, null, ex);

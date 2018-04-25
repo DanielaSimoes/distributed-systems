@@ -1,7 +1,7 @@
 package shared;
 
-import GeneralRepository.Races;
 import GeneralRepository.RacesProxy;
+import settings.NodeSetts;
 
 /**
  * This file contains the shared memory region Stable.
@@ -45,7 +45,7 @@ public class Stable implements IStable {
                     // do something in the future
             } 
             
-            if(raceNumber<Races.N_OF_RACES && races.horsesFinished(raceNumber) && races.hasMoreRaces()){
+            if(raceNumber<NodeSetts.N_OF_RACES && races.horsesFinished(raceNumber) && races.hasMoreRaces()){
                 raceNumber++;
             }
         }

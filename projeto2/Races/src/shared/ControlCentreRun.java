@@ -39,7 +39,7 @@ public class ControlCentreRun {
         
         RacesProxy races = new RacesProxy();
         
-        ControlCentreServer controlCentreServer = new ControlCentreServer(races);
+        ControlCentreServer server = new ControlCentreServer(races);
         System.out.println("Control Centre service has started!\nServer is listening.");
 
         /* processamento de pedidos */
@@ -50,7 +50,7 @@ public class ControlCentreRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                cliProxy = new ServerProxy(schan, schani, controlCentreServer);
+                cliProxy = new ServerProxy(schan, schani, server);
                 cliProxy.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(BettingCentreRun.class.getName()).log(Level.SEVERE, null, ex);

@@ -39,7 +39,7 @@ public class PaddockRun {
         
         RacesProxy races = new RacesProxy();
         
-        PaddockServer paddockServer = new PaddockServer(races);
+        PaddockServer server = new PaddockServer(races);
         System.out.println("Paddock service has started!\nServer is listening.");
 
         /* processamento de pedidos */
@@ -50,7 +50,7 @@ public class PaddockRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                cliProxy = new ServerProxy(schan, schani, paddockServer);
+                cliProxy = new ServerProxy(schan, schani, server);
                 cliProxy.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(BettingCentreRun.class.getName()).log(Level.SEVERE, null, ex);

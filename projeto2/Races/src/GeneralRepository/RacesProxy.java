@@ -39,7 +39,7 @@ public class RacesProxy{
      * @param moneyToBet
      * @return
      */
-    public synchronized Bet chooseBet(int raceNumber, int spectatorId, int initialBet, int moneyToBet){        
+    public Bet chooseBet(int raceNumber, int spectatorId, int initialBet, int moneyToBet){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber, spectatorId, initialBet, moneyToBet));
         return result.getMessage().getBet();
@@ -85,7 +85,7 @@ public class RacesProxy{
      * @param raceNumber
      * @return
      */
-    public synchronized boolean areThereAnyWinners(int raceNumber){
+    public boolean areThereAnyWinners(int raceNumber){
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber));
         return result.getMessage().getBoolean();
@@ -97,7 +97,7 @@ public class RacesProxy{
      * @param spectatorId
      * @return
      */
-    public synchronized boolean haveIWon(int raceNumber, int spectatorId){
+    public boolean haveIWon(int raceNumber, int spectatorId){
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber, spectatorId));
         return result.getMessage().getBoolean();
@@ -134,7 +134,7 @@ public class RacesProxy{
     */
     public void makeAMove(int horseId, int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber, horseId));
+        MessageWrapper result = communicate(new Message(mt, horseId, raceNumber));
     }
     
     /**
@@ -145,7 +145,7 @@ public class RacesProxy{
      */
     public int getHorseIteration(int horseId, int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber, horseId));
+        MessageWrapper result = communicate(new Message(mt, horseId, raceNumber));
         return result.getMessage().getInteger1();
     }
     
@@ -157,7 +157,7 @@ public class RacesProxy{
      */
     public int getStandingPosition(int horseId, int raceNumber){
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber, horseId));
+        MessageWrapper result = communicate(new Message(mt, horseId, raceNumber));
         return result.getMessage().getInteger1();
     }
     
@@ -169,7 +169,7 @@ public class RacesProxy{
      */
     public boolean nextMovingHorse(int horseJockeyId, int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber, horseJockeyId));
+        MessageWrapper result = communicate(new Message(mt, horseJockeyId, raceNumber));
         return result.getMessage().getBoolean();
     }
     
@@ -181,7 +181,7 @@ public class RacesProxy{
      */
     public boolean horseFinished(int horseId, int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber, horseId));
+        MessageWrapper result = communicate(new Message(mt, horseId, raceNumber));
         return result.getMessage().getBoolean();
     }
     
@@ -212,7 +212,7 @@ public class RacesProxy{
      * @param raceNumber
      * @return
      */
-    public synchronized int getCurrentRaceDistance(int raceNumber){
+    public int getCurrentRaceDistance(int raceNumber){
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber));
         return result.getMessage().getInteger1();
@@ -227,7 +227,7 @@ public class RacesProxy{
      * @return
      */
 
-    public synchronized boolean getStartTheRace(int raceNumber){        
+    public boolean getStartTheRace(int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber));
         return result.getMessage().getBoolean();
@@ -238,9 +238,9 @@ public class RacesProxy{
      * @param startTheRace
      * @param raceNumber
      */
-    public synchronized void setStartTheRace(boolean startTheRace, int raceNumber){        
+    public void setStartTheRace(boolean startTheRace, int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber));
+        MessageWrapper result = communicate(new Message(mt, raceNumber, startTheRace));
     }
     /* Stable */
 
@@ -250,7 +250,7 @@ public class RacesProxy{
      * @return
      */
 
-    public synchronized int getWakedHorsesToPaddock(int raceNumber){        
+    public int getWakedHorsesToPaddock(int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber));
         return result.getMessage().getInteger1();
@@ -260,7 +260,7 @@ public class RacesProxy{
      *
      * @param raceNumber
      */
-    public synchronized void addWakedHorsesToPaddock(int raceNumber){        
+    public void addWakedHorsesToPaddock(int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber));
     }
@@ -270,7 +270,7 @@ public class RacesProxy{
      * @param raceNumber
      * @return
      */
-    public synchronized boolean getAnnouncedNextRace(int raceNumber){        
+    public boolean getAnnouncedNextRace(int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber));
         return result.getMessage().getBoolean();
@@ -281,7 +281,7 @@ public class RacesProxy{
      * @param announcedNextRace
      * @param raceNumber
      */
-    public synchronized void setAnnouncedNextRace(boolean announcedNextRace, int raceNumber){        
+    public void setAnnouncedNextRace(boolean announcedNextRace, int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber, announcedNextRace));
     }
@@ -336,7 +336,7 @@ public class RacesProxy{
      * @param raceNumber
      */
 
-    public synchronized void setReportResults(boolean set, int raceNumber){        
+    public void setReportResults(boolean set, int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber, set));
     }
@@ -346,7 +346,7 @@ public class RacesProxy{
      * @param raceNumber
      * @return
      */
-    public synchronized boolean getReportResults(int raceNumber){        
+    public boolean getReportResults(int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber));
         return result.getMessage().getBoolean();
@@ -357,7 +357,7 @@ public class RacesProxy{
      * @param set
      * @param raceNumber
      */
-    public synchronized void setProceedToPaddock(boolean set, int raceNumber){        
+    public void setProceedToPaddock(boolean set, int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber, set));
     }
@@ -367,7 +367,7 @@ public class RacesProxy{
      * @param raceNumber
      * @return
      */
-    public synchronized boolean getProceedToPaddock(int raceNumber){        
+    public boolean getProceedToPaddock(int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber));
         return result.getMessage().getBoolean();
@@ -378,7 +378,7 @@ public class RacesProxy{
      * @param raceNumber
      * @return
      */
-    public synchronized boolean allNHorsesInPaddock(int raceNumber){        
+    public boolean allNHorsesInPaddock(int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber));
         return result.getMessage().getBoolean();
@@ -388,7 +388,7 @@ public class RacesProxy{
      *
      * @param raceNumber
      */
-    public synchronized void addNHorsesInPaddock(int raceNumber){        
+    public void addNHorsesInPaddock(int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber));
     }
@@ -404,7 +404,7 @@ public class RacesProxy{
     public Integer waitAddedBet(int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber));
-        return result.getMessage().getInteger1();
+        return result.getMessage().getInteger();
     }
     
     /**
@@ -457,7 +457,7 @@ public class RacesProxy{
      */
     public void acceptBet(int i, int raceNumber){
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber));
+        MessageWrapper result = communicate(new Message(mt, i, raceNumber));
     }
     
     /**
@@ -468,7 +468,7 @@ public class RacesProxy{
     public Integer poolWaitingToBePaidSpectators(int raceNumber){
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber));
-        return result.getMessage().getInteger1();
+        return result.getMessage().getInteger();
     }
     
     /**
@@ -478,7 +478,7 @@ public class RacesProxy{
      */
     public void addWaitingToBePaidSpectator(int i, int raceNumber){
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber, i));
+        MessageWrapper result = communicate(new Message(mt, i, raceNumber));
     }
     
     /**
@@ -498,10 +498,10 @@ public class RacesProxy{
      * @param raceNumber
      * @return
      */
-    public synchronized Integer getPaidSpectators(int i, int raceNumber){        
+    public Integer getPaidSpectators(int i, int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber, i));
-        return result.getMessage().getInteger1();
+        MessageWrapper result = communicate(new Message(mt, i, raceNumber));
+        return result.getMessage().getInteger();
     }
     
     /**
@@ -510,7 +510,7 @@ public class RacesProxy{
      * @param set
      * @param raceNumber
      */
-    public synchronized void setPaidSpectators(int i, boolean set, int raceNumber){        
+    public void setPaidSpectators(int i, boolean set, int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, raceNumber, set));
     }
@@ -523,7 +523,7 @@ public class RacesProxy{
      */
     public Bet getSpectatorBet(int spectatorId, int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber, spectatorId));
+        MessageWrapper result = communicate(new Message(mt, spectatorId, raceNumber));
         return result.getMessage().getBet();
     }
     
@@ -535,7 +535,7 @@ public class RacesProxy{
      */
     public double getHorseOdd(int horseId, int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber, horseId));
+        MessageWrapper result = communicate(new Message(mt, horseId, raceNumber));
         return result.getMessage().getDouble();
     }
     
@@ -547,7 +547,7 @@ public class RacesProxy{
      */
     public int getHorsePosition(int horseId, int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber));
+        MessageWrapper result = communicate(new Message(mt, horseId, raceNumber));
         return result.getMessage().getInteger1();
     }
     /* end condition states */

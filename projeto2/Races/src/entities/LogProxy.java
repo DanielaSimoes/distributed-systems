@@ -27,7 +27,8 @@ public class LogProxy {
     }
     
     private MessageWrapper communicate(Message m){
-        return ClientProxy.connect(SERVER_HOST,  SERVER_PORT, m);
+        MessageWrapper test = ClientProxy.connect(SERVER_HOST, SERVER_PORT, m);
+        return test;
     }
     
     /**
@@ -44,7 +45,7 @@ public class LogProxy {
      *
      * @param state
      */
-    public synchronized void setBrokerState(BrokerState state){
+    public void setBrokerState(BrokerState state){
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, state));
     }
@@ -53,7 +54,7 @@ public class LogProxy {
     /**
      *
      */
-    public synchronized void makeAMove(){
+    public void makeAMove(){
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt));
     }

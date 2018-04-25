@@ -1,11 +1,14 @@
 package GeneralRepository;
 
+import java.io.Serializable;
+
 /**
  * This file describes the bet.
  * @author Daniela Simões, 76771
  */
-public class Bet {
+public class Bet implements Serializable  {
     
+    private static final long serialVersionUID = 1001L;
     private int horseId;
     private int amount;
     private int spectatorId;

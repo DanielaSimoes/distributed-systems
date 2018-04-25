@@ -8,6 +8,7 @@ package GeneralRepository;
 import java.util.HashMap;
 
 import java.util.LinkedList;
+import settings.NodeSetts;
 
 /**
  *
@@ -15,41 +16,6 @@ import java.util.LinkedList;
  */
 public class Races {
     
-    /**
-     * Number of races.
-     */
-    public static final int N_OF_RACES = 2;
-
-    /**
-     * Number of horses.
-     */
-    public static final int N_OF_HORSES = 8;
-    
-    /**
-     * Number of horses.
-     */
-    public static final int N_OF_HORSES_TO_RUN = 4;
-
-    /**
-     * Number os spectators.
-     */
-    public static final int N_OF_SPECTATORS = 4;
-
-    /**
-     * Size of racing track.
-     */
-    public static final int SIZE_OF_RACING_TRACK = 20;
-
-    /**
-     * Horse maxium step size.
-     */
-    public static final int HORSE_MAX_STEP_SIZE = 8;
-
-    /**
-     * Maximum ammount each spectator can bet.
-     */
-    public static final int MAX_SPECTATOR_BET = 2000;
-        
     private static Races instance = null;
     
     private final HashMap<Integer, Integer> spectatorAmmount;
@@ -72,11 +38,11 @@ public class Races {
     public Races(){
         this.spectatorAmmount = new HashMap<>();
         this.horseJockeyStepSize = new HashMap<>();
-        this.races = new Race[N_OF_RACES];
+        this.races = new Race[NodeSetts.N_OF_RACES];
         
         this.horseJockeySelected = new LinkedList<>();
         
-        for(int i=0; i<N_OF_RACES; i++){
+        for(int i=0; i<NodeSetts.N_OF_RACES; i++){
             this.races[i] = new Race(i, this.horseJockeySelected);
         }
     }
@@ -131,7 +97,7 @@ public class Races {
     public void setHorseJockeyStepSize(int id, int stepSize){
         this.horseJockeyStepSize.put(id, stepSize);
         
-        if(this.horseJockeyStepSize.size()==Races.N_OF_HORSES){
+        if(this.horseJockeyStepSize.size()==NodeSetts.N_OF_HORSES){
             for (Race race : this.races) {
                 race.generateOdds(this.horseJockeyStepSize);
             }
@@ -182,7 +148,7 @@ public class Races {
      * @return 
     */
     public boolean hasMoreRaces(){
-        return !this.races[Races.N_OF_RACES-1].horsesFinished();
+        return !this.races[NodeSetts.N_OF_RACES-1].horsesFinished();
     }
     
     /**
@@ -300,7 +266,7 @@ public class Races {
      * @return
      */
     public synchronized boolean getAnnouncedNextRace(int raceNumber){        
-        if(raceNumber>=N_OF_RACES){
+        if(raceNumber>=NodeSetts.N_OF_RACES){
             return false;
         }
         

@@ -39,7 +39,7 @@ public class StableRun {
         
         RacesProxy races = new RacesProxy();
         
-        StableServer stableServer = new StableServer(races);
+        StableServer server = new StableServer(races);
         System.out.println("Stable service has started!\nServer is listening.");
 
         /* processamento de pedidos */
@@ -50,7 +50,7 @@ public class StableRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                cliProxy = new ServerProxy(schan, schani, stableServer);
+                cliProxy = new ServerProxy(schan, schani, server);
                 cliProxy.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(BettingCentreRun.class.getName()).log(Level.SEVERE, null, ex);

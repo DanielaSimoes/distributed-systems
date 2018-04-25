@@ -14,7 +14,6 @@ import entities.HorseJockeyState;
 import entities.Spectators;
 import entities.SpectatorsState;
 import settings.NodeSettsProxy;
-import shared.IControlCentre;
 
 /**
  * Class that implements control centre proxy.

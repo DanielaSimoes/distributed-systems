@@ -65,7 +65,7 @@ public class BettingCentreProxy implements IBettingCentre{
     public Bet placeABet(int raceNumber, int spectatorId, int initialBet, int moneyToBet) {
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.PLACING_A_BET);
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber, spectatorId));
+        MessageWrapper result = communicate(new Message(mt, raceNumber, spectatorId, initialBet, moneyToBet));
         return result.getMessage().getBet();
     }
 

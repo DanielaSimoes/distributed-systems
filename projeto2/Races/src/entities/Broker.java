@@ -1,8 +1,7 @@
 package entities;
 
-import GeneralRepository.Log;
-import GeneralRepository.Races;
 import GeneralRepository.RacesProxy;
+import settings.NodeSetts;
 
 /**
  * This file contains the code that represents the broker lifecycle.
@@ -75,6 +74,7 @@ public class Broker extends Thread implements IEntity{
 
                 case WAITING_FOR_BETS:
                     rt.startTheRace(raceId);
+                    System.out.println("SAI DO SR");
                     break;
 
                 case SUPERVISING_THE_RACE:
@@ -116,7 +116,7 @@ public class Broker extends Thread implements IEntity{
     */
     @Override
     public void nextRace(){
-        if(this.raceId==Races.N_OF_RACES-1){
+        if(this.raceId==NodeSetts.N_OF_RACES-1){
             return;
         }
         this.raceId++;
@@ -140,6 +140,7 @@ public class Broker extends Thread implements IEntity{
         if(state==this.state){
             return;
         }
+        this.setName("Broker - " + this.state.toString());
         this.state = state;
         this.log.setBrokerState(state);
     } 

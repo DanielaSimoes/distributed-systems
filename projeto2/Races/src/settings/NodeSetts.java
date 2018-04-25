@@ -28,7 +28,7 @@ public class NodeSetts {
     /**
      * Number of races.
      */
-    public static final int N_OF_RACES = 2;
+    public static final int N_OF_RACES = 1;
 
     /**
      * Number of horses.
@@ -88,7 +88,7 @@ public class NodeSetts {
         SERVER_PORTS.put("RacingTrack", 22442);
         SERVER_PORTS.put("ControlCentre", 22443);
         SERVER_PORTS.put("Paddock", 22444);
-        SERVER_PORTS.put("Stable", 22445);
+        SERVER_PORTS.put("Stable", 22448);
         SERVER_PORTS.put("Races", 2246);
         SERVER_PORTS.put("NodeSetts", 2247);
         

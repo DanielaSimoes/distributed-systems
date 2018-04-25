@@ -41,8 +41,7 @@ public class LogRun {
         schan = new ServerChannel(SERVER_PORT);    
         schan.start();
         
-        LogServer logServer = new LogServer();
-        System.out.println("Log service has started!\nServer is listening.");
+        LogServer server = new LogServer();
 
         /* processamento de pedidos */
         
@@ -52,7 +51,7 @@ public class LogRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                cliProxy = new ServerProxy(schan, schani, logServer);
+                cliProxy = new ServerProxy(schan, schani, server);
                 cliProxy.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(LogRun.class.getName()).log(Level.SEVERE, null, ex);

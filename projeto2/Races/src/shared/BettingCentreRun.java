@@ -38,7 +38,7 @@ public class BettingCentreRun {
         
         RacesProxy races = new RacesProxy();
         
-        BettingCentreServer bettingCentreServer = new BettingCentreServer(races);
+        BettingCentreServer server = new BettingCentreServer(races);
         System.out.println("Betting Centre service has started!\nServer is listening.");
 
         /* processamento de pedidos */
@@ -49,7 +49,7 @@ public class BettingCentreRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                cliProxy = new ServerProxy(schan, schani, bettingCentreServer);
+                cliProxy = new ServerProxy(schan, schani, server);
                 cliProxy.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(BettingCentreRun.class.getName()).log(Level.SEVERE, null, ex);

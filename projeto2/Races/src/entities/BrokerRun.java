@@ -41,8 +41,9 @@ public class BrokerRun {
         broker.start();
         
         try {
+            System.out.println("Broker started!\n");
             broker.join();
-            System.err.println("Broker Died");
+            System.err.println("Broker Died\n");
         } catch (InterruptedException ex) {
             // do something in the future
         }

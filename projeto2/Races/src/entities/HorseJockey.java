@@ -1,8 +1,7 @@
 package entities;
 
-import GeneralRepository.Log;
-import GeneralRepository.Races;
 import GeneralRepository.RacesProxy;
+import settings.NodeSetts;
 
 /**
  * This file contains the code that represents the HorseJockey lifecycle.
@@ -58,9 +57,12 @@ public class HorseJockey extends Thread implements IEntity{
     */
     @Override
     public void run(){  
+        System.out.printf("Horse Jockey %d started!\n", this.id);
+        
         this.races.setHorseJockeyStepSize(id, stepSize);
         
         this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
+        
         this.raceId = stable.proceedToStable(raceId, this.id, this.stepSize);
                     
         while(!this.entertainTheGuests){
@@ -110,7 +112,7 @@ public class HorseJockey extends Thread implements IEntity{
     */
     @Override
     public void nextRace(){
-        if(this.raceId==Races.N_OF_RACES-1){
+        if(this.raceId==NodeSetts.N_OF_RACES-1){
             return;
         }
         this.raceId++;
@@ -143,6 +145,7 @@ public class HorseJockey extends Thread implements IEntity{
         if(state==this.state){
             return;
         }
+        this.setName("HorseJockey " + id + " - " + this.state.toString());
         this.state = state;
         this.log.setHorseJockeyState(id, state);
     } 

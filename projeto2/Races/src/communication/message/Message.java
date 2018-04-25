@@ -23,6 +23,7 @@ public class Message implements Serializable {
     private int message_i2;
     private int message_i3;
     private int message_i4;
+    private Integer message_integer;
     private MessageType type;
     private HorseJockeyState horseJockeyState;
     private SpectatorsState spectatorsState;
@@ -34,6 +35,11 @@ public class Message implements Serializable {
         
     public Message(MessageType type, int message){
         this.message_i = message;
+        this.type = type; 
+    }
+    
+    public Message(MessageType type, Integer message){
+        this.message_integer = message;
         this.type = type; 
     }
     
@@ -150,6 +156,10 @@ public class Message implements Serializable {
      */
     public HashMap<String, String> getStrStrMap(){
         return (HashMap<String, String>) this.map;
+    }
+    
+    public Integer getInteger(){
+        return this.message_integer;
     }
     
     /**

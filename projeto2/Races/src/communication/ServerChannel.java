@@ -169,9 +169,11 @@ public class ServerChannel {
             System.out.println(Thread.currentThread().getName() + ", the object to be written is not capable of serialization!");
             System.exit(1);
         } catch (NotSerializableException e) {
+            e.printStackTrace(System.out);
             System.out.println(Thread.currentThread().getName() + ", the object to be written belongs to a type of non serializable data!");
             System.exit(1);
         } catch (IOException e) {
+            e.printStackTrace(System.out);
             System.out.println(Thread.currentThread().getName() + ", error in the writing of an output channel of the object of the communication socket!");
             System.exit(1);
         }

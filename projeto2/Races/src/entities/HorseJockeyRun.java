@@ -46,6 +46,7 @@ public class HorseJockeyRun {
         for (HorseJockey horse : horseJockey) { 
             try { 
                 horse.join ();
+                System.out.printf("Horse Jockey %d died!\n", horse.getHorseId()); 
             } catch (InterruptedException e) {}
         }
                 
