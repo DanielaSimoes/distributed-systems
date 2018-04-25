@@ -1,95 +1,59 @@
 /*
- * This file contains the client proxy.
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package communication.Proxy;
 
-import communication.ClientChannel;
 import communication.message.Message;
-import communication.message.MessageType;
 import communication.message.MessageWrapper;
-import GeneralRepository.LogProxy;
+import java.io.IOException;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import settings.NodeSettsProxy;
 
 /**
- * Class that implements client proxy.
- * @author Daniela Simões, 76771
+ *
+ * @author gipmon
  */
-public class ClientProxy extends Thread {
-    private final String clientProxyServerName;
-    private final int toServerPort;
-    private final Message outMessage;
-    private final MessageWrapper result;
+public class ClientProxy {
+    private final String SERVER_HOST;
+    private final int SERVER_PORT;
+    private final String proxyName;
     
-    /**
-     * Construct the client proxy.
-     * @param clientProxyServerName
-     * @param toServerPort
-     * @param result
-     * @param outMessage
-     */
-    public ClientProxy(String clientProxyServerName, int toServerPort, MessageWrapper result, Message outMessage){
-        this.clientProxyServerName = clientProxyServerName;
-        this.toServerPort = toServerPort;
-        this.outMessage = outMessage;
-        this.result = result;
+    private Logger logger = Logger.getLogger("AccessLog");  
+    private FileHandler fh;  
+    
+    public ClientProxy(String proxyName){
+        NodeSettsProxy proxy = new NodeSettsProxy(); 
+        SERVER_HOST = proxy.SERVER_HOSTS().get(proxyName);
+        SERVER_PORT = proxy.SERVER_PORTS().get(proxyName);
+        this.proxyName = proxyName;
+        /*
+        try {
+            // This block configure the logger with handler and formatter  
+            fh = new FileHandler("access.log");  
+            logger.addHandler(fh);
+            SimpleFormatter formatter = new SimpleFormatter();  
+            fh.setFormatter(formatter);  
+            logger.setUseParentHandlers(false);
+        } catch (SecurityException | IOException e) {  
+            
+        } 
+        */
     }
     
     /**
-     * Client proxy wrapper.
-     * @param logServerName
-     * @param logServerPort
+    * Method to communicate with the Betting Centre.
      * @param m
      * @return 
-     */
-    public static MessageWrapper connect(String logServerName, int logServerPort, Message m){
-        MessageWrapper result = new MessageWrapper();
-        
-        ClientProxy cp = new ClientProxy(logServerName, logServerPort, result, m);
-        
-        cp.start();
-        
-        try {
-            //System.out.printf("[%s][%d][%s] Init Join\n", logServerName, logServerPort, m.getType().toString()); 
-            cp.join(); 
-            //System.out.printf("[%s][%d][%s] Init Join\n", logServerName, logServerPort, m.getType().toString());
-        } catch (InterruptedException ex) {
-            Logger.getLogger(LogProxy.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        if (result.getMessage().getType() != MessageType.ACK) {
-            System.out.println("Tipo Inválido. Message:" + result.getMessage().toString());
-            System.exit(1);
-        }
-        
-        return result;
-    }
-    
-    /**
-     * Run the client proxy
-     */
-    @Override
-    public void run(){
-        try {
-            ClientChannel con = new ClientChannel(this.clientProxyServerName, this.toServerPort);
-            
-            while (!con.open())
-            {
-                try {
-                    sleep((long) (10));
-                } catch (InterruptedException e) {
-                }
-            }   
-            
-            con.writeObject(outMessage);
-            
-            this.result.setMessage((Message) con.readObject());
-            
-            con.close();
-            
-            
-        } catch (Exception ex) {
-            Logger.getLogger(ClientProxy.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    */
+    public MessageWrapper communicate(Message m){
+        Thread.currentThread().getName();
+        //logger.log(Level.INFO, "{0} - requested {1} to {2}", new Object[]{Thread.currentThread().getName(), m.getType(), proxyName});
+        System.out.println(Thread.currentThread().getName() + " requested " + m.getType() + " to " + proxyName);
+        return Proxy.connect(SERVER_HOST,  SERVER_PORT, m);
     }
 }

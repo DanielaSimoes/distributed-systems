@@ -11,32 +11,19 @@ import communication.message.MessageType;
 import communication.message.MessageWrapper;
 import entities.BrokerState;
 import entities.HorseJockeyState;
-import entities.IEntity;
 import entities.SpectatorsState;
-import settings.NodeSettsProxy;
 
 /**
  *
  * @author Daniela
  */
-public class LogProxy {
-    private final String SERVER_HOST;
-    private final int SERVER_PORT;
+public class LogProxy extends ClientProxy{
     
     /**
     * Constructor to paddock proxy.
     */
     public LogProxy(){
-        NodeSettsProxy proxy = new NodeSettsProxy(); 
-        SERVER_HOST = proxy.SERVER_HOSTS().get("Log");
-        SERVER_PORT = proxy.SERVER_PORTS().get("Log");
-    }
-    
-    /**
-    * Method to communicate with the Control Centre.
-    */
-    private MessageWrapper communicate(Message m){
-        return ClientProxy.connect(SERVER_HOST,  SERVER_PORT, m);
+        super("Log");
     }
     
     public void setSpectatorState(int id, SpectatorsState state) {

@@ -12,31 +12,17 @@ import entities.Broker;
 import entities.BrokerState;
 import entities.Spectators;
 import entities.SpectatorsState;
-import settings.NodeSettsProxy;
-import shared.IBettingCentre;
 
 /**
  * Class that implements betting centre proxy.
  * @author Daniela Simões, 76771
  */
-public class BettingCentreProxy implements IBettingCentre{
-    private final String SERVER_HOST;
-    private final int SERVER_PORT;
-    
+public class BettingCentreProxy extends ClientProxy implements IBettingCentre{
     /**
     * Constructor to paddock proxy.
     */
     public BettingCentreProxy(){
-        NodeSettsProxy proxy = new NodeSettsProxy(); 
-        SERVER_HOST = proxy.SERVER_HOSTS().get("BettingCentre");
-        SERVER_PORT = proxy.SERVER_PORTS().get("BettingCentre");
-    }
-    
-    /**
-    * Method to communicate with the Betting Centre.
-    */
-    private MessageWrapper communicate(Message m){
-        return ClientProxy.connect(SERVER_HOST,  SERVER_PORT, m);
+        super("BettingCentre");
     }
     
     @Override

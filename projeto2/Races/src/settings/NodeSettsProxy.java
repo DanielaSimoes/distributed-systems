@@ -8,14 +8,14 @@ package settings;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.message.MessageWrapper;
-import communication.Proxy.ClientProxy;
+import communication.Proxy.Proxy;
 import java.util.HashMap;
 
 /**
  *
  * @author Daniela
  */
-public class NodeSettsProxy {
+public class NodeSettsProxy { /* doesn't extends ClientProxy because is the first to init */
     private final String SERVER_HOST;
     private final int SERVER_PORT;
     
@@ -36,7 +36,7 @@ public class NodeSettsProxy {
     * Communicate method to communicate with the Node Setts server
     */
     private MessageWrapper communicate(Message m){
-        return ClientProxy.connect(SERVER_HOST,  SERVER_PORT, m);
+        return Proxy.connect(SERVER_HOST,  SERVER_PORT, m);
     }
     
     /**

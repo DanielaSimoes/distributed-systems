@@ -11,32 +11,18 @@ import entities.Broker;
 import entities.BrokerState;
 import entities.HorseJockey;
 import entities.HorseJockeyState;
-import settings.NodeSettsProxy;
-import shared.IStable;
 
 /**
  * Class that implements stable proxy.
  * @author Daniela Simões, 76771
  */
-public class StableProxy implements IStable {
-    
-    private final String SERVER_HOST;
-    private final int SERVER_PORT;
+public class StableProxy extends ClientProxy implements IStable {
     
     /**
     * Constructor to paddock proxy.
     */
     public StableProxy(){
-        NodeSettsProxy proxy = new NodeSettsProxy(); 
-        SERVER_HOST = proxy.SERVER_HOSTS().get("Stable");
-        SERVER_PORT = proxy.SERVER_PORTS().get("Stable");
-    }
-    
-    /**
-    * Method to communicate with the RacingTrack.
-    */
-    private MessageWrapper communicate(Message m){
-        return ClientProxy.connect(SERVER_HOST,  SERVER_PORT, m);
+        super("Stable");
     }
     
     @Override

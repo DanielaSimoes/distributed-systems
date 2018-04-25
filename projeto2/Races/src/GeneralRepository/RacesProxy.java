@@ -10,27 +10,17 @@ import communication.message.Message;
 import communication.message.MessageType;
 import communication.message.MessageWrapper;
 import java.util.LinkedList;
-import settings.NodeSettsProxy;
 
 /**
  *
  * @author Daniela
  */
-public class RacesProxy{
+public class RacesProxy extends ClientProxy{
     
-    private final String SERVER_HOST;
-    private final int SERVER_PORT;
-
     public RacesProxy(){
-        NodeSettsProxy proxy = new NodeSettsProxy(); 
-        SERVER_HOST = proxy.SERVER_HOSTS().get("Races");
-        SERVER_PORT = proxy.SERVER_PORTS().get("Races");
+        super("Races");
     }
     
-    private MessageWrapper communicate(Message m){
-        return ClientProxy.connect(SERVER_HOST,  SERVER_PORT, m);
-    }
-   
     /**
      *
      * @param raceNumber

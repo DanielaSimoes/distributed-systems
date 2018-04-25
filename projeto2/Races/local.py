@@ -116,10 +116,11 @@ def run():
 
 
 if __name__ == '__main__':
+    N_RUNS = 100
 
     try:
-        for i in range(0, 100):
-            print("Running ", i)
+        for i in range(0, N_RUNS):
+            print("Running ", i, "/", N_RUNS)
             run()
             print("All end! \n\n")
     except KeyboardInterrupt:

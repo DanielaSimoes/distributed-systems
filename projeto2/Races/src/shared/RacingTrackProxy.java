@@ -11,34 +11,20 @@ import entities.Broker;
 import entities.BrokerState;
 import entities.HorseJockey;
 import entities.HorseJockeyState;
-import settings.NodeSettsProxy;
 
 /**
  * Class that implements racing track proxy.
  * @author Daniela
  */
-public class RacingTrackProxy implements IRacingTrack {
-    
-    private final String SERVER_HOST;
-    private final int SERVER_PORT;
+public class RacingTrackProxy extends ClientProxy implements IRacingTrack {
     
     /**
     * Constructor to paddock proxy.
     */
     public RacingTrackProxy(){
-        NodeSettsProxy proxy = new NodeSettsProxy(); 
-        SERVER_HOST = proxy.SERVER_HOSTS().get("RacingTrack");
-        SERVER_PORT = proxy.SERVER_PORTS().get("RacingTrack");
+        super("RacingTrack");
     }
     
-    /**
-    * Method to communicate with the RacingTrack.
-    */
-    private MessageWrapper communicate(Message m){
-        return ClientProxy.connect(SERVER_HOST,  SERVER_PORT, m);
-    }
-    
-
     @Override
     public void startTheRace(int raceNumber) {
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);

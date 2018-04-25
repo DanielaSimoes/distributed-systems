@@ -13,31 +13,18 @@ import entities.HorseJockey;
 import entities.HorseJockeyState;
 import entities.Spectators;
 import entities.SpectatorsState;
-import settings.NodeSettsProxy;
 
 /**
  * Class that implements control centre proxy.
  * @author Daniela Simões, 76771
  */
-public class ControlCentreProxy implements IControlCentre{
-    
-    private final String SERVER_HOST;
-    private final int SERVER_PORT;
+public class ControlCentreProxy extends ClientProxy implements IControlCentre{
     
     /**
     * Constructor to paddock proxy.
     */
     public ControlCentreProxy(){
-        NodeSettsProxy proxy = new NodeSettsProxy(); 
-        SERVER_HOST = proxy.SERVER_HOSTS().get("ControlCentre");
-        SERVER_PORT = proxy.SERVER_PORTS().get("ControlCentre");
-    }
-    
-    /**
-    * Method to communicate with the Control Centre.
-    */
-    private MessageWrapper communicate(Message m){
-        return ClientProxy.connect(SERVER_HOST,  SERVER_PORT, m);
+        super("ControlCentre");
     }
     
     @Override

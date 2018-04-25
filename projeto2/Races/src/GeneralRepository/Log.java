@@ -12,7 +12,7 @@ import entities.SpectatorsState;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.sun.javafx.binding.Logging;
-import communication.Proxy.ClientProxy;
+import communication.Proxy.Proxy;
 import communication.message.Message;
 import communication.message.MessageType;
 import java.util.HashMap;
@@ -303,7 +303,7 @@ public class Log {
     private void sendTerminate(String serverName){
         NodeSettsProxy proxy = new NodeSettsProxy(); 
         
-        ClientProxy.connect(proxy.SERVER_HOSTS().get(serverName), 
+        Proxy.connect(proxy.SERVER_HOSTS().get(serverName), 
                 proxy.SERVER_PORTS().get(serverName), 
                 new Message(MessageType.TERMINATE));
     }

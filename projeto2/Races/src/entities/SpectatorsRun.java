@@ -10,7 +10,7 @@ import shared.ControlCentreProxy;
 import shared.BettingCentreProxy;
 import GeneralRepository.RacesProxy;
 import GeneralRepository.LogProxy;
-import communication.Proxy.ClientProxy;
+import communication.Proxy.Proxy;
 import communication.message.Message;
 import communication.message.MessageType;
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class SpectatorsRun {
         }
                 
         /* SEND TO LOG THAT SPECTATOR HAS FINISHED */
-        ClientProxy.connect(proxy.SERVER_HOSTS().get("Log"), 
+        Proxy.connect(proxy.SERVER_HOSTS().get("Log"), 
                 proxy.SERVER_PORTS().get("Log"), 
                 new Message(MessageType.TERMINATE));
         

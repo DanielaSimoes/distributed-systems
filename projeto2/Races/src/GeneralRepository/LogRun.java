@@ -52,7 +52,7 @@ public class LogRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                cliProxy = new ServerProxy(schan, schani, server);
+                cliProxy = new ServerProxy(schan, schani, server, "Log");
                 cliProxy.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(LogRun.class.getName()).log(Level.SEVERE, null, ex);

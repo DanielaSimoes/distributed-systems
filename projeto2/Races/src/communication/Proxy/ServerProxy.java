@@ -28,9 +28,10 @@ public class ServerProxy extends Thread{
      * @param scon
      * @param sconi
      * @param sInterface
+     * @param name
      */
-    public ServerProxy(ServerChannel scon, ServerChannel sconi, ServerInterface sInterface) {
-        super("Proxy_" + getProxyId());
+    public ServerProxy(ServerChannel scon, ServerChannel sconi, ServerInterface sInterface, String name) {
+        super(name);
 
         this.sconi = sconi;
         this.sInterface = sInterface;

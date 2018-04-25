@@ -52,7 +52,7 @@ public class NodeSettsRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                cliProxy = new ServerProxy(schan, schani, server);
+                cliProxy = new ServerProxy(schan, schani, server, "NodeSetts");
                 cliProxy.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(NodeSettsRun.class.getName()).log(Level.SEVERE, null, ex);

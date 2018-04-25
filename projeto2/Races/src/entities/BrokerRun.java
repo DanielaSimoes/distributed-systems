@@ -12,7 +12,7 @@ import shared.BettingCentreProxy;
 import shared.StableProxy;
 import GeneralRepository.RacesProxy;
 import GeneralRepository.LogProxy;
-import communication.Proxy.ClientProxy;
+import communication.Proxy.Proxy;
 import communication.message.Message;
 import communication.message.MessageType;
 import settings.NodeSettsProxy;
@@ -50,7 +50,7 @@ public class BrokerRun {
         }
         
         /* SEND TO LOG THAT BROKER HAS FINISHED */
-        ClientProxy.connect(proxy.SERVER_HOSTS().get("Log"), 
+        Proxy.connect(proxy.SERVER_HOSTS().get("Log"), 
         proxy.SERVER_PORTS().get("Log"), 
         new Message(MessageType.TERMINATE));
     }
