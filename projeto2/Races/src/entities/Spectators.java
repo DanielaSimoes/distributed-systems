@@ -142,7 +142,7 @@ public class Spectators extends Thread implements IEntity{
         }
         this.state = state;
         this.setName("Spectator " + id + " - " + this.state.toString());
-        this.log.setSpectatorState(id, state);
+        this.log.setSpectatorState(id, state, this.raceId);
     } 
     
     /**

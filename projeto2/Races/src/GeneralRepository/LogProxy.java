@@ -17,7 +17,7 @@ import entities.SpectatorsState;
  *
  * @author Daniela
  */
-public class LogProxy extends ClientProxy{
+public class LogProxy extends ClientProxy implements ILog{
     
     /**
     * Constructor to paddock proxy.
@@ -26,30 +26,43 @@ public class LogProxy extends ClientProxy{
         super("Log");
     }
     
-    public void setSpectatorState(int id, SpectatorsState state) {
+    @Override
+    public void setSpectatorState(int id, SpectatorsState state, int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        communicate(new Message(mt, id, state));
+        communicate(new Message(mt, id, state, raceNumber));
     }
 
-    public void setHorseJockeyState(int id, HorseJockeyState state) {
+    @Override
+    public void setHorseJockeyState(int id, HorseJockeyState state, int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        communicate(new Message(mt, id, state));
+        communicate(new Message(mt, id, state, raceNumber));
     }
 
-    public void setBrokerState(BrokerState state) {
+    @Override
+    public void setBrokerState(BrokerState state, int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt, state));
     }
 
-    public void makeAMove() {
+    /**
+     *
+     * @param raceNumber
+     */
+    @Override
+    public void makeAMove(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         communicate(new Message(mt));
     }
 
-    public boolean setSpectatorAmount(int spectatorId, int amount) {
+    /**
+     *
+     * @param spectatorId
+     * @param amount
+     */
+    @Override
+    public void setSpectatorAmount(int spectatorId, int amount) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, spectatorId, amount));
-        return result.getMessage().getBoolean();
+        communicate(new Message(mt, spectatorId, amount));
     }
     
 }

@@ -169,7 +169,7 @@ public class Race {
      * Method to generate the odds - each bet is generated considering the maximum step size of each horse, the less the step size, the bigger the odd.
      * @param horseJockeyStepSize
      */
-    public synchronized void generateOdds(HashMap<Integer, Integer> horseJockeyStepSize){
+    public void generateOdds(HashMap<Integer, Integer> horseJockeyStepSize){
         int horseJockeyStepSizeSum = 0;
         
         for(int i=0; i<this.selectedHorses.length; i++){
@@ -203,7 +203,7 @@ public class Race {
      * @param moneyToBet
      * @return
      */
-    public synchronized Bet chooseBet(int spectatorId, int initialBet, int moneyToBet){
+    public Bet chooseBet(int spectatorId, int initialBet, int moneyToBet){
         // get initial bank and divide with the maximum amount possible to bet
         double perception = initialBet / NodeSetts.MAX_SPECTATOR_BET;
         // the capacity of the user compared to the initial bank
@@ -278,7 +278,7 @@ public class Race {
      * Method to verify if are there any winners of the bets.
      * @return
      */
-    public synchronized boolean areThereAnyWinners(){
+    public boolean areThereAnyWinners(){
         boolean thereAreWinners = false;
         
         for (Integer horseId : this.winners) {
@@ -299,7 +299,7 @@ public class Race {
      * @param spectatorId
      * @return
      */
-    public synchronized boolean haveIWon(int spectatorId){
+    public boolean haveIWon(int spectatorId){
         boolean haveIWon = false;
         
         for (Integer horseId : this.winners) {
@@ -461,7 +461,7 @@ public class Race {
     * Method to retrieve the status of the start of the race.
      * @return 
     */
-    protected synchronized boolean getStartTheRace(){
+    protected boolean getStartTheRace(){
         return this.startTheRace;
     }
     
@@ -470,7 +470,7 @@ public class Race {
     * Method to set the variable of start the race.
     * @param startTheRace The value of the variable to be assigned.
     */
-    protected synchronized void setStartTheRace(boolean startTheRace){
+    protected void setStartTheRace(boolean startTheRace){
         this.startTheRace = startTheRace;
     }
 
@@ -480,7 +480,7 @@ public class Race {
     * Method to retrieve the waked horses variable.
      * @return 
     */
-    protected synchronized int getWakedHorsesToPaddock(){
+    protected int getWakedHorsesToPaddock(){
         return this.wakedHorsesToPaddock;
     }
     
@@ -488,7 +488,7 @@ public class Race {
     *
     * Method to add waked horses.
     */
-    protected synchronized void addWakedHorsesToPaddock(){
+    protected void addWakedHorsesToPaddock(){
         this.wakedHorsesToPaddock = this.wakedHorsesToPaddock + 1;
     }
     
@@ -497,7 +497,7 @@ public class Race {
     * Method to get the variable of announcing next race.
      * @return 
     */
-    protected synchronized boolean getAnnuncedNextRace(){
+    protected boolean getAnnuncedNextRace(){
         return this.annuncedNextRace;
     }
     
@@ -506,7 +506,7 @@ public class Race {
     * Method to set the variable of announcing next race.
     * @param annuncedNextRace The value of the variable to be assigned.
     */
-    protected synchronized void setAnnuncedNextRace(boolean annuncedNextRace){
+    protected void setAnnuncedNextRace(boolean annuncedNextRace){
         this.annuncedNextRace = annuncedNextRace;
     }
 
@@ -551,7 +551,7 @@ public class Race {
     * Method to set the variable of report results.
     * @param set The value of the variable to be assigned.
     */
-    protected synchronized void setReportResults(boolean set){
+    protected void setReportResults(boolean set){
         this.reportResults = set;
     }
     
@@ -560,7 +560,7 @@ public class Race {
     * Method to retrieve the variable of report results.
      * @return 
     */
-    protected synchronized boolean getReportResults(){
+    protected boolean getReportResults(){
         return this.reportResults;
     }
     
@@ -569,7 +569,7 @@ public class Race {
     * Method to set the variable of proceed to paddock.
     * @param set The value of the variable to be assigned.
     */
-    protected synchronized void setProceedToPaddock(boolean set){
+    protected void setProceedToPaddock(boolean set){
         this.proceedToPaddock = set;
     }
     
@@ -578,7 +578,7 @@ public class Race {
     * Method to retrieve the variable of proceed to paddock.
      * @return 
     */
-    protected synchronized boolean getProceedToPaddock(){
+    protected boolean getProceedToPaddock(){
         return this.proceedToPaddock;
     }
     
@@ -713,7 +713,7 @@ public class Race {
      * @param spectatorId
      * @return
      */
-    protected synchronized Integer getPaidSpectators(int spectatorId){
+    protected Integer getPaidSpectators(int spectatorId){
         boolean pay = this.paidSpectators[spectatorId];
         
         if(pay){
@@ -736,7 +736,7 @@ public class Race {
     * @param i The id of the spectator.
     * @param set The value of the variable to be assigned.
     */
-    protected synchronized void setPaidSpectators(int i, boolean set){
+    protected void setPaidSpectators(int i, boolean set){
         this.nPaidSpectators++;
         this.paidSpectators[i] = set;
     }

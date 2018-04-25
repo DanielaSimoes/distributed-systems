@@ -82,12 +82,12 @@ public class HorseJockey extends Thread implements IEntity{
                     break;
                 case AT_THE_START_LINE:
                     rt.makeAMove(raceId, this.id);
-                    this.log.makeAMove();
+                    this.log.makeAMove(this.raceId);
                     break;
                 case RUNNNING:
                     while(!rt.hasFinishLineBeenCrossed(this.id, raceId)){
                         rt.makeAMove(raceId, this.id);
-                        this.log.makeAMove();
+                        this.log.makeAMove(this.raceId);
                     }
                     break;
                 case AT_THE_FINISH_LINE:
@@ -148,7 +148,7 @@ public class HorseJockey extends Thread implements IEntity{
         }
         this.state = state;
         this.setName("HorseJockey " + id + " - " + this.state.toString());
-        this.log.setHorseJockeyState(id, state);
+        this.log.setHorseJockeyState(id, state, this.raceId);
     } 
     
     /**

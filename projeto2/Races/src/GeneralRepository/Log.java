@@ -23,7 +23,7 @@ import settings.NodeSettsProxy;
  * This file contains the code to generate a log file.
  * @author Daniela Simões, 76771
  */
-public class Log {
+public class Log implements ILog{
     
     private final RacesProxy races = new RacesProxy();
     
@@ -158,6 +158,7 @@ public class Log {
     
     /**
      *
+     * @param raceNumber
      */
     public void writeLineStatus(int raceNumber){
         String head = "  " + this.brokerState + " ";
@@ -192,6 +193,7 @@ public class Log {
      * @param spectatorId
      * @param amount
      */
+    @Override
     public void setSpectatorAmount(int spectatorId, int amount){
         this.spectatorAmounts[spectatorId] = amount;
     }
@@ -201,6 +203,7 @@ public class Log {
      * @param state
      * @param raceNumber
      */
+    @Override
     public void setBrokerState(BrokerState state, int raceNumber){
         this.brokerState = state;
         this.writeLineStatus(raceNumber);
@@ -213,7 +216,9 @@ public class Log {
 
     /**
      *
+     * @param raceNumber
      */
+    @Override
     public void makeAMove(int raceNumber){
         this.writeLineStatus(raceNumber);
     }
@@ -249,7 +254,9 @@ public class Log {
     * Method to set the state of a Spectator.
      * @param id
     * @param state The state to be assigned.
+     * @param raceNumber
     */
+    @Override
     public void setSpectatorState(int id, SpectatorsState state, int raceNumber){
         if(this.spectatorsState.containsKey(id)){
             this.spectatorsState.replace(id, state);

@@ -14,7 +14,7 @@ import settings.NodeSetts;
  *
  * @author Daniela
  */
-public class Races {
+public class Races implements IRaces{
     
     private static Races instance = null;
     
@@ -69,7 +69,8 @@ public class Races {
      * @param moneyToBet
      * @return
      */
-    public synchronized Bet chooseBet(int raceNumber, int spectatorId, int initialBet, int moneyToBet){        
+    @Override
+    public Bet chooseBet(int raceNumber, int spectatorId, int initialBet, int moneyToBet){        
         return this.races[raceNumber].chooseBet(spectatorId, initialBet, moneyToBet);
     }
 
@@ -81,6 +82,7 @@ public class Races {
      * @param raceNumber
      * @return 
     */
+    @Override
     public boolean horseHasBeenSelectedToRace(int horseJockeyID, int horseStepSize, int raceNumber){    
         if(horseStepSize==-1){
             return this.races[raceNumber].horseHasBeenSelectedToRace(horseJockeyID);
@@ -94,6 +96,7 @@ public class Races {
      * @param id
      * @param stepSize
      */
+    @Override
     public void setHorseJockeyStepSize(int id, int stepSize){
         this.horseJockeyStepSize.put(id, stepSize);
         
@@ -109,6 +112,7 @@ public class Races {
      * @param id
      * @return
      */
+    @Override
     public int getHorseJockeyStepSize(int id){
         return this.horseJockeyStepSize.get(id);
     }
@@ -118,7 +122,8 @@ public class Races {
      * @param raceNumber
      * @return
      */
-    public synchronized boolean areThereAnyWinners(int raceNumber){
+    @Override
+    public boolean areThereAnyWinners(int raceNumber){
         return this.races[raceNumber].areThereAnyWinners();
     };
     
@@ -128,7 +133,8 @@ public class Races {
      * @param spectatorId
      * @return
      */
-    public synchronized boolean haveIWon(int raceNumber, int spectatorId){
+    @Override
+    public boolean haveIWon(int raceNumber, int spectatorId){
         return this.races[raceNumber].haveIWon(spectatorId);
     };
     
@@ -138,6 +144,7 @@ public class Races {
      * @param raceNumber
      * @return 
     */
+    @Override
     public LinkedList<Integer> getWinner(int raceNumber){        
         return races[raceNumber].getWinner();
     }
@@ -147,6 +154,7 @@ public class Races {
     * Method to verify if has more races to happen.
      * @return 
     */
+    @Override
     public boolean hasMoreRaces(){
         return !this.races[NodeSetts.N_OF_RACES-1].horsesFinished();
     }
@@ -157,6 +165,7 @@ public class Races {
     * @param horseId The ID of the HorseJockey.
      * @param raceNumber
     */
+    @Override
     public void makeAMove(int horseId, int raceNumber){        
         this.races[raceNumber].makeAMove(horseId);
     }
@@ -167,6 +176,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
+    @Override
     public int getHorseIteration(int horseId, int raceNumber){        
         return this.races[raceNumber].getHorseIteration(horseId);
     }
@@ -177,6 +187,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
+    @Override
     public int getStandingPosition(int horseId, int raceNumber){
         return this.races[raceNumber].getStandingPosition(horseId);
     }
@@ -187,6 +198,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
+    @Override
     public boolean nextMovingHorse(int horseJockeyId, int raceNumber){        
         return this.races[raceNumber].nextMovingHorse(horseJockeyId);
     }
@@ -197,6 +209,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
+    @Override
     public boolean horseFinished(int horseId, int raceNumber){        
         return this.races[raceNumber].horseFinished(horseId);
     }
@@ -207,6 +220,7 @@ public class Races {
      * @param raceNumber
      * @return 
     */
+    @Override
     public boolean horsesFinished(int raceNumber){     
         return this.races[raceNumber].horsesFinished();
     }
@@ -216,6 +230,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
+    @Override
     public int getNRunningHorses(int raceNumber){        
         return this.races[raceNumber].getNRunningHorses();
     }
@@ -225,7 +240,8 @@ public class Races {
      * @param raceNumber
      * @return
      */
-    public synchronized int getCurrentRaceDistance(int raceNumber){
+    @Override
+    public int getCurrentRaceDistance(int raceNumber){
         return this.races[raceNumber].getCurrentRaceDistance();
     }
     
@@ -238,7 +254,8 @@ public class Races {
      * @return
      */
 
-    public synchronized boolean getStartTheRace(int raceNumber){        
+    @Override
+    public boolean getStartTheRace(int raceNumber){        
         return this.races[raceNumber].getStartTheRace();
     }
     
@@ -247,7 +264,8 @@ public class Races {
      * @param startTheRace
      * @param raceNumber
      */
-    public synchronized void setStartTheRace(boolean startTheRace, int raceNumber){        
+    @Override
+    public void setStartTheRace(boolean startTheRace, int raceNumber){        
         this.races[raceNumber].setStartTheRace(startTheRace);
     }
     /* Stable */
@@ -258,7 +276,8 @@ public class Races {
      * @return
      */
 
-    public synchronized int getWakedHorsesToPaddock(int raceNumber){        
+    @Override
+    public int getWakedHorsesToPaddock(int raceNumber){        
         return this.races[raceNumber].getWakedHorsesToPaddock();
     }
     
@@ -266,7 +285,8 @@ public class Races {
      *
      * @param raceNumber
      */
-    public synchronized void addWakedHorsesToPaddock(int raceNumber){        
+    @Override
+    public void addWakedHorsesToPaddock(int raceNumber){        
         this.races[raceNumber].addWakedHorsesToPaddock();
     }
     
@@ -275,7 +295,8 @@ public class Races {
      * @param raceNumber
      * @return
      */
-    public synchronized boolean getAnnouncedNextRace(int raceNumber){        
+    @Override
+    public boolean getAnnouncedNextRace(int raceNumber){        
         if(raceNumber>=NodeSetts.N_OF_RACES){
             return false;
         }
@@ -288,7 +309,8 @@ public class Races {
      * @param annuncedNextRace
      * @param raceNumber
      */
-    public synchronized void setAnnouncedNextRace(boolean annuncedNextRace, int raceNumber){        
+    @Override
+    public void setAnnouncedNextRace(boolean annuncedNextRace, int raceNumber){        
         this.races[raceNumber].setAnnuncedNextRace(annuncedNextRace);
     }
     /* Paddock */
@@ -298,7 +320,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
-
+    @Override
     public boolean allSpectatorsArrivedAtPaddock(int raceNumber){        
         return this.races[raceNumber].allSpectatorsArrivedAtPaddock();
     }
@@ -307,6 +329,7 @@ public class Races {
      *
      * @param raceNumber
      */
+    @Override
     public void addNSpectatorsArrivedAtPaddock(int raceNumber){        
         this.races[raceNumber].addNSpectatorsArrivedAtPaddock();
     }
@@ -316,6 +339,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
+    @Override
     public boolean allHorseJockeyLeftThePadock(int raceNumber){        
         return this.races[raceNumber].allHorseJockeyLeftThePadock();
     }
@@ -324,6 +348,7 @@ public class Races {
      *
      * @param raceNumber
      */
+    @Override
     public void addNHorseJockeyLeftThePadock(int raceNumber){        
         this.races[raceNumber].addNHorseJockeyLeftThePadock();
     }
@@ -336,7 +361,8 @@ public class Races {
      * @param raceNumber
      */
 
-    public synchronized void setReportResults(boolean set, int raceNumber){        
+    @Override
+    public void setReportResults(boolean set, int raceNumber){        
         this.races[raceNumber].setReportResults(set);
     }
     
@@ -345,7 +371,8 @@ public class Races {
      * @param raceNumber
      * @return
      */
-    public synchronized boolean getReportResults(int raceNumber){        
+    @Override
+    public boolean getReportResults(int raceNumber){        
         return this.races[raceNumber].getReportResults();
     }
     
@@ -354,7 +381,8 @@ public class Races {
      * @param set
      * @param raceNumber
      */
-    public synchronized void setProceedToPaddock(boolean set, int raceNumber){        
+    @Override
+    public void setProceedToPaddock(boolean set, int raceNumber){        
         this.races[raceNumber].setProceedToPaddock(set);
     }
     
@@ -363,7 +391,8 @@ public class Races {
      * @param raceNumber
      * @return
      */
-    public synchronized boolean getProceedToPaddock(int raceNumber){        
+    @Override
+    public boolean getProceedToPaddock(int raceNumber){        
         return this.races[raceNumber].getProceedToPaddock();
     }
     
@@ -372,7 +401,8 @@ public class Races {
      * @param raceNumber
      * @return
      */
-    public synchronized boolean allNHorsesInPaddock(int raceNumber){        
+    @Override
+    public boolean allNHorsesInPaddock(int raceNumber){        
         return this.races[raceNumber].allNHorsesInPaddock();
     }
     
@@ -380,7 +410,8 @@ public class Races {
      *
      * @param raceNumber
      */
-    public synchronized void addNHorsesInPaddock(int raceNumber){        
+    @Override
+    public void addNHorsesInPaddock(int raceNumber){        
         this.races[raceNumber].addNHorsesInPaddock();
     }
     
@@ -391,7 +422,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
-
+    @Override
     public Integer waitAddedBet(int raceNumber){        
         return this.races[raceNumber].waitAddedBet();
     }
@@ -401,6 +432,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
+    @Override
     public boolean allSpectatorsBettsAceppted(int raceNumber){        
         return this.races[raceNumber].allSpectatorsBettsAceppted();
     }
@@ -411,6 +443,7 @@ public class Races {
      * @param raceNumber
      * @param spectatorId
      */
+    @Override
     public void addBetOfSpectator(Bet bet, int raceNumber, int spectatorId){        
         this.races[raceNumber].addBetOfSpectator(bet, spectatorId);
     }
@@ -420,6 +453,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
+    @Override
     public boolean allSpectatorsBetted(int raceNumber){        
         return this.races[raceNumber].allSpectatorsBetted();
     }
@@ -429,6 +463,7 @@ public class Races {
      * @param raceNumber
      * @param spectatorId
      */
+    @Override
     public void waitAcceptedTheBet(int raceNumber, int spectatorId){
         this.races[raceNumber].waitAcceptedTheBet(spectatorId);
     }
@@ -438,6 +473,7 @@ public class Races {
      * @param i
      * @param raceNumber
      */
+    @Override
     public void acceptBet(int i, int raceNumber){
         this.races[raceNumber].acceptBet(i);
     }
@@ -447,6 +483,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
+    @Override
     public Integer poolWaitingToBePaidSpectators(int raceNumber){
         return this.races[raceNumber].poolWaitingToBePaidSpectators();
     }
@@ -456,6 +493,7 @@ public class Races {
      * @param i
      * @param raceNumber
      */
+    @Override
     public void addWaitingToBePaidSpectator(int i, int raceNumber){
         this.races[raceNumber].addWaitingToBePaidSpectator(i);
     }
@@ -465,6 +503,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
+    @Override
     public boolean allSpectatorsPaid(int raceNumber){
         return this.races[raceNumber].allSpectatorsPaid();
     }
@@ -475,7 +514,8 @@ public class Races {
      * @param raceNumber
      * @return
      */
-    public synchronized Integer getPaidSpectators(int i, int raceNumber){        
+    @Override
+    public Integer getPaidSpectators(int i, int raceNumber){        
         return this.races[raceNumber].getPaidSpectators(i);
     }
     
@@ -485,7 +525,8 @@ public class Races {
      * @param set
      * @param raceNumber
      */
-    public synchronized void setPaidSpectators(int i, boolean set, int raceNumber){        
+    @Override
+    public void setPaidSpectators(int i, boolean set, int raceNumber){        
         this.races[raceNumber].setPaidSpectators(i, set);
     }
     
@@ -495,6 +536,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
+    @Override
     public Bet getSpectatorBet(int spectatorId, int raceNumber){        
         return this.races[raceNumber].getSpectatorBet(spectatorId);
     }
@@ -505,6 +547,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
+    @Override
     public double getHorseOdd(int horseId, int raceNumber){        
         return this.races[raceNumber].getHorseOdd(horseId);
     }
@@ -515,6 +558,7 @@ public class Races {
      * @param raceNumber
      * @return
      */
+    @Override
     public int getHorsePosition(int horseId, int raceNumber){        
         return this.races[raceNumber].getHorsePosition(horseId);
     }

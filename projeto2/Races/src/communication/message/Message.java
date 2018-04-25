@@ -85,15 +85,16 @@ public class Message implements Serializable {
         this.type = type; 
     }
     
-    public Message(MessageType type, int message, HorseJockeyState horseJockeyState){
+    public Message(MessageType type, int message, HorseJockeyState horseJockeyState, int raceNumber){
         this.type = type;
         this.message_i = message;
         this.horseJockeyState = horseJockeyState;
     }
     
-    public Message(MessageType type, int message, SpectatorsState spectatorsState){
+    public Message(MessageType type, int message, SpectatorsState spectatorsState, int raceNumber){
         this.type = type;
         this.message_i = message;
+        this.message_i2 = raceNumber;
         this.spectatorsState = spectatorsState;
     }
     

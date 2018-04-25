@@ -142,7 +142,7 @@ public class Broker extends Thread implements IEntity{
         }
         this.state = state;
         this.setName("Broker - " + this.state.toString());
-        this.log.setBrokerState(state);
+        this.log.setBrokerState(state, this.raceId);
     } 
     
     /**
