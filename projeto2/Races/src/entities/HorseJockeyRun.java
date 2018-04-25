@@ -10,9 +10,10 @@ import shared.PaddockProxy;
 import shared.ControlCentreProxy;
 import shared.StableProxy;
 import GeneralRepository.RacesProxy;
+import GeneralRepository.LogProxy;
+import communication.Proxy.ClientProxy;
 import communication.message.Message;
 import communication.message.MessageType;
-import communication.Proxy.ClientProxy;
 import java.util.ArrayList;
 import settings.NodeSettsProxy;
 
@@ -46,7 +47,7 @@ public class HorseJockeyRun {
         for (HorseJockey horse : horseJockey) { 
             try { 
                 horse.join ();
-                System.out.printf("Horse Jockey %d died!\n", horse.getHorseId()); 
+                System.err.printf("Horse Jockey %d died!\n", horse.getHorseId()); 
             } catch (InterruptedException e) {}
         }
                 

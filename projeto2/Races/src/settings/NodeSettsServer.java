@@ -18,6 +18,7 @@ import java.net.SocketException;
  */
 public class NodeSettsServer extends NodeSetts implements ServerInterface{
     private boolean serverEnded;
+    private String name;
     
     /**
      * Node settings server
@@ -25,6 +26,7 @@ public class NodeSettsServer extends NodeSetts implements ServerInterface{
      */
     public NodeSettsServer(String jsonfilepath) {
         super(jsonfilepath);
+        this.name = "Node Setts Server";
         this.serverEnded = false;
     }
     
@@ -38,6 +40,7 @@ public class NodeSettsServer extends NodeSetts implements ServerInterface{
         switch(inMessage.getType()){
             case TERMINATE:
                 this.serverEnded = true;
+                break;
             case SERVER_PORTS:
                 return new Message(MessageType.ACK, super.SERVER_PORTS);
             case SERVER_HOSTS:
@@ -68,5 +71,10 @@ public class NodeSettsServer extends NodeSetts implements ServerInterface{
     @Override
     public boolean serviceEnded() {
         return serverEnded;
+    }
+    
+    @Override
+    public String serviceName() {
+        return this.name;
     }
 }

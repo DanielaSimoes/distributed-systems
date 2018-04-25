@@ -62,7 +62,7 @@ public class ServerProxy extends Thread{
         
         if(sInterface.serviceEnded())
         {
-            System.out.println("Closing service ... Done!");
+            System.out.println(this.sInterface.serviceName() + " - Closing service ... Done!");
             System.exit(0);
         }
     }

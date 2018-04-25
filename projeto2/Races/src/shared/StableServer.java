@@ -19,9 +19,11 @@ import java.net.SocketException;
  */
 public class StableServer extends Stable implements ServerInterface{
     private boolean serverEnded;
+    private String name;
     
     public StableServer(RacesProxy races) {
         super(races);
+        this.name = "Stable Server";
         this.serverEnded = false;
     }
 
@@ -30,6 +32,7 @@ public class StableServer extends Stable implements ServerInterface{
         switch(inMessage.getType()){
             case TERMINATE:
                 this.serverEnded = true;
+                break;
             case summonHorsesToPaddock:
                 super.summonHorsesToPaddock(inMessage.getInteger1());
                 break;
@@ -47,5 +50,10 @@ public class StableServer extends Stable implements ServerInterface{
     @Override
     public boolean serviceEnded() {
         return serverEnded;
+    }
+    
+    @Override
+    public String serviceName() {
+        return this.name;
     }
 }

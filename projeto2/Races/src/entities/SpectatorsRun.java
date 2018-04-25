@@ -9,6 +9,7 @@ import shared.PaddockProxy;
 import shared.ControlCentreProxy;
 import shared.BettingCentreProxy;
 import GeneralRepository.RacesProxy;
+import GeneralRepository.LogProxy;
 import communication.Proxy.ClientProxy;
 import communication.message.Message;
 import communication.message.MessageType;
@@ -51,7 +52,7 @@ public class SpectatorsRun {
         for (Spectators spectator : spectators) { 
             try { 
                 spectator.join ();
-                System.out.printf("Spectator %d died!\n", spectator.getSpectatorId()); 
+                System.err.printf("Spectator %d died!\n", spectator.getSpectatorId()); 
             } catch (InterruptedException e) {}
         }
                 

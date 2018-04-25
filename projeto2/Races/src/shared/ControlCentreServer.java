@@ -20,9 +20,11 @@ import java.net.SocketException;
 public class ControlCentreServer extends ControlCentre implements ServerInterface {
     
     private boolean serverEnded;
+    private String name;
     
     public ControlCentreServer(RacesProxy races) {
         super(races);
+        this.name = "Control Centre Server";
         this.serverEnded = false;
     }
 
@@ -31,6 +33,7 @@ public class ControlCentreServer extends ControlCentre implements ServerInterfac
         switch(inMessage.getType()){
             case TERMINATE:
                 this.serverEnded = true;
+                break;
             case reportResults:
                 super.reportResults(inMessage.getInteger1());
                 break;
@@ -59,4 +62,8 @@ public class ControlCentreServer extends ControlCentre implements ServerInterfac
         return serverEnded;
     }
     
+    @Override
+    public String serviceName() {
+        return this.name;
+    }
 }

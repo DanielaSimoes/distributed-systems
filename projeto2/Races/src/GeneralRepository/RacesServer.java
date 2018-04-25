@@ -25,10 +25,12 @@ public class RacesServer extends Races implements ServerInterface{
     private double response_double;
     private boolean response_boolean;
     private Integer response_integer;
+    private String name;
     
     
     public RacesServer() {
         super();
+        this.name = "Races Server";
         this.serverEnded = false;
     }
 
@@ -37,6 +39,7 @@ public class RacesServer extends Races implements ServerInterface{
         switch(inMessage.getType()){
             case TERMINATE:
                 this.serverEnded = true;
+                break;
             case chooseBet:
                 response_bet = super.chooseBet(inMessage.getInteger1(), inMessage.getInteger2(), inMessage.getInteger3(), inMessage.getInteger4());
                 return new Message(MessageType.ACK, response_bet);
@@ -75,6 +78,9 @@ public class RacesServer extends Races implements ServerInterface{
                 return new Message(MessageType.ACK, response_boolean);
             case horseFinished:
                 response_boolean = super.horseFinished(inMessage.getInteger1(), inMessage.getInteger2());
+                return new Message(MessageType.ACK, response_boolean);
+            case horsesFinished:
+                response_boolean = super.horsesFinished(inMessage.getInteger1());
                 return new Message(MessageType.ACK, response_boolean);
             case getNRunningHorses:
                 response_int = super.getNRunningHorses(inMessage.getInteger1());
@@ -182,4 +188,8 @@ public class RacesServer extends Races implements ServerInterface{
         return serverEnded;
     }
     
+    @Override
+    public String serviceName() {
+        return this.name;
+    }
 }

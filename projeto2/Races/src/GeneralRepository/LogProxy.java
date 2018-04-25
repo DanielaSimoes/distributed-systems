@@ -28,8 +28,8 @@ public class LogProxy {
     */
     public LogProxy(){
         NodeSettsProxy proxy = new NodeSettsProxy(); 
-        SERVER_HOST = proxy.SERVER_HOSTS().get("ControlCentre");
-        SERVER_PORT = proxy.SERVER_PORTS().get("ControlCentre");
+        SERVER_HOST = proxy.SERVER_HOSTS().get("Log");
+        SERVER_PORT = proxy.SERVER_PORTS().get("Log");
     }
     
     /**

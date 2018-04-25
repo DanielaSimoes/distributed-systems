@@ -21,9 +21,11 @@ import java.net.SocketException;
 public class BettingCentreServer extends BettingCentre implements ServerInterface {
     
     private boolean serverEnded;
+    private String name;
     
     public BettingCentreServer(RacesProxy races) {
         super(races);
+        this.name = "Betting Centre Server";
         this.serverEnded = false;
     }
 
@@ -32,6 +34,7 @@ public class BettingCentreServer extends BettingCentre implements ServerInterfac
         switch(inMessage.getType()){
             case TERMINATE:
                 this.serverEnded = true;
+                break;
             case acceptTheBets:
                 super.acceptTheBets(inMessage.getInteger1());
                 break;
@@ -57,4 +60,8 @@ public class BettingCentreServer extends BettingCentre implements ServerInterfac
         return serverEnded;
     }
     
+    @Override
+    public String serviceName() {
+        return this.name;
+    }
 }

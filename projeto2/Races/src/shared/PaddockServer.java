@@ -20,9 +20,11 @@ import java.net.SocketException;
 public class PaddockServer extends Paddock implements ServerInterface{
     
     private boolean serverEnded;
+    private String name;
     
     public PaddockServer(RacesProxy races) {
         super(races);
+        this.name = "Paddock Server";
         this.serverEnded = false;
     }
 
@@ -31,6 +33,7 @@ public class PaddockServer extends Paddock implements ServerInterface{
         switch(inMessage.getType()){
             case TERMINATE:
                 this.serverEnded = true;
+                break;
             case proceedToPaddock:
                 super.proceedToPaddock(inMessage.getInteger1());
                 break;
@@ -53,4 +56,8 @@ public class PaddockServer extends Paddock implements ServerInterface{
         return serverEnded;
     }
     
+    @Override
+    public String serviceName() {
+        return this.name;
+    }
 }

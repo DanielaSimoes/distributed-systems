@@ -11,9 +11,10 @@ import shared.ControlCentreProxy;
 import shared.BettingCentreProxy;
 import shared.StableProxy;
 import GeneralRepository.RacesProxy;
+import GeneralRepository.LogProxy;
+import communication.Proxy.ClientProxy;
 import communication.message.Message;
 import communication.message.MessageType;
-import communication.Proxy.ClientProxy;
 import settings.NodeSettsProxy;
 
 
@@ -43,7 +44,7 @@ public class BrokerRun {
         try {
             System.out.println("Broker started!\n");
             broker.join();
-            System.err.println("Broker Died\n");
+            System.err.println("Broker Died");
         } catch (InterruptedException ex) {
             // do something in the future
         }

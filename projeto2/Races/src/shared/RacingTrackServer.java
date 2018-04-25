@@ -20,9 +20,11 @@ import java.net.SocketException;
 public class RacingTrackServer extends RacingTrack implements ServerInterface{
 
     private boolean serverEnded;
+    private String name;
     
     public RacingTrackServer(RacesProxy races) {
         super(races);
+        this.name = "Racing Track Server";
         this.serverEnded = false;
     }
 
@@ -31,6 +33,7 @@ public class RacingTrackServer extends RacingTrack implements ServerInterface{
         switch(inMessage.getType()){
             case TERMINATE:
                 this.serverEnded = true;
+                break;
             case startTheRace:
                 super.startTheRace(inMessage.getInteger1());
                 break;
@@ -53,4 +56,8 @@ public class RacingTrackServer extends RacingTrack implements ServerInterface{
         return serverEnded;
     }
     
+    @Override
+    public String serviceName() {
+        return this.name;
+    }
 }

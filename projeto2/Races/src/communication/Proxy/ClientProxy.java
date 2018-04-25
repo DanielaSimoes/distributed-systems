@@ -7,7 +7,7 @@ import communication.ClientChannel;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.message.MessageWrapper;
-import entities.LogProxy;
+import GeneralRepository.LogProxy;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

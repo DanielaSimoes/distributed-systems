@@ -1,6 +1,7 @@
 package entities;
 
 import GeneralRepository.Bet;
+import GeneralRepository.LogProxy;
 import GeneralRepository.RacesProxy;
 import settings.NodeSetts;
 
@@ -139,8 +140,8 @@ public class Spectators extends Thread implements IEntity{
         if(state==this.state){
             return;
         }
-        this.setName("Spectator " + id + " - " + this.state.toString());
         this.state = state;
+        this.setName("Spectator " + id + " - " + this.state.toString());
         this.log.setSpectatorState(id, state);
     } 
     

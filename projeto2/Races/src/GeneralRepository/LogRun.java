@@ -42,6 +42,7 @@ public class LogRun {
         schan.start();
         
         LogServer server = new LogServer();
+        System.out.println("Log service has started!\nServer is listening.");
 
         /* processamento de pedidos */
         

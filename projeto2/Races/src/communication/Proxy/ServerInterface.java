@@ -26,6 +26,12 @@ public interface ServerInterface {
     
     
     /**
+     * Service name
+     * @return 
+     */
+    public String serviceName();
+    
+    /**
      * Service end
      * @return 
      */

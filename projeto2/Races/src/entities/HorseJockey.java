@@ -2,6 +2,7 @@ package entities;
 
 import GeneralRepository.RacesProxy;
 import settings.NodeSetts;
+import GeneralRepository.LogProxy;
 
 /**
  * This file contains the code that represents the HorseJockey lifecycle.
@@ -145,8 +146,8 @@ public class HorseJockey extends Thread implements IEntity{
         if(state==this.state){
             return;
         }
-        this.setName("HorseJockey " + id + " - " + this.state.toString());
         this.state = state;
+        this.setName("HorseJockey " + id + " - " + this.state.toString());
         this.log.setHorseJockeyState(id, state);
     } 
     

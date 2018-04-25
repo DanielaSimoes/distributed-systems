@@ -28,7 +28,7 @@ public class NodeSetts {
     /**
      * Number of races.
      */
-    public static final int N_OF_RACES = 1;
+    public static final int N_OF_RACES = 2;
 
     /**
      * Number of horses.

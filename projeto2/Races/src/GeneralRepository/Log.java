@@ -45,7 +45,8 @@ public class Log {
     private final HashMap<Integer, HorseJockeyState> horseJockeysState;
     private final HashMap<Integer, SpectatorsState> spectatorsState;
 
-    
+    // number of terminates 
+    private int nTerminates = 0;
     
     public Log(String filename){
         if(filename.length()==0){
@@ -268,23 +269,42 @@ public class Log {
         return this.spectatorsState.get(id);
     }
     
-    public void terminateServers(){
+    public boolean terminateServers(){
+        nTerminates++;
+        
+        if(nTerminates==3){
+            // BettingCentre
+            this.sendTerminate("BettingCentre");
+
+            // RacingTrack
+            this.sendTerminate("RacingTrack");
+
+            // ControlCentre
+            this.sendTerminate("ControlCentre");
+
+            // Paddock
+            this.sendTerminate("Paddock");
+
+            // Stable
+            this.sendTerminate("Stable");
+
+            // Races
+            this.sendTerminate("Races");
+
+            // NodeSetts
+            this.sendTerminate("NodeSetts");
+            
+            return true;
+        }
+        
+        return false;
+    }
+    
+    private void sendTerminate(String serverName){
         NodeSettsProxy proxy = new NodeSettsProxy(); 
         
-        ClientProxy.connect(proxy.SERVER_HOSTS().get("Bench"), 
-                proxy.SERVER_PORTS().get("Bench"), 
-                new Message(MessageType.TERMINATE));
-         
-        ClientProxy.connect(proxy.SERVER_HOSTS().get("Playground"), 
-                proxy.SERVER_PORTS().get("Playground"), 
-                new Message(MessageType.TERMINATE));
-        
-        ClientProxy.connect(proxy.SERVER_HOSTS().get("RefereeSite"), 
-                proxy.SERVER_PORTS().get("RefereeSite"), 
-                new Message(MessageType.TERMINATE));
-        
-        ClientProxy.connect(proxy.SERVER_HOSTS().get("NodeSetts"), 
-                proxy.SERVER_PORTS().get("NodeSetts"), 
+        ClientProxy.connect(proxy.SERVER_HOSTS().get(serverName), 
+                proxy.SERVER_PORTS().get(serverName), 
                 new Message(MessageType.TERMINATE));
     }
     

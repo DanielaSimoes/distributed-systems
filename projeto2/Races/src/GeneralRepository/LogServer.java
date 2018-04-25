@@ -19,9 +19,11 @@ import java.net.SocketException;
 public class LogServer extends Log implements ServerInterface{
     
     private boolean serverEnded;
+    private String name;
     
     public LogServer() {
         super("");
+        this.name = "Log Server";
         this.serverEnded = false;
     }
 
@@ -29,8 +31,8 @@ public class LogServer extends Log implements ServerInterface{
     public Message processAndReply(Message inMessage, ServerChannel scon) throws MessageException, SocketException {
         switch(inMessage.getType()){
             case TERMINATE:
-                this.serverEnded = true;
-                super.terminateServers();
+                this.serverEnded = super.terminateServers();
+                break;
             case setSpectatorState:
                 super.setSpectatorState(inMessage.getInteger1(), inMessage.getSpectatorState(), inMessage.getInteger2());
                 break;
@@ -54,6 +56,11 @@ public class LogServer extends Log implements ServerInterface{
     @Override
     public boolean serviceEnded() {
         return serverEnded;
+    }
+
+    @Override
+    public String serviceName() {
+        return this.name;
     }
     
 }

@@ -202,6 +202,16 @@ public class Races {
     }
    
     /**
+    *
+    * Method to verify if all horses finished the race.
+     * @param raceNumber
+     * @return 
+    */
+    public boolean horsesFinished(int raceNumber){     
+        return this.races[raceNumber].horsesFinished();
+    }
+    
+    /**
      *
      * @param raceNumber
      * @return
