@@ -8,109 +8,131 @@ import paramiko
 hosts = [
     {
         "host": "l040101-ws01.ua.pt",
-        "user": "sd0209",
-        "password": "qwerty"
+        "user": "sd0405",
+        "password": "reverse"
     },
     {
         "host": "l040101-ws02.ua.pt",
-        "user": "sd0209",
-        "password": "qwerty"
+        "user": "sd0405",
+        "password": "reverse"
     },
     {
         "host": "l040101-ws03.ua.pt",
-        "user": "sd0209",
-        "password": "qwerty"
+        "user": "sd0405",
+        "password": "reverse"
     },
     {
         "host": "l040101-ws04.ua.pt",
-        "user": "sd0209",
-        "password": "qwerty"
+        "user": "sd0405",
+        "password": "reverse"
     },
     {
         "host": "l040101-ws05.ua.pt",
-        "user": "sd0209",
-        "password": "qwerty"
+        "user": "sd0405",
+        "password": "reverse"
     },
     {
         "host": "l040101-ws06.ua.pt",
-        "user": "sd0209",
-        "password": "qwerty"
+        "user": "sd0405",
+        "password": "reverse"
     },
     {
         "host": "l040101-ws07.ua.pt",
-        "user": "sd0209",
-        "password": "qwerty"
+        "user": "sd0405",
+        "password": "reverse"
     },
     {
         "host": "l040101-ws09.ua.pt",
-        "user": "sd0209",
-        "password": "qwerty"
+        "user": "sd0405",
+        "password": "reverse"
     },
     {
         "host": "l040101-ws10.ua.pt",
-        "user": "sd0209",
-        "password": "qwerty"
+        "user": "sd0405",
+        "password": "reverse"
     }
 ]
 
-jars = [
-    {
-        "class": "Bench",
-        "package": "bench",
-        "type": "server",
-        "order": 5,
-        "command": "java -cp 'SDTrabalho2.jar:libs/*' %s &> output"
-    },
-    {
-        "class": "Coach",
-        "package": "entities",
-        "type": "client",
-        "order": 7,
-        "command": "java -cp 'SDTrabalho2.jar:libs/*' %s &> output"
-    },
-    {
-        "class": "Contestant",
-        "package": "entities",
-        "type": "client",
-        "order": 6,
-        "command": "java -cp 'SDTrabalho2.jar:libs/*' %s &> output"
-    },
-    {
-        "class": "Referee",
-        "package": "entities",
-        "type": "client",
-        "order": 8,
-        "command": "java -cp 'SDTrabalho2.jar:libs/*' %s &> output"
-    },
-    {
-        "class": "Log",
-        "package": "general_info_repo",
-        "type": "server",
-        "order": 2,
-        "command": "java -cp 'SDTrabalho2.jar:libs/*' %s &> output"
-    },
-    {
-        "class": "Playground",
-        "package": "playground",
-        "type": "server",
-        "order": 4,
-        "command": "java -cp 'SDTrabalho2.jar:libs/*' %s &> output"
-    },
-    {
-        "class": "RefereeSite",
-        "package": "referee_site",
-        "type": "server",
-        "order": 3,
-        "command": "java -cp 'SDTrabalho2.jar:libs/*' %s &> output"
-    },
+jars = sorted([
+
     {
         "class": "NodeSetts",
         "package": "settings",
         "type": "server",
         "order": 1,
-        "command": "java -cp 'SDTrabalho2.jar:libs/*' %s hosts.json &> output"
+        "command": "java -cp 'Races.jar:libs/*' {}"
     },
-]
+    {
+        "class": "Log",
+        "package": "GeneralRepository",
+        "type": "server",
+        "order": 2,
+        "command": "java -cp 'Races.jar:libs/*' {}"
+    },
+    {
+        "class": "Races",
+        "package": "GeneralRepository",
+        "type": "server",
+        "order": 3,
+        "command": "java -cp 'Races.jar:libs/*' {}"
+    },
+    {
+        "class": "BettingCentre",
+        "package": "shared",
+        "type": "server",
+        "order": 4,
+        "command": "java -cp 'Races.jar:libs/*' {}"
+    },
+    {
+        "class": "ControlCentre",
+        "package": "shared",
+        "type": "server",
+        "order": 5,
+        "command": "java -cp 'Races.jar:libs/*' {}"
+    },
+    {
+        "class": "Paddock",
+        "package": "shared",
+        "type": "server",
+        "order": 6,
+        "command": "java -cp 'Races.jar:libs/*' {}"
+    },
+    {
+        "class": "RacingTrack",
+        "package": "shared",
+        "type": "server",
+        "order": 7,
+        "command": "java -cp 'Races.jar:libs/*' {}"
+    },
+    {
+        "class": "Stable",
+        "package": "shared",
+        "type": "server",
+        "order": 8,
+        "command": "java -cp 'Races.jar:libs/*' {}"
+    },
+    {
+        "class": "HorseJockey",
+        "package": "entities",
+        "type": "client",
+        "order": 9,
+        "command": "java -cp 'Races.jar:libs/*' {}"
+    },
+    {
+        "class": "Spectators",
+        "package": "entities",
+        "type": "client",
+        "order": 10,
+        "command": "java -cp 'Races.jar:libs/*' {}"
+    },
+    {
+        "class": "Broker",
+        "package": "entities",
+        "type": "client",
+        "order": 11,
+        "command": "java -cp 'Races.jar:libs/*' {}"
+    }
+], key=lambda jar_host: jar_host["order"])
 
 ssh = paramiko.SSHClient()
 ssh.load_system_host_keys()
@@ -129,7 +151,7 @@ def send_jar(host, jar):
         ssh.exec_command("mkdir libs")
 
     ssh.exec_command("killall java")
-    sftp.put(os.getcwd() + "/dist/SDTrabalho2.jar", "SDTrabalho2.jar")
+    sftp.put(os.getcwd() + "/dist/Races.jar", "Races.jar")
     sftp.put(os.getcwd() + "/libs/json-simple-1.1.jar", "libs/json-simple-1.1.jar")
     sftp.put(os.getcwd() + "/libs/org.json-20120521.jar", "libs/org.json-20120521.jar")
 
