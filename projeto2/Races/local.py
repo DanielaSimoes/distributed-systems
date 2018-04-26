@@ -14,14 +14,14 @@ jars = [
         "command": "java -cp 'Races.jar:libs/*' {}"
     },
     {
-        "class": "Races",
+        "class": "Log",
         "package": "GeneralRepository",
         "type": "server",
         "order": 2,
         "command": "java -cp 'Races.jar:libs/*' {}"
     },
     {
-        "class": "Log",
+        "class": "Races",
         "package": "GeneralRepository",
         "type": "server",
         "order": 3,
@@ -86,6 +86,9 @@ jars = [
 ]
 
 """
+    
+    
+    
 """
 
 
@@ -122,6 +125,7 @@ if __name__ == '__main__':
         for i in range(0, N_RUNS):
             print("Running ", i, "/", N_RUNS)
             run()
+            os.system("pkill -f  \"java -cp\"")
             print("All end! \n\n")
     except KeyboardInterrupt:
         os.system("pkill -f  \"java -cp\"")

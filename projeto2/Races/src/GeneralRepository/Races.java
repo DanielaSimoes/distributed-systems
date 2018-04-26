@@ -97,7 +97,7 @@ public class Races implements IRaces{
      * @param stepSize
      */
     @Override
-    public void setHorseJockeyStepSize(int id, int stepSize){
+    public synchronized void setHorseJockeyStepSize(int id, int stepSize){
         this.horseJockeyStepSize.put(id, stepSize);
         
         if(this.horseJockeyStepSize.size()==NodeSetts.N_OF_HORSES){
@@ -113,7 +113,7 @@ public class Races implements IRaces{
      * @return
      */
     @Override
-    public int getHorseJockeyStepSize(int id){
+    public synchronized int getHorseJockeyStepSize(int id){
         return this.horseJockeyStepSize.get(id);
     }
     
@@ -515,19 +515,18 @@ public class Races implements IRaces{
      * @return
      */
     @Override
-    public Integer getPaidSpectators(int i, int raceNumber){        
+    public int getPaidSpectators(int i, int raceNumber){        
         return this.races[raceNumber].getPaidSpectators(i);
     }
     
     /**
      *
      * @param i
-     * @param set
      * @param raceNumber
      */
     @Override
-    public void setPaidSpectators(int i, boolean set, int raceNumber){        
-        this.races[raceNumber].setPaidSpectators(i, set);
+    public void setPaidSpectators(int i, int raceNumber){        
+        this.races[raceNumber].setPaidSpectators(i);
     }
     
     /**

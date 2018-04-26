@@ -28,17 +28,17 @@ public class NodeSetts {
     /**
      * Number of races.
      */
-    public static final int N_OF_RACES = 2;
+    public static final int N_OF_RACES = 1;
 
     /**
      * Number of horses.
      */
-    public static final int N_OF_HORSES = 8;
+    public static final int N_OF_HORSES = 2;
     
     /**
      * Number of horses in the race.
      */
-    public static final int N_OF_HORSES_TO_RUN = 4;
+    public static final int N_OF_HORSES_TO_RUN = 2;
 
     /**
      * Number os spectators.

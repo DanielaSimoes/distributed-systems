@@ -114,6 +114,7 @@ public class Race {
             }while(repeated);
             
             this.selectedHorses[i] = selectedId;
+            this.horseIterations[i] = 0;
             horseJockeySelected.add(selectedId);
         }
         
@@ -121,7 +122,6 @@ public class Race {
             this.paidSpectators[i] = false;
             this.waitingAcceptedTheBet[i] = new Object();
             this.acceptedBet[i] = false;
-            this.horseIterations[i] = 0;
         }
         
     }
@@ -139,7 +139,8 @@ public class Race {
     /**
     *
     * Method to verify if a given horse was selected to participate in the race.
-     * @param horseJockey
+     * @param horseJockeyID
+     * @param stepSize
      * @return if the horse has been selected to run and init its position.
     */
     public boolean horseHasBeenSelectedToRace(int horseJockeyID, int stepSize){
@@ -713,7 +714,7 @@ public class Race {
      * @param spectatorId
      * @return
      */
-    protected Integer getPaidSpectators(int spectatorId){
+    protected int getPaidSpectators(int spectatorId){
         boolean pay = this.paidSpectators[spectatorId];
         
         if(pay){
@@ -734,11 +735,10 @@ public class Race {
     *
     * Method to set the variable of get paid.
     * @param i The id of the spectator.
-    * @param set The value of the variable to be assigned.
     */
-    protected void setPaidSpectators(int i, boolean set){
+    protected void setPaidSpectators(int i){
         this.nPaidSpectators++;
-        this.paidSpectators[i] = set;
+        this.paidSpectators[i] = true;
     }
     /* end condition states */
 }

@@ -31,8 +31,6 @@ public class ClientProxy {
      * @return 
     */
     public MessageWrapper communicate(Message m){
-        Thread.currentThread().getName();
-        System.out.println(Thread.currentThread().getName() + " requested " + m.getType() + " to " + proxyName);
         return Proxy.connect(SERVER_HOST,  SERVER_PORT, m);
     }
 }

@@ -53,8 +53,8 @@ public interface IRaces {
     public Integer poolWaitingToBePaidSpectators(int raceNumber);
     public void addWaitingToBePaidSpectator(int i, int raceNumber);
     public boolean allSpectatorsPaid(int raceNumber);
-    public Integer getPaidSpectators(int i, int raceNumber);
-    public void setPaidSpectators(int i, boolean set, int raceNumber);
+    public int getPaidSpectators(int i, int raceNumber);
+    public void setPaidSpectators(int i, int raceNumber);
     public Bet getSpectatorBet(int spectatorId, int raceNumber);
     public double getHorseOdd(int horseId, int raceNumber);
     public int getHorsePosition(int horseId, int raceNumber);

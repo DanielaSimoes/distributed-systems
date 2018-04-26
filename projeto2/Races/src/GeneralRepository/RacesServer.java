@@ -164,10 +164,10 @@ public class RacesServer extends Races implements ServerInterface{
                 response_boolean = super.allSpectatorsPaid(inMessage.getInteger1());
                 return new Message(MessageType.ACK, response_boolean);
             case getPaidSpectators:
-                response_integer = super.getPaidSpectators(inMessage.getInteger1(), inMessage.getInteger2());
-                return new Message(MessageType.ACK, response_integer);
+                response_int = super.getPaidSpectators(inMessage.getInteger1(), inMessage.getInteger2());
+                return new Message(MessageType.ACK, response_int);
             case setPaidSpectators:
-                super.setPaidSpectators(inMessage.getInteger1(), inMessage.getBoolean(), inMessage.getInteger2());
+                super.setPaidSpectators(inMessage.getInteger1(), inMessage.getInteger2());
                 break;
             case getSpectatorBet:
                 response_bet = super.getSpectatorBet(inMessage.getInteger1(), inMessage.getInteger2());

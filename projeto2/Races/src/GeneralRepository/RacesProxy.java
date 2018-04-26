@@ -529,22 +529,21 @@ public class RacesProxy extends ClientProxy implements IRaces{
      * @return
      */
     @Override
-    public Integer getPaidSpectators(int i, int raceNumber){        
+    public int getPaidSpectators(int i, int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
         MessageWrapper result = communicate(new Message(mt, i, raceNumber));
-        return result.getMessage().getInteger();
+        return result.getMessage().getInteger1();
     }
     
     /**
      *
      * @param i
-     * @param set
      * @param raceNumber
      */
     @Override
-    public void setPaidSpectators(int i, boolean set, int raceNumber){        
+    public void setPaidSpectators(int i, int raceNumber){        
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        MessageWrapper result = communicate(new Message(mt, raceNumber, set));
+        communicate(new Message(mt, i, raceNumber));
     }
     
     /**

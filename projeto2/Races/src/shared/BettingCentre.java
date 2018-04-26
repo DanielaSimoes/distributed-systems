@@ -50,10 +50,10 @@ public class BettingCentre implements IBettingCentre {
             if(this.races.allSpectatorsPaid(raceNumber) && spectatorId == null){
                 break;
             }else if(this.races.allSpectatorsPaid(raceNumber) && spectatorId != null){
-                this.races.setPaidSpectators(spectatorId, true, raceNumber);
+                this.races.setPaidSpectators(spectatorId, raceNumber);
                 notifyAll();
             }else if(!this.races.allSpectatorsPaid(raceNumber) && spectatorId != null){
-                this.races.setPaidSpectators(spectatorId, true, raceNumber);
+                this.races.setPaidSpectators(spectatorId, raceNumber);
                 notifyAll();
             }else if(!this.races.allSpectatorsPaid(raceNumber) && spectatorId == null){
                 try{
