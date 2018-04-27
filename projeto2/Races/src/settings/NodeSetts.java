@@ -20,20 +20,20 @@ import org.json.simple.parser.JSONParser;
  * @author Daniela Simões, 76771
  */
 public class NodeSetts {
-    protected static HashMap<String, Integer> SERVER_PORTS;
-    protected static HashMap<String, String> SERVER_HOSTS;
+    protected HashMap<String, Integer> SERVER_PORTS;
+    protected HashMap<String, String> SERVER_HOSTS;
     
     protected static boolean DEBUG = false;
     
     /**
      * Number of races.
      */
-    public static final int N_OF_RACES = 1;
+    public static final int N_OF_RACES = 2;
 
     /**
      * Number of horses.
      */
-    public static final int N_OF_HORSES = 2;
+    public static final int N_OF_HORSES = 4;
     
     /**
      * Number of horses in the race.
@@ -91,8 +91,8 @@ public class NodeSetts {
         SERVER_PORTS.put("ControlCentre", 22443);
         SERVER_PORTS.put("Paddock", 22444);
         SERVER_PORTS.put("Stable", 22448);
-        SERVER_PORTS.put("Races", 2246);
-        SERVER_PORTS.put("NodeSetts", 2247);
+        SERVER_PORTS.put("Races", 22446);
+        SERVER_PORTS.put("NodeSetts", 22447);
         
     }
 }

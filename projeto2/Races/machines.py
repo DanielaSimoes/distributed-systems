@@ -5,6 +5,13 @@ import sys
 import json
 import paramiko
 
+
+# colors
+CRED = '\033[91m'
+CEND = '\033[0m'
+# end colors
+
+
 hosts = [
     {
         "host": "l040101-ws01.ua.pt",
@@ -60,77 +67,77 @@ jars = sorted([
         "package": "settings",
         "type": "server",
         "order": 1,
-        "command": "java -cp 'Races.jar:libs/*' {}"
+        "command": "java -cp 'Races.jar:libs/*' {} &> output"
     },
     {
         "class": "Log",
         "package": "GeneralRepository",
         "type": "server",
         "order": 2,
-        "command": "java -cp 'Races.jar:libs/*' {}"
+        "command": "java -cp 'Races.jar:libs/*' {} &> output"
     },
     {
         "class": "Races",
         "package": "GeneralRepository",
         "type": "server",
         "order": 3,
-        "command": "java -cp 'Races.jar:libs/*' {}"
+        "command": "java -cp 'Races.jar:libs/*' {} &> output"
     },
     {
         "class": "BettingCentre",
         "package": "shared",
         "type": "server",
         "order": 4,
-        "command": "java -cp 'Races.jar:libs/*' {}"
+        "command": "java -cp 'Races.jar:libs/*' {} &> output"
     },
     {
         "class": "ControlCentre",
         "package": "shared",
         "type": "server",
         "order": 5,
-        "command": "java -cp 'Races.jar:libs/*' {}"
+        "command": "java -cp 'Races.jar:libs/*' {} &> output"
     },
     {
         "class": "Paddock",
         "package": "shared",
         "type": "server",
         "order": 6,
-        "command": "java -cp 'Races.jar:libs/*' {}"
+        "command": "java -cp 'Races.jar:libs/*' {} &> output"
     },
     {
         "class": "RacingTrack",
         "package": "shared",
         "type": "server",
         "order": 7,
-        "command": "java -cp 'Races.jar:libs/*' {}"
+        "command": "java -cp 'Races.jar:libs/*' {} &> output"
     },
     {
         "class": "Stable",
         "package": "shared",
         "type": "server",
         "order": 8,
-        "command": "java -cp 'Races.jar:libs/*' {}"
+        "command": "java -cp 'Races.jar:libs/*' {} &> output"
     },
     {
         "class": "HorseJockey",
         "package": "entities",
         "type": "client",
         "order": 9,
-        "command": "java -cp 'Races.jar:libs/*' {}"
+        "command": "java -cp 'Races.jar:libs/*' {} &> output_horsejockeys"
     },
     {
         "class": "Spectators",
         "package": "entities",
         "type": "client",
         "order": 10,
-        "command": "java -cp 'Races.jar:libs/*' {}"
+        "command": "java -cp 'Races.jar:libs/*' {} &> output_spectators"
     },
     {
         "class": "Broker",
         "package": "entities",
         "type": "client",
         "order": 11,
-        "command": "java -cp 'Races.jar:libs/*' {}"
+        "command": "java -cp 'Races.jar:libs/*' {} &> output_broker"
     }
 ], key=lambda jar_host: jar_host["order"])
 
@@ -144,7 +151,7 @@ def send_jar(host, jar):
     print("Sending the proper jar to the workstation")
 
     ssh.connect(host["host"], username=host["user"], password=host["password"])
-    ssh.exec_command("rm -rf *")(host["host"], username=host["user"], password=host["password"])
+    ssh.exec_command("rm -rf *")
     sftp = ssh.open_sftp()
 
     while u'libs\n' not in ssh.exec_command("ls")[1].readlines():
@@ -153,7 +160,7 @@ def send_jar(host, jar):
     ssh.exec_command("killall java")
     sftp.put(os.getcwd() + "/dist/Races.jar", "Races.jar")
     sftp.put(os.getcwd() + "/libs/json-simple-1.1.jar", "libs/json-simple-1.1.jar")
-    sftp.put(os.getcwd() + "/libs/org.json-20120521.jar", "libs/org.json-20120521.jar")
+    sftp.put(os.getcwd() + "/libs/java-json.jar", "libs/java-json.jar")
 
     return [{
         "class": jar,
@@ -198,15 +205,18 @@ def upload(wait):
             if jar_i == len(jars):
                 break
     else:
-        for host in hosts:
-            jars_hosts += send_jar(host, jars[jar_i])
+        # there are more jars than hosts
+        # machines 0 to 7 will have servers
+        SERVERS = 7
 
-            jar_i += 1
-            if jar_i == len(jars):
-                break
+        for i in range(0, SERVERS+1):
+            jars_hosts += send_jar(hosts[i], jars[i])
 
-        for i in range(len(hosts) - 1, len(jars)):
-            jars_hosts += send_jar(hosts[len(hosts) - 1], jars[i])
+        # machine 8 will have clients
+        CLIENTS = 3
+
+        for i in range(len(jars)-CLIENTS, len(jars)):
+            jars_hosts += send_jar(hosts[len(hosts)-1], jars[i])
 
     print("Save the hosts in a JSON file to send it to the NodeSettsServer")
 
@@ -253,10 +263,10 @@ def upload(wait):
         except Exception:
             continue
 
-        print(jars_host["class"]["command"] % (
+        print(jars_host["class"]["command"].format(
             jars_host["class"]["package"] + "." + jars_host["class"]["class"] + "Run"))
         stdin, stdout, stderr = ssh.exec_command(
-            jars_host["class"]["command"] % (jars_host["class"]["package"] + "." + jars_host["class"]["class"] + "Run"))
+            jars_host["class"]["command"].format(jars_host["class"]["package"] + "." + jars_host["class"]["class"] + "Run"))
 
         if jars_host["class"]["class"] == "Log":
             log_connection = stdout.channel
@@ -324,7 +334,7 @@ def kill_all():
             ssh.exec_command("echo \"Hello!\"")
         except Exception:
             continue
-        ssh.exec_command("rm -rf *")
+        #ssh.exec_command("rm -rf *")
         ssh.exec_command("killall java")
         print(host["host"] + ": killall java")
 
@@ -354,12 +364,13 @@ def show_logs(command="tail"):
             continue
 
         if len(command) == 1:
-            stdin, stdout, stderr = ssh.exec_command(command[0]+" output")
+            stdin, stdout, stderr = ssh.exec_command(command[0]+" output*")
         else:
-            stdin, stdout, stderr = ssh.exec_command(command+" output")
+            stdin, stdout, stderr = ssh.exec_command(command+" output*")
 
-        print(host["host"])
-        print(stdout.readlines())
+        print(CRED + host["host"] + CEND)
+        for line in stdout.readlines():
+            print(line, end='', flush=True)
 
 
 def command(command_to="tail"):
@@ -393,8 +404,9 @@ def command(command_to="tail"):
 
         stdin, stdout, stderr = ssh.exec_command(command_to[0])
 
-        print(host["host"])
-        print(stdout.readlines())
+        print(CRED + host["host"] + CEND)
+        for line in stdout.readlines():
+            print(line, end='', flush=True)
 
 
 if __name__ == '__main__':

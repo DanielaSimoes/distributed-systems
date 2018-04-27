@@ -28,8 +28,8 @@ public class NodeSettsProxy { /* doesn't extends ClientProxy because is the firs
         
         NodeSetts nodeSetts = new NodeSetts(json_path);
         
-        this.SERVER_HOST = NodeSetts.SERVER_HOSTS.get("NodeSetts");
-        this.SERVER_PORT = NodeSetts.SERVER_PORTS.get("NodeSetts");
+        this.SERVER_HOST = nodeSetts.SERVER_HOSTS.get("NodeSetts");
+        this.SERVER_PORT = nodeSetts.SERVER_PORTS.get("NodeSetts");
     }
     
     /**
