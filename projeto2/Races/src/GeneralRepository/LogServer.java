@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package GeneralRepository;
 
 import communication.Proxy.ServerInterface;
@@ -13,8 +8,8 @@ import communication.message.MessageType;
 import java.net.SocketException;
 
 /**
- *
- * @author Daniela
+ * This file implememts the log server.
+ * @author Daniela Simões, 76771
  */
 public class LogServer extends Log implements ServerInterface{
     
@@ -27,6 +22,11 @@ public class LogServer extends Log implements ServerInterface{
         this.serverEnded = false;
     }
 
+    /**
+    * Method to process and reply.
+    * @throws communication.message.MessageException
+    * @throws java.net.SocketException
+    */
     @Override
     public Message processAndReply(Message inMessage, ServerChannel scon) throws MessageException, SocketException {
         switch(inMessage.getType()){
@@ -53,11 +53,19 @@ public class LogServer extends Log implements ServerInterface{
         return new Message(MessageType.ACK);
     }
 
+    /**
+    * Method for return the service end flag
+    * @return 
+    */
     @Override
     public boolean serviceEnded() {
         return serverEnded;
     }
 
+    /**
+    * Method to return the service name.
+    * @return
+    */
     @Override
     public String serviceName() {
         return this.name;

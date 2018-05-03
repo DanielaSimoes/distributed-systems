@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package settings;
 
 import communication.ServerChannel;
@@ -13,8 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Daniela
+ * This file implements the main of the node settings.
+ * @author Daniela Simões.
  */
 public class NodeSettsRun {
     public static void main(String[] args) throws SocketException {

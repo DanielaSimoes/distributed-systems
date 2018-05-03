@@ -11,8 +11,8 @@ import java.util.LinkedList;
 import java.io.Serializable;
 
 /**
- *
- * @author Daniela
+ * This class implements the message.
+ * @author Daniela Simões, 76771
  */
 public class Message implements Serializable {
     
@@ -32,19 +32,28 @@ public class Message implements Serializable {
     private Bet bet;
     private LinkedList<Integer> linked;
 
-        
+    /**
+     * Constructor of Message.
+     * @param type
+     * @param message
+     */
     public Message(MessageType type, int message){
         this.message_i = message;
         this.type = type; 
     }
     
+    /**
+     * Constructor of Message.
+     * @param type
+     * @param message
+     */
     public Message(MessageType type, Integer message){
         this.message_integer = message;
         this.type = type; 
     }
     
     /**
-     *
+     * Constructor of Message.
      * @param type
      * @param message
      * @param message2
@@ -55,12 +64,25 @@ public class Message implements Serializable {
         this.type = type; 
     }
     
+    /**
+     * Constructor of Message.
+     * @param type
+     * @param message
+     * @param message2
+     */
     public Message(MessageType type, int message, boolean message2){
         this.message_i = message;
         this.message_b = message2;
         this.type = type; 
     }
     
+    /**
+     * Constructor of Message.
+     * @param type
+     * @param message
+     * @param message2
+     * @param message3
+     */
     public Message(MessageType type, int message, int message2, int message3){
         this.message_i = message;
         this.message_i2 = message2;
@@ -68,6 +90,14 @@ public class Message implements Serializable {
         this.type = type; 
     }
     
+    /**
+     * Constructor of Message.
+     * @param type
+     * @param message
+     * @param message2
+     * @param message3
+     * @param message4
+     */
     public Message(MessageType type, int message, int message2, int message3, int message4){
         this.message_i = message;
         this.message_i2 = message2;
@@ -76,21 +106,44 @@ public class Message implements Serializable {
         this.type = type; 
     }
     
+    /**
+     * Constructor of Message.
+     * @param type
+     * @param message
+     */
     public Message(MessageType type, boolean message){
         this.message_b = message;
         this.type = type; 
     }
     
+    /**
+     * Constructor of Message.
+     * @param type
+     */
     public Message(MessageType type){
         this.type = type; 
     }
     
+    /**
+     * Constructor of Message.
+     * @param type
+     * @param message
+     * @param horseJockeyState
+     * @param raceNumber
+     */
     public Message(MessageType type, int message, HorseJockeyState horseJockeyState, int raceNumber){
         this.type = type;
         this.message_i = message;
         this.horseJockeyState = horseJockeyState;
     }
     
+    /**
+     * Constructor of Message.
+     * @param type
+     * @param message
+     * @param spectatorsState
+     * @param raceNumber
+     */
     public Message(MessageType type, int message, SpectatorsState spectatorsState, int raceNumber){
         this.type = type;
         this.message_i = message;
@@ -98,13 +151,18 @@ public class Message implements Serializable {
         this.spectatorsState = spectatorsState;
     }
     
+    /**
+     * Constructor of Message.
+     * @param type
+     * @param brokerState
+     */
     public Message(MessageType type, BrokerState brokerState){
         this.type = type;
         this.brokerState = brokerState;
     }
     
     /**
-     * Construct to create Message with type and HashMap
+     * Construct of Message.
      * @param type
      * @param map
      */
@@ -113,6 +171,13 @@ public class Message implements Serializable {
         this.map = map;
     }
 
+    /**
+     * Constructor of Message.
+     * @param mt
+     * @param raceNumber
+     * @param spectatorId
+     * @param bet
+     */
     public Message(MessageType mt, int raceNumber, int spectatorId, Bet bet) {
         this.type = mt;
         this.message_i = raceNumber;
@@ -120,23 +185,38 @@ public class Message implements Serializable {
         this.bet = bet;
     }
 
+    /**
+     * Constructor of Message.
+     * @param messageType
+     * @param bet
+     */
     public Message(MessageType messageType, Bet bet) {
         this.type = messageType;
         this.bet = bet;
     }
 
+    /**
+     * Constructor of Message.
+     * @param messageType
+     * @param linked
+     */
     public Message(MessageType messageType, LinkedList<Integer> linked) {
         this.type = messageType;
         this.linked = linked;
     }
 
+    /**
+     * Constructor of Message.
+     * @param messageType
+     * @param response_double
+     */
     public Message(MessageType messageType, double response_double) {
         this.type = messageType;
         this.message_d = response_double;
     }
     
     /**
-     * Return Message Type
+     * Return Message Type.
      * @return 
      */
     public MessageType getType(){
@@ -144,7 +224,7 @@ public class Message implements Serializable {
     }
     
     /**
-     * Return Integer HashMap
+     * Return HashMap message.
      * @return 
      */
     public HashMap<String, Integer> getStrIntMap(){
@@ -152,19 +232,23 @@ public class Message implements Serializable {
     }
     
     /**
-     * Return String HashMap
+     * Return HashMap message.
      * @return 
      */
     public HashMap<String, String> getStrStrMap(){
         return (HashMap<String, String>) this.map;
     }
     
+     /**
+     * Return Intege message.
+     * @return 
+     */
     public Integer getInteger(){
         return this.message_integer;
     }
     
     /**
-     * Return Integer
+     * Return Integer message.
      * @return 
      */
     public int getInteger1(){
@@ -172,7 +256,7 @@ public class Message implements Serializable {
     }
     
     /**
-     * Return Integer
+     * Return Integer message.
      * @return 
      */
     public int getInteger2(){
@@ -180,7 +264,7 @@ public class Message implements Serializable {
     }
     
     /**
-     * Return Integer
+     * Return Integer message.
      * @return 
      */
     public int getInteger3(){
@@ -188,7 +272,7 @@ public class Message implements Serializable {
     }
     
     /**
-     * Return Integer
+     * Return Integer message.
      * @return 
      */
     public int getInteger4(){
@@ -196,33 +280,57 @@ public class Message implements Serializable {
     }
     
     /**
-     * Return Boolean
+     * Return Boolean message.
      * @return 
      */
     public boolean getBoolean(){
         return this.message_b;
     }
 
+    /**
+     * Return Bet message.
+     * @return 
+     */
     public Bet getBet() {
         return this.bet;
     }
 
+    /**
+     * Return LinkedList message.
+     * @return 
+     */
     public LinkedList<Integer> getLinkedList() {
         return this.linked;
     }
 
+    /**
+     * Return double message.
+     * @return 
+     */
     public double getDouble() {
         return this.message_d;
     }
 
+    /**
+     * Return SpectatorsState message.
+     * @return 
+     */
     public SpectatorsState getSpectatorState() {
         return this.spectatorsState;
     }
 
+    /**
+     * Return HorseJockeyState message.
+     * @return 
+     */
     public HorseJockeyState getHorseJockeyState() {
         return this.horseJockeyState;
     }
     
+    /**
+     * Return BrokerState message.
+     * @return 
+     */
     public BrokerState getBrokerState() {
         return this.brokerState;
     }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package settings;
 
 import communication.Proxy.ServerInterface;
@@ -21,7 +16,7 @@ public class NodeSettsServer extends NodeSetts implements ServerInterface{
     private String name;
     
     /**
-     * Node settings server
+     * Constructor of node settings server.
      * @param jsonfilepath
      */
     public NodeSettsServer(String jsonfilepath) {
@@ -65,14 +60,18 @@ public class NodeSettsServer extends NodeSetts implements ServerInterface{
     }
 
     /**
-     * Method for return the service end flag
-     * @return 
-     */
+    * Method for return the service end flag
+    * @return 
+    */
     @Override
     public boolean serviceEnded() {
         return serverEnded;
     }
     
+    /**
+    * Method to return the service name.
+    * @return
+    */
     @Override
     public String serviceName() {
         return this.name;

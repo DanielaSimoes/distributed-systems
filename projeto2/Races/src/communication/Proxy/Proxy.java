@@ -1,5 +1,5 @@
 /*
- * This file contains the client proxy.
+ * This file contains the proxy.
  */
 package communication.Proxy;
 
@@ -12,9 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class that implements client proxy.
- * @author Daniela Simões, 76771
- */
+* Class that implements a proxy.
+* @author Daniela Simões, 76771
+*/
 public class Proxy extends Thread {
     private final String clientProxyServerName;
     private final int toServerPort;
@@ -22,12 +22,12 @@ public class Proxy extends Thread {
     private final MessageWrapper result;
     
     /**
-     * Construct the client proxy.
-     * @param clientProxyServerName
-     * @param toServerPort
-     * @param result
-     * @param outMessage
-     */
+    * Constructor of proxy.
+    * @param clientProxyServerName
+    * @param toServerPort
+    * @param result
+    * @param outMessage
+    */
     public Proxy(String clientProxyServerName, int toServerPort, MessageWrapper result, Message outMessage){
         this.clientProxyServerName = clientProxyServerName;
         this.toServerPort = toServerPort;
@@ -36,12 +36,12 @@ public class Proxy extends Thread {
     }
     
     /**
-     * Client proxy wrapper.
-     * @param logServerName
-     * @param logServerPort
-     * @param m
-     * @return 
-     */
+    * Proxy wrapper.
+    * @param logServerName
+    * @param logServerPort
+    * @param m
+    * @return 
+    */
     public static MessageWrapper connect(String logServerName, int logServerPort, Message m){
         MessageWrapper result = new MessageWrapper();
         
@@ -50,9 +50,7 @@ public class Proxy extends Thread {
         cp.start();
         
         try {
-            //System.out.printf("[%s][%d][%s] Init Join\n", logServerName, logServerPort, m.getType().toString()); 
             cp.join(); 
-            //System.out.printf("[%s][%d][%s] Init Join\n", logServerName, logServerPort, m.getType().toString());
         } catch (InterruptedException ex) {
             Logger.getLogger(LogProxy.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -66,8 +64,8 @@ public class Proxy extends Thread {
     }
     
     /**
-     * Run the client proxy
-     */
+    * Method to run the proxy.
+    */
     @Override
     public void run(){
         try {

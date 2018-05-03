@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package GeneralRepository;
 
 import communication.Proxy.ServerInterface;
@@ -14,8 +9,8 @@ import java.net.SocketException;
 import java.util.LinkedList;
 
 /**
- *
- * @author Daniela
+ * This class implements the races server.
+ * @author Daniela Simões, 76771
  */
 public class RacesServer extends Races implements ServerInterface{
     
@@ -25,15 +20,22 @@ public class RacesServer extends Races implements ServerInterface{
     private double response_double;
     private boolean response_boolean;
     private Integer response_integer;
-    private String name;
+    private final String name;
     
-    
+    /**
+    * Constructor of races server.
+    */
     public RacesServer() {
         super();
         this.name = "Races Server";
         this.serverEnded = false;
     }
-
+    
+    /**
+    * Method to process and reply.
+    * @throws communication.message.MessageException
+    * @throws java.net.SocketException
+    */
     @Override
     public Message processAndReply(Message inMessage, ServerChannel scon) throws MessageException, SocketException {
         switch(inMessage.getType()){
@@ -183,11 +185,19 @@ public class RacesServer extends Races implements ServerInterface{
         return new Message(MessageType.ACK);
     }
 
+    /**
+    * Method for return the service end flag
+    * @return 
+    */
     @Override
     public boolean serviceEnded() {
         return serverEnded;
     }
     
+    /**
+    * Method to return the service name.
+    * @return
+    */
     @Override
     public String serviceName() {
         return this.name;

@@ -17,7 +17,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 /**
- * This class represents the client' channel.
+ * This class implements the client channel.
  * @author Daniela Simões, 76771
  */
 public class ClientChannel {

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package settings;
 
 import communication.message.Message;
@@ -12,8 +7,8 @@ import communication.Proxy.Proxy;
 import java.util.HashMap;
 
 /**
- *
- * @author Daniela
+ * This file implements the proxy of the node settings.
+ * @author Daniela Simões, 76771
  */
 public class NodeSettsProxy { /* doesn't extends ClientProxy because is the first to init */
     private final String SERVER_HOST;
@@ -33,14 +28,14 @@ public class NodeSettsProxy { /* doesn't extends ClientProxy because is the firs
     }
     
     /**
-    * Communicate method to communicate with the Node Setts server
+    * Method to communicate with the Node Setts server.
     */
     private MessageWrapper communicate(Message m){
         return Proxy.connect(SERVER_HOST,  SERVER_PORT, m);
     }
     
     /**
-    * SERVER HOSTS
+    * Method to return the SERVER HOSTS.
     * @return 
     */
     public HashMap<String, String> SERVER_HOSTS() {
@@ -50,7 +45,7 @@ public class NodeSettsProxy { /* doesn't extends ClientProxy because is the firs
     }
     
     /**
-    * SERVER PORTS
+    * Method to return the SERVER PORTS.
     * @return 
     */
     public HashMap<String, Integer> SERVER_PORTS() {
@@ -60,7 +55,7 @@ public class NodeSettsProxy { /* doesn't extends ClientProxy because is the firs
     }
     
     /**
-    * Number of horses.
+    * Method to return the number of horses.
     * @return 
     */
     public int N_OF_HORSES() {
@@ -70,7 +65,7 @@ public class NodeSettsProxy { /* doesn't extends ClientProxy because is the firs
     }
     
     /**
-    * Size of max step.
+    * Method to return the size of the max step of the horse.
     * @return 
     */
     public int HORSE_MAX_STEP_SIZE() {
@@ -80,7 +75,7 @@ public class NodeSettsProxy { /* doesn't extends ClientProxy because is the firs
     }
     
     /**
-    * Return number of spectators.
+    * Method to return the number of spectators.
     * @return 
     */
     public int N_OF_SPECTATORS() {
@@ -90,7 +85,7 @@ public class NodeSettsProxy { /* doesn't extends ClientProxy because is the firs
     }
     
     /**
-    * Return max amount to bet.
+    * Method to return max amount to bet.
     * @return 
     */
     public int MAX_SPECTATOR_BET() {

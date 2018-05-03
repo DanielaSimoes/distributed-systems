@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package settings;
 
 import java.io.FileNotFoundException;
@@ -16,7 +11,7 @@ import org.json.JSONException;
 import org.json.simple.parser.JSONParser;
 
 /**
- *
+ * This class implements the node settings.
  * @author Daniela Simões, 76771
  */
 public class NodeSetts {
@@ -61,7 +56,7 @@ public class NodeSetts {
     public static final int MAX_SPECTATOR_BET = 2000;
     
     /**
-     * Node settings, it will read from the jsonfilepath the JSON with the hosts
+     * Constructor of node settings, it will read and parse the jsonfilepath which contains the hosts.
      * @param jsonfilepath
      */
     public NodeSetts(String jsonfilepath){

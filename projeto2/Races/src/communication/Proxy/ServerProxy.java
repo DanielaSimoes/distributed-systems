@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 /**
  * Class that implements the server proxy.
- * @author Daniela
+ * @author Daniela Simões, 76771
  */
 public class ServerProxy extends Thread{
     

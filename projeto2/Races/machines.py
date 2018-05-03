@@ -182,6 +182,7 @@ def upload(wait):
         if response != 0:
             hosts.remove(host)
             continue
+
         try:
             ssh.connect(host["host"], username=host["user"], password=host["password"])
             ssh.exec_command("echo \"Hello!\"")
@@ -263,11 +264,13 @@ def upload(wait):
         except Exception:
             continue
 
+        # run
         print(jars_host["class"]["command"].format(
             jars_host["class"]["package"] + "." + jars_host["class"]["class"] + "Run"))
         stdin, stdout, stderr = ssh.exec_command(
             jars_host["class"]["command"].format(jars_host["class"]["package"] + "." + jars_host["class"]["class"] + "Run"))
 
+        # when the log is over, everything is over
         if jars_host["class"]["class"] == "Log":
             log_connection = stdout.channel
 
@@ -306,6 +309,7 @@ def get_log(log_host_hostname):
     sftp = ssh.open_sftp()
     dir = sftp.listdir(".")
 
+    # copy log file to localhost
     for f in dir:
         if str(f).endswith(".log"):
             log_file = str(f)

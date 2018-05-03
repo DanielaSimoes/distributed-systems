@@ -14,17 +14,21 @@ import entities.HorseJockeyState;
 
 /**
  * Class that implements racing track proxy.
- * @author Daniela
+ * @author Daniela Simões, 76771
  */
 public class RacingTrackProxy extends ClientProxy implements IRacingTrack {
     
     /**
-    * Constructor to paddock proxy.
+    * Constructor to racing track proxy.
     */
     public RacingTrackProxy(){
         super("RacingTrack");
     }
     
+    /**
+     * Method to send a message to start the race.
+     * @param raceNumber
+     */
     @Override
     public void startTheRace(int raceNumber) {
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
@@ -32,6 +36,11 @@ public class RacingTrackProxy extends ClientProxy implements IRacingTrack {
         communicate(new Message(mt, raceNumber));
     }
 
+    /**
+     * Method to send a message to proceed to start line.
+     * @param raceNumber
+     * @param horseId
+     */
     @Override
     public void proceedToStartLine(int raceNumber, int horseId) {
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
@@ -39,6 +48,12 @@ public class RacingTrackProxy extends ClientProxy implements IRacingTrack {
         communicate(new Message(mt, raceNumber, horseId));
     }
 
+    /**
+     * Method to send a message to verify if the finish line has been crossed.
+     * @param horseId
+     * @param raceNumber
+     * @return 
+     */
     @Override
     public boolean hasFinishLineBeenCrossed(int horseId, int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
@@ -46,6 +61,11 @@ public class RacingTrackProxy extends ClientProxy implements IRacingTrack {
         return result.getMessage().getBoolean();
     }
 
+    /**
+     * Method to send a message to make a move.
+     * @param raceNumber
+     * @param horseId
+     */
     @Override
     public void makeAMove(int raceNumber, int horseId) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());

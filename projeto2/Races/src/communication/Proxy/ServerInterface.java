@@ -9,31 +9,33 @@ import communication.message.MessageException;
 import java.net.SocketException;
 
 /**
- *
- * @author Daniela
+ * Server Interface.
+ * @author Daniela Simões, 76771
  */
 public interface ServerInterface {
      
     /**
-     *
-     * @param inMessage
-     * @param scon
-     * @return
-     * @throws MessageException
-     * @throws SocketException
-     */
+    * Method to process a message and reply.
+    * @param inMessage
+    * @param scon
+    * @return
+    * @throws MessageException
+    * @throws SocketException
+    */
     public Message processAndReply (Message inMessage, ServerChannel scon) throws MessageException, SocketException;
     
     
     /**
-     * Service name
-     * @return 
-     */
+    * Method to get the service name.
+    * Service name
+    * @return 
+    */
     public String serviceName();
     
     /**
-     * Service end
-     * @return 
-     */
+    * Method to retrieve the flag of the end of the service.
+    * Service end
+    * @return 
+    */
     public boolean serviceEnded();
 }

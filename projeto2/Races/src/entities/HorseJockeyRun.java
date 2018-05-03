@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package entities;
 
 import shared.RacingTrackProxy;
@@ -16,10 +11,9 @@ import communication.message.Message;
 import communication.message.MessageType;
 import java.util.ArrayList;
 import settings.NodeSettsProxy;
-
 /**
- *
- * @author Daniela
+ * This class implements the main of the entity horse jockey.
+ * @author Daniela Simões, 76771
  */
 public class HorseJockeyRun {
     private static StableProxy stable = new StableProxy();

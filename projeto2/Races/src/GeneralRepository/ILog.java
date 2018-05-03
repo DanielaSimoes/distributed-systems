@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package GeneralRepository;
 
 import entities.BrokerState;
@@ -10,7 +5,7 @@ import entities.HorseJockeyState;
 import entities.SpectatorsState;
 
 /**
- *
+ * This file contains the log interface.
  * @author Daniela Simões, 76771
  */
 public interface ILog {

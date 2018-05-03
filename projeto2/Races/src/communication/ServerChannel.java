@@ -15,7 +15,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 /**
- *
+ * This class implements the ServerChannel.
  * @author Daniela Simões, 76771
  */
 public class ServerChannel {
@@ -34,18 +34,18 @@ public class ServerChannel {
     }
     
     /**
-     * Construct for create server channel.
-     * @param serverPort
-     * @param lSocket
-     */
+    * Construct for create server channel.
+    * @param serverPort
+    * @param lSocket
+    */
     public ServerChannel(int serverPort, ServerSocket lSocket) {
         this(serverPort);
         this.listenSocket = lSocket;
     }
     
     /**
-     * Method to start the server channel.
-     */
+    * Method to start the server channel.
+    */
     public void start() {
         try {
             this.listenSocket = new ServerSocket(this.serverPort);
@@ -59,8 +59,8 @@ public class ServerChannel {
     }
     
     /**
-     * Method to end the server channel.
-     */
+    * Method to end the server channel.
+    */
     public void end() {
         try {
             this.listenSocket.close();
@@ -71,10 +71,10 @@ public class ServerChannel {
     }
     
     /**
-     * Method to accept connection.
-     * @return 
-     * @throws java.net.SocketTimeoutException
-     */
+    * Method to accept connection.
+    * @return 
+    * @throws java.net.SocketTimeoutException
+    */
     public ServerChannel accept() throws SocketTimeoutException {
         ServerChannel server_channel;
         
@@ -136,9 +136,9 @@ public class ServerChannel {
     }
 
     /**
-     * Method to read an object.
-     * @return 
-     */
+    * Method to read an object.
+    * @return 
+    */
     public Object readObject() {
         Object from_client = null; 
         
@@ -159,9 +159,9 @@ public class ServerChannel {
     }
 
     /**
-     * Method to write an object.
-     * @param toClient
-     */
+    * Method to write an object.
+    * @param toClient
+    */
     public void writeObject(Object toClient) {
         try {
             response.writeObject(toClient);

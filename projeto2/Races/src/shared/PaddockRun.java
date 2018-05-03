@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package shared;
 
 import GeneralRepository.RacesProxy;
@@ -15,8 +10,8 @@ import java.util.logging.Logger;
 import settings.NodeSettsProxy;
 
 /**
- *
- * @author Daniela
+ * This class implements the main of paddock.
+ * @author Daniela Simões, 76771
  */
 public class PaddockRun {
     private static int SERVER_PORT;

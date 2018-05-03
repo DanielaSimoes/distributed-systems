@@ -11,7 +11,6 @@ import GeneralRepository.LogProxy;
 public class Broker extends Thread implements IEntity{
     
     /**
-    *
     * State of the broker
     */
     private BrokerState state;
@@ -30,7 +29,6 @@ public class Broker extends Thread implements IEntity{
     private int raceId = 0;
     
     /**
-    *
     * Broker Constructor
     * @param s The Stable is a shared memory region where the broker will perform actions.
     * @param cc The Control Centre is a shared memory region where the broker will perform actions.
@@ -51,7 +49,6 @@ public class Broker extends Thread implements IEntity{
     }
     
     /**
-    *
     * The run method of the Broker executes its entire life cycle, making the transitions between
     * the states: Opening the event - Announcin next race -  Waiting for bets - Supervising the race - Settling accounts - Playing host at the bar.
     * This method runs until it's time to entertain the guests - death state.

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package GeneralRepository;
 
 import communication.Proxy.ServerProxy;
@@ -14,17 +9,12 @@ import java.util.logging.Logger;
 import settings.NodeSettsProxy;
 
 /**
- *
- * @author Daniela
+ * This class implements the main of log.
+ * @author Daniela Simões, 76771
  */
 public class LogRun {
     private static int SERVER_PORT;
-    /**
-     * This class will launch one server listening one port and processing
-     * the events.
-     * @param args
-     * @throws java.net.SocketException
-     */
+   
     public static void main(String[] args) throws SocketException, SocketTimeoutException {
         NodeSettsProxy proxy = new NodeSettsProxy(); 
         SERVER_PORT = proxy.SERVER_PORTS().get("Log");

@@ -21,12 +21,16 @@ import entities.SpectatorsState;
 public class ControlCentreProxy extends ClientProxy implements IControlCentre{
     
     /**
-    * Constructor to paddock proxy.
+    * Constructor to control centre proxy.
     */
     public ControlCentreProxy(){
         super("ControlCentre");
     }
     
+    /**
+     * Method to send a message to report results.
+     * @param raceNumber
+     */
     @Override
     public void reportResults(int raceNumber) {
         ((Broker)Thread.currentThread()).setBrokerState(BrokerState.SUPERVISING_THE_RACE);
@@ -34,6 +38,10 @@ public class ControlCentreProxy extends ClientProxy implements IControlCentre{
         communicate(new Message(mt, raceNumber));
     }
 
+    /**
+     * Method to send a message to proceed to paddock.
+     * @param raceNumber
+     */
     @Override
     public void proceedToPaddock(int raceNumber) {
         ((HorseJockey)Thread.currentThread()).setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
@@ -41,6 +49,10 @@ public class ControlCentreProxy extends ClientProxy implements IControlCentre{
         communicate(new Message(mt, raceNumber));
     }
 
+    /**
+     * Method to send a message to wait for next race.
+     * @param raceNumber
+     */
     @Override
     public void waitForNextRace(int raceNumber) {
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WAITING_FOR_A_RACE_TO_START);
@@ -48,6 +60,10 @@ public class ControlCentreProxy extends ClientProxy implements IControlCentre{
         communicate(new Message(mt, raceNumber));
     }
 
+    /**
+     * Method to send a message to go watch the race
+     * @param raceNumber
+     */
     @Override
     public void goWatchTheRace(int raceNumber) {
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
@@ -55,6 +71,12 @@ public class ControlCentreProxy extends ClientProxy implements IControlCentre{
         communicate(new Message(mt, raceNumber));
     }
 
+    /**
+     * Method to send a message to verify if a spectator has won.
+     * @param raceNumber
+     * @param spectatorId
+     * @return 
+     */
     @Override
     public boolean haveIWon(int raceNumber, int spectatorId) {
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
@@ -63,6 +85,9 @@ public class ControlCentreProxy extends ClientProxy implements IControlCentre{
         return result.getMessage().getBoolean();
     }
 
+    /**
+     * Method to send a message to relax a bit.
+     */
     @Override
     public void relaxABit() {
         ((Spectators)Thread.currentThread()).setSpectatorsState(SpectatorsState.CELEBRATING);

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package shared;
 
 import GeneralRepository.Bet;
@@ -15,20 +10,29 @@ import communication.message.MessageType;
 import java.net.SocketException;
 
 /**
- *
- * @author Daniela
+ * This class implements the server of betting centre.
+ * @author Daniela Simões, 76771
  */
 public class BettingCentreServer extends BettingCentre implements ServerInterface {
     
     private boolean serverEnded;
-    private String name;
+    private final String name;
     
+    /**
+    * BettingCentreServer constructor.
+    * @param races
+    */
     public BettingCentreServer(RacesProxy races) {
         super(races);
         this.name = "Betting Centre Server";
         this.serverEnded = false;
     }
 
+    /**
+    * Method to process and reply.
+    * @throws communication.message.MessageException
+    * @throws java.net.SocketException
+    */
     @Override
     public Message processAndReply(Message inMessage, ServerChannel scon) throws MessageException, SocketException {
         switch(inMessage.getType()){
@@ -55,11 +59,19 @@ public class BettingCentreServer extends BettingCentre implements ServerInterfac
         return new Message(MessageType.ACK);
     }
 
+    /**
+    * Method to return the flag of the service ended.
+    * @return
+    */
     @Override
     public boolean serviceEnded() {
         return serverEnded;
     }
     
+    /**
+    * Method to return the service name.
+    * @return
+    */
     @Override
     public String serviceName() {
         return this.name;

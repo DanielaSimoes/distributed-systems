@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package shared;
 
 import GeneralRepository.RacesProxy;
@@ -14,8 +9,8 @@ import communication.message.MessageType;
 import java.net.SocketException;
 
 /**
- *
- * @author Daniela
+ * This file contains the racing track server.
+ * @author Daniela Simões, 76771
  */
 public class RacingTrackServer extends RacingTrack implements ServerInterface{
 
@@ -28,6 +23,11 @@ public class RacingTrackServer extends RacingTrack implements ServerInterface{
         this.serverEnded = false;
     }
 
+    /**
+    * Method to process and reply.
+    * @throws communication.message.MessageException
+    * @throws java.net.SocketException
+    */
     @Override
     public Message processAndReply(Message inMessage, ServerChannel scon) throws MessageException, SocketException {
         switch(inMessage.getType()){
@@ -51,11 +51,19 @@ public class RacingTrackServer extends RacingTrack implements ServerInterface{
         return new Message(MessageType.ACK);
     }
 
+    /**
+    * Method for return the service end flag
+    * @return 
+    */
     @Override
     public boolean serviceEnded() {
         return serverEnded;
     }
     
+    /**
+    * Method to return the service name.
+    * @return
+    */
     @Override
     public String serviceName() {
         return this.name;

@@ -28,13 +28,13 @@ public class Log implements ILog{
     private final RacesProxy races = new RacesProxy();
     
     /**
-     * This will be a singleton
-     */
+    * This will be a singleton
+    */
     private static Log instance = null;
     
     /**
-     *  File where the log will be saved
-     */
+    *  File where the log will be saved
+    */
     private final File log;
     
     private static PrintWriter pw;
@@ -48,6 +48,10 @@ public class Log implements ILog{
     // number of terminates 
     private int nTerminates = 0;
     
+    /**
+    * Constructor of Log.
+     * @param filename
+    */
     public Log(String filename){
         if(filename.length()==0){
             Date today = Calendar.getInstance().getTime();
@@ -70,13 +74,16 @@ public class Log implements ILog{
     }
     
     /**
-     *
-     * @return
-     */
+    * Method to get a instance of log.
+    * @return
+    */
     public static Log getInstance(){
         return instance;
     }
     
+    /**
+    * Method to init the writing of log.
+    */
     private void writeInit(){
         try{
                         
@@ -122,9 +129,9 @@ public class Log implements ILog{
     }
     
     /**
-     *
-     * @param raceNumber
-     */
+    * Method to write the race line of log.
+    * @param raceNumber
+    */
     public void writeLineRace(int raceNumber){
                 
         String head = String.format("   %d  %2d  ", raceNumber+1, races.getCurrentRaceDistance(raceNumber));
@@ -157,9 +164,9 @@ public class Log implements ILog{
     }
     
     /**
-     *
-     * @param raceNumber
-     */
+    * Method to write the status line of the log.
+    * @param raceNumber
+    */
     public void writeLineStatus(int raceNumber){
         String head = "  " + this.brokerState + " ";
 
@@ -189,20 +196,20 @@ public class Log implements ILog{
     }
     
     /**
-     *
-     * @param spectatorId
-     * @param amount
-     */
+    * Method to set the spectator amount to bet.
+    * @param spectatorId
+    * @param amount
+    */
     @Override
     public void setSpectatorAmount(int spectatorId, int amount){
         this.spectatorAmounts[spectatorId] = amount;
     }
 
     /**
-     *
-     * @param state
-     * @param raceNumber
-     */
+    * Method to set the broker state.
+    * @param state
+    * @param raceNumber
+    */
     @Override
     public void setBrokerState(BrokerState state, int raceNumber){
         this.brokerState = state;
@@ -215,21 +222,21 @@ public class Log implements ILog{
     
 
     /**
-     *
-     * @param raceNumber
-     */
+    * Method to allow the horse to make a move.
+    * @param raceNumber
+    */
     @Override
     public void makeAMove(int raceNumber){
         this.writeLineStatus(raceNumber);
     }
     
-     /**
-    *
+    /**
     * Method to set the state of a HorseJockey.
     * @param id
     * @param state The state to be assigned.
-     * @param raceNumber
+    * @param raceNumber
     */
+    @Override
     public void setHorseJockeyState(int id, HorseJockeyState state, int raceNumber){
         if(this.horseJockeysState.containsKey(id)){
             this.horseJockeysState.replace(id, state);
@@ -239,22 +246,20 @@ public class Log implements ILog{
         this.writeLineStatus(raceNumber);
     }
     
-     /**
-    *
+    /**
     * Method to get the state of a HorseJockey.
-     * @param id
-     * @return 
+    * @param id
+    * @return 
     */
     public HorseJockeyState getHorseJockeyState(int id){
         return this.horseJockeysState.get(id);
     }
 
     /**
-    *
     * Method to set the state of a Spectator.
-     * @param id
+    * @param id
     * @param state The state to be assigned.
-     * @param raceNumber
+    * @param raceNumber
     */
     @Override
     public void setSpectatorState(int id, SpectatorsState state, int raceNumber){
@@ -267,19 +272,22 @@ public class Log implements ILog{
     }
     
     /**
-    *
     * Method to get the state of a Spectator.
-     * @param id
-     * @return 
+    * @param id
+    * @return 
     */
     public SpectatorsState getSpectatorsState(int id){
         return this.spectatorsState.get(id);
     }
     
+    /**
+    * Method to terminate servers.
+    * @return 
+    */
     public boolean terminateServers(){
         nTerminates++;
         
-        if(nTerminates==3){
+        if(nTerminates==3){ // broker, horse and spectators are dead
             // BettingCentre
             this.sendTerminate("BettingCentre");
 
@@ -307,6 +315,10 @@ public class Log implements ILog{
         return false;
     }
     
+    /**
+    * Method to send the message to terminate servers.
+    * @return 
+    */
     private void sendTerminate(String serverName){
         NodeSettsProxy proxy = new NodeSettsProxy(); 
         
