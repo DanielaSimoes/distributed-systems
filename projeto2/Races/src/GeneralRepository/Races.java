@@ -60,6 +60,17 @@ public class Races implements IRaces{
    
    
     /**
+    * Method to get the selectedHorses
+     * @param raceId
+     * @param horseRaceId
+    * @return moving horse id
+    */
+    @Override
+    public int selectedHorseId(int raceId, int horseRaceId){
+        return this.races[raceId].selectedHorseId(horseRaceId);
+    }
+    
+    /**
     * Method to choose the horse to bet.
     * @param raceNumber
     * @param spectatorId

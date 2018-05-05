@@ -17,6 +17,19 @@ public class RacesProxy extends ClientProxy implements IRaces{
     }
     
     /**
+    * Method to get the selectedHorses
+     * @param raceId
+     * @param horseRaceId
+    * @return moving horse id
+    */
+    @Override
+    public int selectedHorseId(int raceId, int horseRaceId){        
+        MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
+        MessageWrapper result = communicate(new Message(mt, raceId, horseRaceId));
+        return result.getMessage().getInteger1();
+    }
+    
+    /**
      * Method to choose a horse to bet.
      * @param raceNumber
      * @param spectatorId

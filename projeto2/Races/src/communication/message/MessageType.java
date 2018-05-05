@@ -27,5 +27,5 @@ public enum MessageType {
     addNSpectatorsArrivedAtPaddock, allHorseJockeyLeftThePadock, addNHorseJockeyLeftThePadock, setReportResults, getReportResults,
     setProceedToPaddock, getProceedToPaddock, allNHorsesInPaddock, addNHorsesInPaddock, waitAddedBet, allSpectatorsBettsAceppted,
     addBetOfSpectator, allSpectatorsBetted, waitAcceptedTheBet, acceptBet, poolWaitingToBePaidSpectators, addWaitingToBePaidSpectator,
-    allSpectatorsPaid, getPaidSpectators, setPaidSpectators, getSpectatorBet, getHorseOdd, getHorsePosition
+    allSpectatorsPaid, getPaidSpectators, setPaidSpectators, getSpectatorBet, getHorseOdd, getHorsePosition, selectedHorseId
 }

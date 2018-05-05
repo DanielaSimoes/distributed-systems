@@ -119,7 +119,7 @@ def run():
 
 
 if __name__ == '__main__':
-    N_RUNS = 100
+    N_RUNS = 1
 
     try:
         for i in range(0, N_RUNS):

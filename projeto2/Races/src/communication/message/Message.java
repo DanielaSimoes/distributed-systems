@@ -135,6 +135,7 @@ public class Message implements Serializable {
         this.type = type;
         this.message_i = message;
         this.horseJockeyState = horseJockeyState;
+        this.message_i2 = raceNumber;
     }
     
     /**
@@ -155,10 +156,12 @@ public class Message implements Serializable {
      * Constructor of Message.
      * @param type
      * @param brokerState
+     * @param raceNumber
      */
-    public Message(MessageType type, BrokerState brokerState){
+    public Message(MessageType type, BrokerState brokerState, int raceNumber){
         this.type = type;
         this.brokerState = brokerState;
+        this.message_i = raceNumber;
     }
     
     /**

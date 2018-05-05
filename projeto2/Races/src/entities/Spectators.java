@@ -45,6 +45,7 @@ public class Spectators extends Thread implements IEntity{
         this.moneyToBet = moneyToBet;
         this.initialMoney = moneyToBet;
         this.log = log;
+        this.setSpectatorsState(SpectatorsState.WAITING_FOR_A_RACE_TO_START);
         this.log.setSpectatorAmount(id, moneyToBet);
         this.relaxABit = false;
         this.races = races;
@@ -60,8 +61,6 @@ public class Spectators extends Thread implements IEntity{
     @Override
     public void run(){ 
         System.out.printf("Spectator %d started!\n", this.id); 
-
-        this.setSpectatorsState(SpectatorsState.WAITING_FOR_A_RACE_TO_START);
         
         while(!this.relaxABit){
             switch(this.state){
@@ -104,7 +103,7 @@ public class Spectators extends Thread implements IEntity{
                         this.relaxABit = true;
                     }
                     break;
-            }   
+            }
         }
         
         cc.relaxABit();

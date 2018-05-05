@@ -44,7 +44,6 @@ public class Race {
      * Number of horses in paddock.
      */
     protected int nHorsesInPaddock = 0;
-    private int[] horseIterations = new int[NodeSetts.N_OF_HORSES];
     
     /* BettingCentre */
     Queue<Integer> betsOfSpectators = new LinkedList<>();
@@ -64,6 +63,7 @@ public class Race {
     LinkedList<Integer> winners = new LinkedList();
     private final int id;
     
+    private final HashMap<Integer, Integer> horseIterations;
     private final HashMap<Integer, Integer> horsesStepSize;
     private final HashMap<Integer, Integer> horsesPosition;
     private final HashMap<Integer, Boolean> horsesFinished;
@@ -84,6 +84,7 @@ public class Race {
         this.id = id;
         this.trackSize = NodeSetts.SIZE_OF_RACING_TRACK;
         
+        this.horseIterations = new HashMap<>();
         this.horsesStepSize = new HashMap<>();
         this.horsesPosition = new HashMap<>();
         this.horsesFinished = new HashMap<>();
@@ -114,7 +115,7 @@ public class Race {
             }while(repeated);
             
             this.selectedHorses[i] = selectedId;
-            this.horseIterations[i] = 0;
+            horseIterations.put(selectedId, 0);
             horseJockeySelected.add(selectedId);
         }
         
@@ -124,6 +125,15 @@ public class Race {
             this.acceptedBet[i] = false;
         }
         
+    }
+    
+    /**
+    * Method to get the selectedHorses
+     * @param horseRaceId
+    * @return moving horse id
+    */
+    public int selectedHorseId(int horseRaceId){
+        return this.selectedHorses[horseRaceId];
     }
     
     /**
@@ -209,9 +219,9 @@ public class Race {
     */
     public Bet chooseBet(int spectatorId, int initialBet, int moneyToBet){
         // get initial bank and divide with the maximum amount possible to bet
-        double perception = initialBet / NodeSetts.MAX_SPECTATOR_BET;
+        double perception = (initialBet * 1.0) / NodeSetts.MAX_SPECTATOR_BET;
         // the capacity of the user compared to the initial bank
-        double capacity = moneyToBet / initialBet;
+        double capacity = (moneyToBet * 1.0) / initialBet;
         // 
         double peek = perception * capacity * 100;
         
@@ -242,7 +252,13 @@ public class Race {
         
         int amountToBet = (int)(moneyToBet*0.1);
         
-        return new Bet(horseId, amountToBet, spectatorId, odd);
+        for(i=0; i<this.selectedHorses.length; i++){
+            if(this.selectedHorses[i]==horseId){
+                break;
+            }
+        }
+        
+        return new Bet(horseId, amountToBet, spectatorId, odd, i);
     }
     
     /**
@@ -335,15 +351,15 @@ public class Race {
                 winners.add(horseId);
             }else{
                 double pos_winner = this.horsesPosition.get(this.winners.getFirst());
-                double iteration_winner = this.horseIterations[this.winners.getFirst()];
+                double iteration_winner = this.horseIterations.get(this.winners.getFirst());
                 
-                if(this.horsesPosition.get(horseId)>pos_winner && this.horseIterations[horseId] <= iteration_winner){
+                if(this.horsesPosition.get(horseId)>pos_winner && this.horseIterations.get(horseId) <= iteration_winner){
                     while(!this.winners.isEmpty()){
                         this.winners.remove();
                     }
                     
                     this.winners.add(horseId);
-                }else if(this.horsesPosition.get(horseId)==pos_winner && this.horseIterations[horseId] <= iteration_winner){
+                }else if(this.horsesPosition.get(horseId)==pos_winner && this.horseIterations.get(horseId) <= iteration_winner){
                     this.winners.add(horseId);
                 }
             }
@@ -358,7 +374,8 @@ public class Race {
             horseToMove = (horseToMove + 1) % NodeSetts.N_OF_HORSES_TO_RUN;
         }
         
-        this.horseIterations[horseId]++;
+        int it = horseIterations.get(horseId);
+        this.horseIterations.put(horseId, ++it);
     }
     
     /**
@@ -367,7 +384,7 @@ public class Race {
     * @return
     */
     public int getHorseIteration(int horseId){
-        return this.horseIterations[horseId];
+        return this.horseIterations.get(horseId);
     }
     
     /**
@@ -391,6 +408,17 @@ public class Race {
         int pos = 0;
         
         if(this.horsesFinished()){
+            int standingPosition[] = new int[NodeSetts.N_OF_HORSES_TO_RUN];
+            
+            
+            
+            
+            // order by horse iteration
+            //Stream<Map.Entry<Integer, Integer>> entries = this.horseIterations.entrySet().stream()
+            //    .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()));
+            
+            // if iteration is equal, verify who arrived 
+            
             Stream<Map.Entry<Integer, Integer>> entries = this.horsesPosition.entrySet().stream()
                 .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()));
             
@@ -407,7 +435,7 @@ public class Race {
             }
         }
         
-        return 0;
+        return -1;
     }
     
     /**

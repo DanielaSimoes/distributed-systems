@@ -42,6 +42,9 @@ public class RacesServer extends Races implements ServerInterface{
             case TERMINATE:
                 this.serverEnded = true;
                 break;
+            case selectedHorseId:
+                response_int = super.selectedHorseId(inMessage.getInteger1(), inMessage.getInteger2());
+                return new Message(MessageType.ACK, response_int);
             case chooseBet:
                 response_bet = super.chooseBet(inMessage.getInteger1(), inMessage.getInteger2(), inMessage.getInteger3(), inMessage.getInteger4());
                 return new Message(MessageType.ACK, response_bet);

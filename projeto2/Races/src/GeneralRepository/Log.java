@@ -39,6 +39,7 @@ public class Log implements ILog{
     
     private static PrintWriter pw;
     private boolean event_opened = false;
+    private boolean announced_next_race = false;
     
     private final int[] spectatorAmounts;
     private BrokerState brokerState;
@@ -47,8 +48,10 @@ public class Log implements ILog{
 
     // number of terminates 
     private int nTerminates = 0;
-    private String previous_line_status = "";
-    private String previous_line_race = "";
+    private String previous_line = "";
+    
+    // last timestamp
+    long last_wr_timestamp = 0;
     
     /**
     * Constructor of Log.
@@ -58,7 +61,7 @@ public class Log implements ILog{
         if(filename.length()==0){
             Date today = Calendar.getInstance().getTime();
             SimpleDateFormat date = new SimpleDateFormat("yyyyMMddhhmmss");
-            filename = "AfternoonAtTheRaces.log";
+            filename = "AfternoonAtTheRaces"+ date.format(today) + ".log";
         }
         this.log = new File(filename);
         this.spectatorAmounts = new int[NodeSetts.N_OF_SPECTATORS];
@@ -131,16 +134,50 @@ public class Log implements ILog{
     }
     
     /**
-    * Method to write the race line of log.
+    * Method to write the status line of the log.
     * @param raceNumber
+     * @param call_timestamp
     */
-    public void writeLineRace(int raceNumber){
-                
-        String head = String.format("   %d  %2d  ", raceNumber+1, races.getCurrentRaceDistance(raceNumber));
+    public void writeLine(int raceNumber, long call_timestamp){
+        if(call_timestamp < this.last_wr_timestamp){
+            return;
+        }
+        
+        if(!event_opened){
+            return;
+        }
+        
+        String head = "  " + this.brokerState + " ";
+
+        for(int i=0; i<NodeSetts.N_OF_SPECTATORS; i++){
+            SpectatorsState spectatorState = spectatorsState.get(i);
+            
+            if(spectatorState == null){
+                head += " --- ";
+            }else{
+                head += " " + spectatorsState.get(i) + " ";
+            }
+            
+            
+            try{
+                head += String.format("%3d", this.spectatorAmounts[i]) + " ";
+            }catch(java.lang.NullPointerException e){
+                head += "--- ";
+            }
+        }
+
+        head += (raceNumber+1);
+
+        for(int i=0; i<NodeSetts.N_OF_HORSES_TO_RUN; i++){
+            int horseId = this.races.selectedHorseId(raceNumber, i);
+            head += "  " + horseJockeysState.get(horseId) + " " + String.format("%3d", this.races.getHorseJockeyStepSize(horseId));
+        }
+
+        head += String.format("\n   %d  %2d  ", raceNumber+1, races.getCurrentRaceDistance(raceNumber));
 
         for(int i=0; i<NodeSetts.N_OF_SPECTATORS; i++){
             try{
-                head += String.format("  %d  %4d", this.races.getSpectatorBet(i, raceNumber).getHorseId(), this.races.getSpectatorBet(i,raceNumber).getAmount());
+                head += String.format("  %d  %4d", this.races.getSpectatorBet(i, raceNumber).getHorseRaceId(), this.races.getSpectatorBet(i,raceNumber).getAmount());
             }catch(java.lang.NullPointerException e){
                 head += " --- ----";
             }
@@ -148,69 +185,54 @@ public class Log implements ILog{
 
         head += " ";
 
-        for(int i=0; i<NodeSetts.N_OF_HORSES; i++){
-            if(this.races.horseHasBeenSelectedToRace(i, -1, raceNumber)){
-                try{
-                    head += String.format(" %2.1f %2d   %2d    %d ", this.races.getHorseOdd(i, raceNumber), this.races.getHorseIteration(i, raceNumber), this.races.getHorsePosition(i, raceNumber), this.races.getStandingPosition(i, raceNumber));
-                }catch(java.lang.NullPointerException e){
-                    head += " ---- --  --    - ";
+        for(int i=0; i<NodeSetts.N_OF_HORSES_TO_RUN; i++){
+            if(announced_next_race){
+                int horseId = this.races.selectedHorseId(raceNumber, i);
+                int horsePos = this.races.getHorsePosition(horseId, raceNumber);
+                int standingPosition = this.races.getStandingPosition(horseId, raceNumber);
+
+                if(horsePos>0 && standingPosition>=0){
+                    try{
+                        head += String.format(" %2.1f %2d   %2d    %d ", this.races.getHorseOdd(horseId, raceNumber), this.races.getHorseIteration(horseId, raceNumber), horsePos, standingPosition);
+                    }catch(java.lang.NullPointerException e){
+                        head += " ---- --  --    - ";
+                    }   
+                }else if(horsePos>0){
+                    try{
+                        head += String.format(" %2.1f %2d   %2d    - ", this.races.getHorseOdd(horseId, raceNumber), this.races.getHorseIteration(horseId, raceNumber), horsePos);
+                    }catch(java.lang.NullPointerException e){
+                        head += " ---- --  --    - ";
+                    }   
+                }else if(standingPosition>=0){
+                    try{
+                        head += String.format(" %2.1f %2d   --    %d ", this.races.getHorseOdd(horseId, raceNumber), this.races.getHorseIteration(horseId, raceNumber), standingPosition);
+                    }catch(java.lang.NullPointerException e){
+                        head += " ---- --  --    - ";
+                    }
+                }else{
+                    try{
+                        head += String.format(" %2.1f %2d   --    - ", this.races.getHorseOdd(horseId, raceNumber), this.races.getHorseIteration(horseId, raceNumber));
+                    }catch(java.lang.NullPointerException e){
+                        head += " ---- --  --    - ";
+                    }
                 }
+            }else{
+                head += " ---- --  --    - ";
             }
         }
 
         head += " ";
 
-        if(head.equals(this.previous_line_race)){
+        if(head.equals(this.previous_line)){
             return;
         }
         
-        this.previous_line_race = head;
-
-        pw.println(head);
-
-        pw.flush();
-    }
-    
-    /**
-    * Method to write the status line of the log.
-    * @param raceNumber
-    */
-    public void writeLineStatus(int raceNumber){
-        String head = "  " + this.brokerState + " ";
-
-        for(int i=0; i<NodeSetts.N_OF_SPECTATORS; i++){
-            head += " " + spectatorsState.get(i) + "  " + String.format("%3d", this.spectatorAmounts[i]) + " ";
-        }
-
-        head += (raceNumber+1);
-
-        for(int i=0; i<NodeSetts.N_OF_HORSES; i++){
-            if(this.races.horseHasBeenSelectedToRace(i, -1, raceNumber)){
-                head += "  " + horseJockeysState.get(i) + " " + String.format("%3d", this.races.getHorseJockeyStepSize(i));
-            }
-        }
-
-        if(head.contains("null")){
-            return;
-        }
-        
-        if(head.equals(this.previous_line_status)){
-            if(this.event_opened){
-                this.writeLineRace(raceNumber);
-            }
-            
-            return;
-        }
-        
-        this.previous_line_status = head;
+        this.previous_line = head;
+        this.last_wr_timestamp = System.currentTimeMillis();
         
         pw.println(head);
 
         pw.flush();
-        
-        if(this.event_opened){
-            this.writeLineRace(raceNumber);
-        }
     }
     
     /**
@@ -231,11 +253,18 @@ public class Log implements ILog{
     @Override
     public void setBrokerState(BrokerState state, int raceNumber){
         this.brokerState = state;
-        this.writeLineStatus(raceNumber);
         
         if(state==BrokerState.OPENING_THE_EVENT){
             event_opened = true;
         }
+        
+        if(state==BrokerState.ANNOUNCING_NEXT_RACE){
+            announced_next_race = true;
+        }
+        
+        System.out.println("Broker " + raceNumber);
+        
+        this.writeLine(raceNumber, System.currentTimeMillis());
     }
     
 
@@ -245,7 +274,7 @@ public class Log implements ILog{
     */
     @Override
     public void makeAMove(int raceNumber){
-        this.writeLineStatus(raceNumber);
+        this.writeLine(raceNumber, System.currentTimeMillis());
     }
     
     /**
@@ -261,7 +290,10 @@ public class Log implements ILog{
         }else{
             this.horseJockeysState.put(id, state);
         }
-        this.writeLineStatus(raceNumber);
+        
+        System.out.println("HorseJockey state " + state + " " + id + " in race " + raceNumber);
+        
+        this.writeLine(raceNumber, System.currentTimeMillis());
     }
     
     /**
@@ -286,7 +318,10 @@ public class Log implements ILog{
         }else{
             this.spectatorsState.put(id, state);
         }
-        this.writeLineStatus(raceNumber);
+        
+        System.out.println("Spectator state"+state+" " + id + " in race " + raceNumber);
+        
+        this.writeLine(raceNumber, System.currentTimeMillis());
     }
     
     /**

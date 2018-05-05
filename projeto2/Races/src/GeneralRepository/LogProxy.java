@@ -52,7 +52,7 @@ public class LogProxy extends ClientProxy implements ILog{
     @Override
     public void setBrokerState(BrokerState state, int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        communicate(new Message(mt, state));
+        communicate(new Message(mt, state, raceNumber));
     }
 
     /**
@@ -62,7 +62,7 @@ public class LogProxy extends ClientProxy implements ILog{
     @Override
     public void makeAMove(int raceNumber) {
         MessageType mt = MessageType.valueOf(new Object(){}.getClass().getEnclosingMethod().getName());
-        communicate(new Message(mt));
+        communicate(new Message(mt, raceNumber));
     }
 
     /**

@@ -10,6 +10,7 @@ public class Bet implements Serializable  {
     
     private static final long serialVersionUID = 1001L;
     private int horseId;
+    private int horseRaceId;
     private int amount;
     private int spectatorId;
     private double odd;
@@ -20,9 +21,11 @@ public class Bet implements Serializable  {
     * @param amount
     * @param spectatorId
     * @param odd
+     * @param horseRaceId
     */
-    public Bet(int horseId, int amount, int spectatorId, double odd){
+    public Bet(int horseId, int amount, int spectatorId, double odd, int horseRaceId){
         this.horseId = horseId;
+        this.horseRaceId = horseRaceId;
         this.amount = amount;
         this.spectatorId = spectatorId;
         this.odd = odd;
@@ -34,6 +37,14 @@ public class Bet implements Serializable  {
     */
     public int getHorseId(){
         return this.horseId;
+    }
+    
+    /**
+    * Method to return horse ID
+    * @return
+    */
+    public int getHorseRaceId(){
+        return this.horseRaceId;
     }
     
     /**

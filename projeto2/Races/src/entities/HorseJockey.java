@@ -48,6 +48,10 @@ public class HorseJockey extends Thread implements IEntity{
         this.setName("HorseJockey " + id);
         this.entertainTheGuests = false;
         this.races = races;
+        
+        this.races.setHorseJockeyStepSize(id, stepSize);
+        
+        this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
     }
     
     /**
@@ -59,10 +63,6 @@ public class HorseJockey extends Thread implements IEntity{
     @Override
     public void run(){  
         System.out.printf("Horse Jockey %d started!\n", this.id);
-        
-        this.races.setHorseJockeyStepSize(id, stepSize);
-        
-        this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
         
         this.raceId = stable.proceedToStable(raceId, this.id, this.stepSize);
                     
@@ -77,6 +77,14 @@ public class HorseJockey extends Thread implements IEntity{
                     }
                     break;
                 case AT_THE_PADDOCK:
+                    while(races.horsesFinished(raceId)){
+                        this.nextRace();
+
+                        if(!races.hasMoreRaces() && races.horsesFinished(raceId)){
+                            break;
+                        }
+                    }
+                    
                     paddock.proceedToStartLine(raceId);
                     rt.proceedToStartLine(raceId, this.id);
                     break;
@@ -146,8 +154,8 @@ public class HorseJockey extends Thread implements IEntity{
         if(state==this.state){
             return;
         }
+        
         this.state = state;
-        this.setName("HorseJockey " + id + " - " + this.state.toString());
         this.log.setHorseJockeyState(id, state, this.raceId);
     } 
     

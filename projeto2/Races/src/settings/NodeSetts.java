@@ -18,7 +18,7 @@ public class NodeSetts {
     protected HashMap<String, Integer> SERVER_PORTS;
     protected HashMap<String, String> SERVER_HOSTS;
     
-    protected static boolean DEBUG = false;
+    protected static boolean DEBUG = true;
     
     /**
      * Number of races.
@@ -28,12 +28,12 @@ public class NodeSetts {
     /**
      * Number of horses.
      */
-    public static final int N_OF_HORSES = 4;
+    public static final int N_OF_HORSES = 10;
     
     /**
      * Number of horses in the race.
      */
-    public static final int N_OF_HORSES_TO_RUN = 2;
+    public static final int N_OF_HORSES_TO_RUN = 5;
 
     /**
      * Number os spectators.
