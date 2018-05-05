@@ -47,6 +47,8 @@ public class Log implements ILog{
 
     // number of terminates 
     private int nTerminates = 0;
+    private String previous_line_status = "";
+    private String previous_line_race = "";
     
     /**
     * Constructor of Log.
@@ -158,6 +160,12 @@ public class Log implements ILog{
 
         head += " ";
 
+        if(head.equals(this.previous_line_race)){
+            return;
+        }
+        
+        this.previous_line_race = head;
+
         pw.println(head);
 
         pw.flush();
@@ -185,6 +193,16 @@ public class Log implements ILog{
         if(head.contains("null")){
             return;
         }
+        
+        if(head.equals(this.previous_line_status)){
+            if(this.event_opened){
+                this.writeLineRace(raceNumber);
+            }
+            
+            return;
+        }
+        
+        this.previous_line_status = head;
         
         pw.println(head);
 

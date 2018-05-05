@@ -31,10 +31,10 @@ public class NodeSettsRun {
 
         /* estabelecimento do servico */
         
-        NodeSettsServer server = new NodeSettsServer(json_path);
+        NodeSettsServer nodeSettsServer = new NodeSettsServer(json_path);
         
         // criação do canal de escuta e sua associação
-        schan = new ServerChannel(server.SERVER_PORTS.get("NodeSetts"));    
+        schan = new ServerChannel(nodeSettsServer.SERVER_PORTS.get("NodeSetts"));    
         schan.start();
         
         System.out.println("Node Setts service has started!\nServer is listening.");
@@ -47,7 +47,7 @@ public class NodeSettsRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                cliProxy = new ServerProxy(schan, schani, server, "NodeSetts");
+                cliProxy = new ServerProxy(schan, schani, nodeSettsServer, "NodeSetts");
                 cliProxy.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(NodeSettsRun.class.getName()).log(Level.SEVERE, null, ex);

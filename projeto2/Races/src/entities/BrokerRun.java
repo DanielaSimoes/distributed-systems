@@ -29,10 +29,10 @@ public class BrokerRun {
     private static Broker broker;
     
     public static void main(String [] args) {  
-        LogProxy log = new LogProxy();
-        NodeSettsProxy proxy = new NodeSettsProxy();
+        LogProxy logProxy = new LogProxy();
+        NodeSettsProxy nodeSettsProxy = new NodeSettsProxy();
         
-        broker = new Broker((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre, (shared.IRacingTrack) racingTrack, (shared.IPaddock) paddock, log, races);
+        broker = new Broker((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre, (shared.IRacingTrack) racingTrack, (shared.IPaddock) paddock, logProxy, races);
         
         broker.start();
         
@@ -45,8 +45,8 @@ public class BrokerRun {
         }
         
         /* SEND TO LOG THAT BROKER HAS FINISHED */
-        Proxy.connect(proxy.SERVER_HOSTS().get("Log"), 
-        proxy.SERVER_PORTS().get("Log"), 
+        Proxy.connect(nodeSettsProxy.SERVER_HOSTS().get("Log"), 
+        nodeSettsProxy.SERVER_PORTS().get("Log"), 
         new Message(MessageType.TERMINATE));
     }
 
