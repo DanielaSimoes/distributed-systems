@@ -18,7 +18,7 @@ public class NodeSetts {
     protected HashMap<String, Integer> SERVER_PORTS;
     protected HashMap<String, String> SERVER_HOSTS;
     
-    protected static boolean DEBUG = true;
+    protected static boolean DEBUG = false;
     
     /**
      * Number of races.

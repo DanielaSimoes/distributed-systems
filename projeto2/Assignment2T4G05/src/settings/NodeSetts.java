@@ -17,9 +17,9 @@ import org.json.simple.parser.JSONParser;
 public class NodeSetts {
     protected HashMap<String, Integer> SERVER_PORTS;
     protected HashMap<String, String> SERVER_HOSTS;
-    
-    protected static boolean DEBUG = true;
-    
+
+    protected static boolean DEBUG = false;
+
     /**
      * Number of races.
      */
@@ -29,7 +29,7 @@ public class NodeSetts {
      * Number of horses.
      */
     public static final int N_OF_HORSES = 10;
-    
+
     /**
      * Number of horses in the race.
      */
@@ -54,21 +54,21 @@ public class NodeSetts {
      * Maximum ammount each spectator can bet.
      */
     public static final int MAX_SPECTATOR_BET = 2000;
-    
+
     /**
      * Constructor of node settings, it will read and parse the jsonfilepath which contains the hosts.
      * @param jsonfilepath
      */
     public NodeSetts(String jsonfilepath){
         assert N_OF_HORSES>=N_OF_HORSES_TO_RUN*N_OF_RACES;
-        
+
         JSONParser parser = new JSONParser();
-        
-        try {     
+
+        try {
             Object obj = parser.parse(new FileReader(jsonfilepath));
 
             JSONArray json =  (JSONArray) obj;
-            
+
             SERVER_HOSTS = JSONUtils.jsonToHashString(json);
         } catch (JSONException ex) {
             Logger.getLogger(NodeSetts.class.getName()).log(Level.SEVERE, null, ex);
@@ -77,7 +77,7 @@ public class NodeSetts {
         } catch (IOException | org.json.simple.parser.ParseException ex) {
             Logger.getLogger(NodeSetts.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         // 22440 - 22449
         SERVER_PORTS = new HashMap<>();
         SERVER_PORTS.put("BettingCentre", 22440);
@@ -88,6 +88,6 @@ public class NodeSetts {
         SERVER_PORTS.put("Stable", 22448);
         SERVER_PORTS.put("Races", 22446);
         SERVER_PORTS.put("NodeSetts", 22447);
-        
+
     }
 }
