@@ -1,11 +1,11 @@
 /*
- * This file contains the paddock proxy.
+ * This file contains the paddock stub.
  */
 package shared;
 
 import communication.message.Message;
 import communication.message.MessageType;
-import communication.Proxy.ClientStub;
+import communication.stub.ClientStub;
 import entities.Broker;
 import entities.BrokerState;
 import entities.HorseJockey;
@@ -15,13 +15,13 @@ import entities.SpectatorsState;
 
 
 /**
- * This class implements the paddock proxy.
+ * This class implements the paddock stub.
  * @author Daniela Simões, 76771
  */
 public class PaddockStub extends ClientStub implements IPaddock {
 
     /**
-    * Constructor to paddock proxy.
+    * Constructor to paddock stub.
     */
     public PaddockStub(){
         super("Paddock");

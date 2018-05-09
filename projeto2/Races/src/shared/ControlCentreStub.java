@@ -1,9 +1,9 @@
 /*
- * This file contains the control centre proxy.
+ * This file contains the control centre stub.
  */
 package shared;
 
-import communication.Proxy.ClientStub;
+import communication.stub.ClientStub;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.message.MessageWrapper;
@@ -15,13 +15,13 @@ import entities.Spectators;
 import entities.SpectatorsState;
 
 /**
- * Class that implements control centre proxy.
+ * Class that implements control centre stub.
  * @author Daniela Simões, 76771
  */
 public class ControlCentreStub extends ClientStub implements IControlCentre{
     
     /**
-    * Constructor to control centre proxy.
+    * Constructor to control centre stub.
     */
     public ControlCentreStub(){
         super("ControlCentre");

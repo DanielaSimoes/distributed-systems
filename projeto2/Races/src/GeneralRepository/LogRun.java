@@ -1,6 +1,6 @@
 package GeneralRepository;
 
-import communication.Proxy.APS;
+import communication.stub.APS;
 import communication.ServerChannel;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -16,8 +16,8 @@ public class LogRun {
     private static int SERVER_PORT;
    
     public static void main(String[] args) throws SocketException, SocketTimeoutException {
-        NodeSettsStub proxy = new NodeSettsStub(); 
-        SERVER_PORT = proxy.SERVER_PORTS().get("Log");
+        NodeSettsStub nodeSettsStub = new NodeSettsStub(); 
+        SERVER_PORT = nodeSettsStub.SERVER_PORTS().get("Log");
         
         // canais de comunicação
         ServerChannel schan, schani;
@@ -31,7 +31,7 @@ public class LogRun {
         schan = new ServerChannel(SERVER_PORT);    
         schan.start();
         
-        LogInterface logServer = new LogInterface();
+        LogInterface logInterface = new LogInterface();
         System.out.println("Log service has started!\nServer is listening.");
 
         /* processamento de pedidos */
@@ -42,7 +42,7 @@ public class LogRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                aps = new APS(schan, schani, logServer, "Log");
+                aps = new APS(schan, schani, logInterface, "Log");
                 aps.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(LogRun.class.getName()).log(Level.SEVERE, null, ex);

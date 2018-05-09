@@ -1,7 +1,7 @@
 /*
- * This file contains the proxy.
+ * This file contains the Stub.
  */
-package communication.Proxy;
+package communication.stub;
 
 import communication.ClientChannel;
 import communication.message.Message;
@@ -12,40 +12,40 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
-* Class that implements a proxy.
+* Class that implements a stub.
 * @author Daniela Simões, 76771
 */
 public class Stub extends Thread {
-    private final String clientProxyServerName;
+    private final String clientStubServerName;
     private final int toServerPort;
     private final Message outMessage;
-    private final MessageWrapper result;
+    private final MessageWrapper inMessage;
     
     /**
-    * Constructor of proxy.
-    * @param clientProxyServerName
+    * Constructor of Stub.
+    * @param clientStubServerName
     * @param toServerPort
-    * @param result
+    * @param inMessage
     * @param outMessage
     */
-    public Stub(String clientProxyServerName, int toServerPort, MessageWrapper result, Message outMessage){
-        this.clientProxyServerName = clientProxyServerName;
+    public Stub(String clientStubServerName, int toServerPort, MessageWrapper inMessage, Message outMessage){
+        this.clientStubServerName = clientStubServerName;
         this.toServerPort = toServerPort;
         this.outMessage = outMessage;
-        this.result = result;
+        this.inMessage = inMessage;
     }
     
     /**
-    * Proxy wrapper.
+    * Message wrapper.
     * @param logServerName
     * @param logServerPort
     * @param m
     * @return 
     */
     public static MessageWrapper connect(String logServerName, int logServerPort, Message m){
-        MessageWrapper result = new MessageWrapper();
+        MessageWrapper inMessage = new MessageWrapper();
         
-        Stub cp = new Stub(logServerName, logServerPort, result, m);
+        Stub cp = new Stub(logServerName, logServerPort, inMessage, m);
         
         cp.start();
         
@@ -55,21 +55,21 @@ public class Stub extends Thread {
             Logger.getLogger(LogStub.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        if (result.getMessage().getType() != MessageType.ACK) {
-            System.out.println("Tipo Inválido. Message:" + result.getMessage().toString());
+        if (inMessage.getMessage().getType() != MessageType.ACK) {
+            System.out.println("Tipo Inválido. Message:" + inMessage.getMessage().toString());
             System.exit(1);
         }
         
-        return result;
+        return inMessage;
     }
     
     /**
-    * Method to run the proxy.
+    * Method to run the stub.
     */
     @Override
     public void run(){
         try {
-            ClientChannel con = new ClientChannel(this.clientProxyServerName, this.toServerPort);
+            ClientChannel con = new ClientChannel(this.clientStubServerName, this.toServerPort);
             
             while (!con.open())
             {
@@ -81,7 +81,7 @@ public class Stub extends Thread {
             
             con.writeObject(outMessage);
             
-            this.result.setMessage((Message) con.readObject());
+            this.inMessage.setMessage((Message) con.readObject());
             
             con.close();
             

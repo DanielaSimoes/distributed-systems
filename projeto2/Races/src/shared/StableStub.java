@@ -1,9 +1,9 @@
 /*
- * This file contains the stable proxy.
+ * This file contains the stable stub.
  */
 package shared;
 
-import communication.Proxy.ClientStub;
+import communication.stub.ClientStub;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.message.MessageWrapper;
@@ -13,13 +13,13 @@ import entities.HorseJockey;
 import entities.HorseJockeyState;
 
 /**
- * Class that implements stable proxy.
+ * Class that implements stable stub.
  * @author Daniela Simões, 76771
  */
 public class StableStub extends ClientStub implements IStable {
     
     /**
-    * Constructor to stable proxy.
+    * Constructor to stable stub.
     */
     public StableStub(){
         super("Stable");

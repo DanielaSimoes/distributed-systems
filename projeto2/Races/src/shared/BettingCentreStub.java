@@ -1,10 +1,10 @@
 /*
- * This file contains the betting centre proxy.
+ * This file contains the betting centre stub.
  */
 package shared;
 
 import GeneralRepository.Bet;
-import communication.Proxy.ClientStub;
+import communication.stub.ClientStub;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.message.MessageWrapper;
@@ -14,13 +14,13 @@ import entities.Spectators;
 import entities.SpectatorsState;
 
 /**
- * Class that implements betting centre proxy.
+ * Class that implements betting centre stub.
  * @author Daniela Simões, 76771
  */
 public class BettingCentreStub extends ClientStub implements IBettingCentre{
     
     /**
-    * Constructor to betting centre proxy.
+    * Constructor to betting centre stub.
     */
     public BettingCentreStub(){
         super("BettingCentre");

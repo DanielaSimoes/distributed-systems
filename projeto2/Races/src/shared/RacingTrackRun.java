@@ -1,7 +1,7 @@
 package shared;
 
 import GeneralRepository.RacesStub;
-import communication.Proxy.APS;
+import communication.stub.APS;
 import communication.ServerChannel;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -17,8 +17,8 @@ public class RacingTrackRun {
     private static int SERVER_PORT;
     
     public static void main(String[] args) throws SocketException {
-        NodeSettsStub proxy = new NodeSettsStub(); 
-        SERVER_PORT = proxy.SERVER_PORTS().get("RacingTrack");
+        NodeSettsStub nodeSettsStub = new NodeSettsStub(); 
+        SERVER_PORT = nodeSettsStub.SERVER_PORTS().get("RacingTrack");
         
         // canais de comunicação
         ServerChannel schan, schani;
@@ -32,9 +32,9 @@ public class RacingTrackRun {
         schan = new ServerChannel(SERVER_PORT);    
         schan.start();
         
-        RacesStub races = new RacesStub();
+        RacesStub racesStub = new RacesStub();
         
-        RacingTrackInterface racingTrackServer = new RacingTrackInterface(races);
+        RacingTrackInterface racingTrackInterface = new RacingTrackInterface(racesStub);
         System.out.println("Racing Track service has started!\nServer is listening.");
 
         /* processamento de pedidos */
@@ -45,7 +45,7 @@ public class RacingTrackRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                aps = new APS(schan, schani, racingTrackServer, "RacingTrack");
+                aps = new APS(schan, schani, racingTrackInterface, "RacingTrack");
                 aps.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(BettingCentreRun.class.getName()).log(Level.SEVERE, null, ex);

@@ -1,7 +1,7 @@
 /*
  * Server interface.
  */
-package communication.Proxy;
+package communication.stub;
 
 import communication.ServerChannel;
 import communication.message.Message;

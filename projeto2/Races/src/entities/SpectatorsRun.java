@@ -5,7 +5,7 @@ import shared.ControlCentreStub;
 import shared.BettingCentreStub;
 import GeneralRepository.RacesStub;
 import GeneralRepository.LogStub;
-import communication.Proxy.Stub;
+import communication.stub.Stub;
 import communication.message.Message;
 import communication.message.MessageType;
 import java.util.ArrayList;
@@ -16,29 +16,29 @@ import settings.NodeSettsStub;
  * @author Daniela Simões, 76771
  */
 public class SpectatorsRun {
-    private static PaddockStub paddock = new PaddockStub();
-    private static ControlCentreStub controlCentre = new ControlCentreStub();
-    private static BettingCentreStub bettingCentre = new BettingCentreStub();
-    private static RacesStub races = new RacesStub();
+    private static PaddockStub paddockStub = new PaddockStub();
+    private static ControlCentreStub controlCentreStub = new ControlCentreStub();
+    private static BettingCentreStub bettingCentreStub = new BettingCentreStub();
+    private static RacesStub racesStub = new RacesStub();
     
     private static int N_OF_SPECTATORS;
 
     public static void main(String [] args) {
-        LogStub log = new LogStub();
+        LogStub logStub = new LogStub();
         
         /* init proxies */
-        paddock = new PaddockStub();
-        controlCentre = new ControlCentreStub();
-        bettingCentre = new BettingCentreStub();
+        paddockStub = new PaddockStub();
+        controlCentreStub = new ControlCentreStub();
+        bettingCentreStub = new BettingCentreStub();
         /* end init proxies */
         
-        NodeSettsStub proxy = new NodeSettsStub(); 
-        N_OF_SPECTATORS = proxy.N_OF_SPECTATORS();
+        NodeSettsStub nodeSettsStub = new NodeSettsStub(); 
+        N_OF_SPECTATORS = nodeSettsStub.N_OF_SPECTATORS();
         
         ArrayList<Spectators> spectators = new ArrayList<>(N_OF_SPECTATORS);
 
         for(int i = 0; i < N_OF_SPECTATORS; i++){
-            spectators.add(new Spectators((shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre , (shared.IPaddock) paddock, (int) (Math.random() * (proxy.MAX_SPECTATOR_BET() - 200)) + 200, i, races, log));
+            spectators.add(new Spectators((shared.IControlCentre) controlCentreStub, (shared.IBettingCentre) bettingCentreStub , (shared.IPaddock) paddockStub, (int) (Math.random() * (nodeSettsStub.MAX_SPECTATOR_BET() - 200)) + 200, i, racesStub, logStub));
         }
         
         for (Spectators spectator : spectators)
@@ -52,8 +52,8 @@ public class SpectatorsRun {
         }
                 
         /* SEND TO LOG THAT SPECTATOR HAS FINISHED */
-        Stub.connect(proxy.SERVER_HOSTS().get("Log"), 
-                proxy.SERVER_PORTS().get("Log"), 
+        Stub.connect(nodeSettsStub.SERVER_HOSTS().get("Log"), 
+                nodeSettsStub.SERVER_PORTS().get("Log"), 
                 new Message(MessageType.TERMINATE));
         
     }

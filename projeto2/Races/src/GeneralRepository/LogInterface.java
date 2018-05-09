@@ -1,6 +1,6 @@
 package GeneralRepository;
 
-import communication.Proxy.ServerInterface;
+import communication.stub.ServerInterface;
 import communication.ServerChannel;
 import communication.message.Message;
 import communication.message.MessageException;

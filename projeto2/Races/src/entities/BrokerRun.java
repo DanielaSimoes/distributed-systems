@@ -7,7 +7,7 @@ import shared.BettingCentreStub;
 import shared.StableStub;
 import GeneralRepository.RacesStub;
 import GeneralRepository.LogStub;
-import communication.Proxy.Stub;
+import communication.stub.Stub;
 import communication.message.Message;
 import communication.message.MessageType;
 import settings.NodeSettsStub;
@@ -19,20 +19,20 @@ import settings.NodeSettsStub;
  */
 public class BrokerRun {
     
-    private static StableStub stable = new StableStub();
-    private static RacingTrackStub racingTrack = new RacingTrackStub();
-    private static PaddockStub paddock = new PaddockStub();
-    private static ControlCentreStub controlCentre = new ControlCentreStub();
-    private static BettingCentreStub bettingCentre = new BettingCentreStub();
-    private static RacesStub races = new RacesStub();
+    private static StableStub stableStub = new StableStub();
+    private static RacingTrackStub racingTrackStub = new RacingTrackStub();
+    private static PaddockStub paddockStub = new PaddockStub();
+    private static ControlCentreStub controlCentreStub = new ControlCentreStub();
+    private static BettingCentreStub bettingCentreStub = new BettingCentreStub();
+    private static RacesStub racesStub = new RacesStub();
     
     private static Broker broker;
     
     public static void main(String [] args) {  
-        LogStub logProxy = new LogStub();
-        NodeSettsStub nodeSettsProxy = new NodeSettsStub();
+        LogStub logStub = new LogStub();
+        NodeSettsStub nodeSettsStub = new NodeSettsStub();
         
-        broker = new Broker((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre, (shared.IRacingTrack) racingTrack, (shared.IPaddock) paddock, logProxy, races);
+        broker = new Broker((shared.IStable) stableStub, (shared.IControlCentre) controlCentreStub, (shared.IBettingCentre) bettingCentreStub, (shared.IRacingTrack) racingTrackStub, (shared.IPaddock) paddockStub, logStub, racesStub);
         
         broker.start();
         
@@ -45,9 +45,9 @@ public class BrokerRun {
         }
         
         /* SEND TO LOG THAT BROKER HAS FINISHED */
-        Stub.connect(nodeSettsProxy.SERVER_HOSTS().get("Log"), 
-        nodeSettsProxy.SERVER_PORTS().get("Log"), 
-        new Message(MessageType.TERMINATE));
+        Stub.connect(nodeSettsStub.SERVER_HOSTS().get("Log"),  
+                nodeSettsStub.SERVER_PORTS().get("Log"),  
+                new Message(MessageType.TERMINATE));
     }
 
 }

@@ -1,7 +1,7 @@
 package settings;
 
 import communication.ServerChannel;
-import communication.Proxy.APS;
+import communication.stub.APS;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.logging.Level;
@@ -31,10 +31,10 @@ public class NodeSettsRun {
 
         /* estabelecimento do servico */
         
-        NodeSettsInterface nodeSettsServer = new NodeSettsInterface(json_path);
+        NodeSettsInterface nodeSettsInterface = new NodeSettsInterface(json_path);
         
         // criação do canal de escuta e sua associação
-        schan = new ServerChannel(nodeSettsServer.SERVER_PORTS.get("NodeSetts"));    
+        schan = new ServerChannel(nodeSettsInterface.SERVER_PORTS.get("NodeSetts"));    
         schan.start();
         
         System.out.println("Node Setts service has started!\nServer is listening.");
@@ -47,7 +47,7 @@ public class NodeSettsRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                aps = new APS(schan, schani, nodeSettsServer, "NodeSetts");
+                aps = new APS(schan, schani, nodeSettsInterface, "NodeSetts");
                 aps.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(NodeSettsRun.class.getName()).log(Level.SEVERE, null, ex);

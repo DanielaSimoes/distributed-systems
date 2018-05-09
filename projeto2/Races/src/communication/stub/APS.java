@@ -1,7 +1,7 @@
 /*
- * This file contains the server proxy.
+ * This file contains the server APS.
  */
-package communication.Proxy;
+package communication.stub;
 
 import communication.ServerChannel;
 import communication.message.Message;
@@ -12,19 +12,19 @@ import java.util.logging.Logger;
 
 
 /**
- * Class that implements the server proxy.
+ * Class that implements the server APS.
  * @author Daniela Simões, 76771
  */
 public class APS extends Thread{
     
-    private static int nProxy;
+    private static int nAPS;
     private final ServerChannel sconi;
     private final ServerInterface sInterface;
     private final ServerChannel scon;
 
     
     /**
-     * Constructor to create the server proxy.
+     * Constructor to create the APS.
      * @param scon
      * @param sconi
      * @param sInterface
@@ -39,7 +39,7 @@ public class APS extends Thread{
     }
 
     /**
-     * Method to run the server proxy.
+     * Method to run the APS.
      */
     @Override
     public void run() {
@@ -69,10 +69,10 @@ public class APS extends Thread{
     }
 
     /**
-     * Method to retrieve the server proxy ID.
+     * Method to retrieve the server APS ID.
      * @return 
      */
-    public static int getProxyId(){
-        return nProxy;
+    public static int getApsId(){
+        return nAPS;
     }
 }

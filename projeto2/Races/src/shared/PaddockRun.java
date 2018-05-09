@@ -1,7 +1,7 @@
 package shared;
 
 import GeneralRepository.RacesStub;
-import communication.Proxy.APS;
+import communication.stub.APS;
 import communication.ServerChannel;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -17,8 +17,8 @@ public class PaddockRun {
     private static int SERVER_PORT;
     
     public static void main(String[] args) throws SocketException {
-        NodeSettsStub proxy = new NodeSettsStub(); 
-        SERVER_PORT = proxy.SERVER_PORTS().get("Paddock");
+        NodeSettsStub nodeSettsStub = new NodeSettsStub(); 
+        SERVER_PORT = nodeSettsStub.SERVER_PORTS().get("Paddock");
         
         // canais de comunicação
         ServerChannel schan, schani;
@@ -32,9 +32,9 @@ public class PaddockRun {
         schan = new ServerChannel(SERVER_PORT);    
         schan.start();
         
-        RacesStub racesProxy = new RacesStub();
+        RacesStub racesStub = new RacesStub();
         
-        PaddockInterface paddockServer = new PaddockInterface(racesProxy);
+        PaddockInterface paddockInterface = new PaddockInterface(racesStub);
         System.out.println("Paddock service has started!\nServer is listening.");
 
         /* processamento de pedidos */
@@ -45,7 +45,7 @@ public class PaddockRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                aps = new APS(schan, schani, paddockServer, "Paddock");
+                aps = new APS(schan, schani, paddockInterface, "Paddock");
                 aps.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(BettingCentreRun.class.getName()).log(Level.SEVERE, null, ex);

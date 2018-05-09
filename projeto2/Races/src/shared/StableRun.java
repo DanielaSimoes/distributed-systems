@@ -1,7 +1,7 @@
 package shared;
 
 import GeneralRepository.RacesStub;
-import communication.Proxy.APS;
+import communication.stub.APS;
 import communication.ServerChannel;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -17,8 +17,8 @@ public class StableRun {
     private static int SERVER_PORT;
     
     public static void main(String[] args) throws SocketException {
-        NodeSettsStub proxy = new NodeSettsStub(); 
-        SERVER_PORT = proxy.SERVER_PORTS().get("Stable");
+        NodeSettsStub nodeSettsStub = new NodeSettsStub(); 
+        SERVER_PORT = nodeSettsStub.SERVER_PORTS().get("Stable");
         
         // canais de comunicação
         ServerChannel schan, schani;
@@ -32,9 +32,9 @@ public class StableRun {
         schan = new ServerChannel(SERVER_PORT);    
         schan.start();
         
-        RacesStub races = new RacesStub();
+        RacesStub racesStub = new RacesStub();
         
-        StableInterface stableServer = new StableInterface(races);
+        StableInterface stableInterface = new StableInterface(racesStub);
         System.out.println("Stable service has started!\nServer is listening.");
 
         /* processamento de pedidos */
@@ -45,7 +45,7 @@ public class StableRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                aps = new APS(schan, schani, stableServer, "Stable");
+                aps = new APS(schan, schani, stableInterface, "Stable");
                 aps.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(BettingCentreRun.class.getName()).log(Level.SEVERE, null, ex);

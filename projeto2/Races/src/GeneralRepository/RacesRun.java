@@ -1,6 +1,6 @@
 package GeneralRepository;
 
-import communication.Proxy.APS;
+import communication.stub.APS;
 import communication.ServerChannel;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -16,8 +16,8 @@ public class RacesRun {
     private static int SERVER_PORT;
     
     public static void main(String[] args) throws SocketException, SocketTimeoutException {
-        NodeSettsStub proxy = new NodeSettsStub(); 
-        SERVER_PORT = proxy.SERVER_PORTS().get("Races");
+        NodeSettsStub nodeSettsStub = new NodeSettsStub(); 
+        SERVER_PORT = nodeSettsStub.SERVER_PORTS().get("Races");
         
         // canais de comunicação
         ServerChannel schan, schani;

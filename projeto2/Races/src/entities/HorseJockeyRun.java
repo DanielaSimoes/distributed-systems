@@ -6,7 +6,7 @@ import shared.ControlCentreStub;
 import shared.StableStub;
 import GeneralRepository.RacesStub;
 import GeneralRepository.LogStub;
-import communication.Proxy.Stub;
+import communication.stub.Stub;
 import communication.message.Message;
 import communication.message.MessageType;
 import java.util.ArrayList;
@@ -16,25 +16,25 @@ import settings.NodeSettsStub;
  * @author Daniela Simões, 76771
  */
 public class HorseJockeyRun {
-    private static StableStub stable = new StableStub();
-    private static RacingTrackStub racingTrack = new RacingTrackStub();
-    private static PaddockStub paddock = new PaddockStub();
-    private static ControlCentreStub controlCentre = new ControlCentreStub();
-    private static RacesStub races = new RacesStub();
+    private static StableStub stableStub = new StableStub();
+    private static RacingTrackStub racingTrackStub = new RacingTrackStub();
+    private static PaddockStub paddockStub = new PaddockStub();
+    private static ControlCentreStub controlCentreStub = new ControlCentreStub();
+    private static RacesStub racesStub = new RacesStub();
     
     private static int N_OF_HORSES;
 
     public static void main(String [] args) {
-        LogStub log = new LogStub();
-        NodeSettsStub proxy = new NodeSettsStub(); 
+        LogStub logStub = new LogStub();
+        NodeSettsStub nodeSettsStub = new NodeSettsStub(); 
         
-        N_OF_HORSES = proxy.N_OF_HORSES();
+        N_OF_HORSES = nodeSettsStub.N_OF_HORSES();
         ArrayList<HorseJockey> horseJockey = new ArrayList<>(N_OF_HORSES);
 
         for(int i = 0; i < N_OF_HORSES; i++){
-            int stepSize = (int) (Math.random() * (proxy.HORSE_MAX_STEP_SIZE() - 1)) + 1;
-            races.setHorseJockeyStepSize(i, stepSize);
-            horseJockey.add(new HorseJockey((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IPaddock) paddock, (shared.IRacingTrack) racingTrack, stepSize, i, races, log));
+            int stepSize = (int) (Math.random() * (nodeSettsStub.HORSE_MAX_STEP_SIZE() - 1)) + 1;
+            racesStub.setHorseJockeyStepSize(i, stepSize);
+            horseJockey.add(new HorseJockey((shared.IStable) stableStub, (shared.IControlCentre) controlCentreStub, (shared.IPaddock) paddockStub, (shared.IRacingTrack) racingTrackStub, stepSize, i, racesStub, logStub));
         }
         
         for (HorseJockey horse : horseJockey)
@@ -48,8 +48,8 @@ public class HorseJockeyRun {
         }
                 
         /* SEND TO LOG THAT HORSEJOCKEY HAS FINISHED */
-        Stub.connect(proxy.SERVER_HOSTS().get("Log"), 
-                proxy.SERVER_PORTS().get("Log"), 
+        Stub.connect(nodeSettsStub.SERVER_HOSTS().get("Log"), 
+                nodeSettsStub.SERVER_PORTS().get("Log"), 
                 new Message(MessageType.TERMINATE));
         
     }

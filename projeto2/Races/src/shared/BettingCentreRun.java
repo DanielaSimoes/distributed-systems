@@ -4,7 +4,7 @@
 package shared;
 
 import GeneralRepository.RacesStub;
-import communication.Proxy.APS;
+import communication.stub.APS;
 import communication.ServerChannel;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -21,8 +21,8 @@ public class BettingCentreRun {
     private static int SERVER_PORT;
     
     public static void main(String[] args) throws SocketException {
-        NodeSettsStub proxy = new NodeSettsStub(); 
-        SERVER_PORT = proxy.SERVER_PORTS().get("BettingCentre");
+        NodeSettsStub nodeSettsStub = new NodeSettsStub(); 
+        SERVER_PORT = nodeSettsStub.SERVER_PORTS().get("BettingCentre");
         
         // canais de comunicação
         ServerChannel schan, schani;
@@ -36,9 +36,9 @@ public class BettingCentreRun {
         schan = new ServerChannel(SERVER_PORT);    
         schan.start();
         
-        RacesStub races = new RacesStub();
+        RacesStub racesStub = new RacesStub();
         
-        BettingCentreInterface bettingCentreServer = new BettingCentreInterface(races);
+        BettingCentreInterface bettingCentreInterface = new BettingCentreInterface(racesStub);
         System.out.println("Betting Centre service has started!\nServer is listening.");
 
         /* processamento de pedidos */
@@ -49,7 +49,7 @@ public class BettingCentreRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                aps = new APS(schan, schani, bettingCentreServer, "BettingCentre");
+                aps = new APS(schan, schani, bettingCentreInterface, "BettingCentre");
                 aps.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(BettingCentreRun.class.getName()).log(Level.SEVERE, null, ex);

@@ -1,30 +1,30 @@
 /*
- * This file contains a client proxy.
+ * This file contains a client stub.
  */
-package communication.Proxy;
+package communication.stub;
 
 import communication.message.Message;
 import communication.message.MessageWrapper;
 import settings.NodeSettsStub;
 
 /**
- * This class implements a client proxy.
+ * This class implements a client st7ub.
  * @author Daniela Simões, 76771
  */
 public class ClientStub {
     private final String SERVER_HOST;
     private final int SERVER_PORT;
-    private final String proxyName;
+    private final String stubName;
     
     /**
-    * Client Proxy constructor.
-    * @param proxyName    
+    * Client Stub constructor.
+    * @param stubName    
     */
-    public ClientStub(String proxyName){
-        NodeSettsStub proxy = new NodeSettsStub(); 
-        SERVER_HOST = proxy.SERVER_HOSTS().get(proxyName);
-        SERVER_PORT = proxy.SERVER_PORTS().get(proxyName);
-        this.proxyName = proxyName;
+    public ClientStub(String stubName){
+        NodeSettsStub nodeSettsStub = new NodeSettsStub(); 
+        SERVER_HOST = nodeSettsStub.SERVER_HOSTS().get(stubName);
+        SERVER_PORT = nodeSettsStub.SERVER_PORTS().get(stubName);
+        this.stubName = stubName;
     }
     
     /**

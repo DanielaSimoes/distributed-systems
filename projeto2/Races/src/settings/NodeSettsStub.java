@@ -3,14 +3,14 @@ package settings;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.message.MessageWrapper;
-import communication.Proxy.Stub;
+import communication.stub.Stub;
 import java.util.HashMap;
 
 /**
- * This file implements the proxy of the node settings.
+ * This file implements the stub of the node settings.
  * @author Daniela Simões, 76771
  */
-public class NodeSettsStub { /* doesn't extends ClientProxy because is the first to init */
+public class NodeSettsStub {
     private final String SERVER_HOST;
     private final int SERVER_PORT;
     

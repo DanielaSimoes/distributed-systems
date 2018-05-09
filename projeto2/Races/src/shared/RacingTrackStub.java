@@ -1,9 +1,9 @@
 /*
- * This file contains the racing track proxy.
+ * This file contains the racing track stub.
  */
 package shared;
 
-import communication.Proxy.ClientStub;
+import communication.stub.ClientStub;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.message.MessageWrapper;
@@ -13,13 +13,13 @@ import entities.HorseJockey;
 import entities.HorseJockeyState;
 
 /**
- * Class that implements racing track proxy.
+ * Class that implements racing track stub.
  * @author Daniela Simões, 76771
  */
 public class RacingTrackStub extends ClientStub implements IRacingTrack {
     
     /**
-    * Constructor to racing track proxy.
+    * Constructor to racing track stub.
     */
     public RacingTrackStub(){
         super("RacingTrack");
