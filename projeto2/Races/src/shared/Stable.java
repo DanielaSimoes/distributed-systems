@@ -1,6 +1,6 @@
 package shared;
 
-import GeneralRepository.RacesProxy;
+import GeneralRepository.RacesStub;
 import settings.NodeSetts;
 
 /**
@@ -11,9 +11,9 @@ public class Stable implements IStable {
     
     private boolean wakeEntertainTheGuests = false;
     
-    private final RacesProxy races;
+    private final RacesStub races;
     
-    public Stable(RacesProxy races){
+    public Stable(RacesStub races){
         this.races = races;
     }
      

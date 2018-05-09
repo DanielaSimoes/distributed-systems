@@ -3,13 +3,13 @@ package entities;
 import shared.PaddockStub;
 import shared.ControlCentreStub;
 import shared.BettingCentreStub;
-import GeneralRepository.RacesProxy;
-import GeneralRepository.LogProxy;
+import GeneralRepository.RacesStub;
+import GeneralRepository.LogStub;
 import communication.Proxy.Proxy;
 import communication.message.Message;
 import communication.message.MessageType;
 import java.util.ArrayList;
-import settings.NodeSettsProxy;
+import settings.NodeSettsStub;
 
 /**
  * This class implements the main of the entity spectator.
@@ -19,12 +19,12 @@ public class SpectatorsRun {
     private static PaddockStub paddock = new PaddockStub();
     private static ControlCentreStub controlCentre = new ControlCentreStub();
     private static BettingCentreStub bettingCentre = new BettingCentreStub();
-    private static RacesProxy races = new RacesProxy();
+    private static RacesStub races = new RacesStub();
     
     private static int N_OF_SPECTATORS;
 
     public static void main(String [] args) {
-        LogProxy log = new LogProxy();
+        LogStub log = new LogStub();
         
         /* init proxies */
         paddock = new PaddockStub();
@@ -32,7 +32,7 @@ public class SpectatorsRun {
         bettingCentre = new BettingCentreStub();
         /* end init proxies */
         
-        NodeSettsProxy proxy = new NodeSettsProxy(); 
+        NodeSettsStub proxy = new NodeSettsStub(); 
         N_OF_SPECTATORS = proxy.N_OF_SPECTATORS();
         
         ArrayList<Spectators> spectators = new ArrayList<>(N_OF_SPECTATORS);

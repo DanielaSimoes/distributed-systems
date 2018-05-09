@@ -1,8 +1,8 @@
 package entities;
 
 import GeneralRepository.Bet;
-import GeneralRepository.LogProxy;
-import GeneralRepository.RacesProxy;
+import GeneralRepository.LogStub;
+import GeneralRepository.RacesStub;
 import settings.NodeSetts;
 
 /**
@@ -14,7 +14,7 @@ public class Spectators extends Thread implements IEntity{
     private SpectatorsState state;
     private int moneyToBet;
     private int initialMoney;
-    private final RacesProxy races;
+    private final RacesStub races;
     
     /**
      *   Shared zones in which Spectators has actions
@@ -22,7 +22,7 @@ public class Spectators extends Thread implements IEntity{
     private final shared.IControlCentre cc;
     private final shared.IBettingCentre bc;
     private final shared.IPaddock paddock;
-    private final LogProxy log;
+    private final LogStub log;
     private final int id;
     private boolean relaxABit;
     private int raceId = 0;
@@ -37,7 +37,7 @@ public class Spectators extends Thread implements IEntity{
     * @param id The ID of the spectator.
      * @param log
     */
-    public Spectators(shared.IControlCentre cc, shared.IBettingCentre bc, shared.IPaddock paddock, int moneyToBet, int id, RacesProxy races, LogProxy log){
+    public Spectators(shared.IControlCentre cc, shared.IBettingCentre bc, shared.IPaddock paddock, int moneyToBet, int id, RacesStub races, LogStub log){
         this.id = id;
         this.cc = cc;
         this.bc = bc;

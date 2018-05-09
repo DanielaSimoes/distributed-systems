@@ -5,13 +5,13 @@ package communication.Proxy;
 
 import communication.message.Message;
 import communication.message.MessageWrapper;
-import settings.NodeSettsProxy;
+import settings.NodeSettsStub;
 
 /**
  * This class implements a client proxy.
  * @author Daniela Simões, 76771
  */
-public class ClientProxy {
+public class ClientStub {
     private final String SERVER_HOST;
     private final int SERVER_PORT;
     private final String proxyName;
@@ -20,8 +20,8 @@ public class ClientProxy {
     * Client Proxy constructor.
     * @param proxyName    
     */
-    public ClientProxy(String proxyName){
-        NodeSettsProxy proxy = new NodeSettsProxy(); 
+    public ClientStub(String proxyName){
+        NodeSettsStub proxy = new NodeSettsStub(); 
         SERVER_HOST = proxy.SERVER_HOSTS().get(proxyName);
         SERVER_PORT = proxy.SERVER_PORTS().get(proxyName);
         this.proxyName = proxyName;

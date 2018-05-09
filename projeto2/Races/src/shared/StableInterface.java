@@ -1,6 +1,6 @@
 package shared;
 
-import GeneralRepository.RacesProxy;
+import GeneralRepository.RacesStub;
 import communication.Proxy.ServerInterface;
 import communication.ServerChannel;
 import communication.message.Message;
@@ -9,20 +9,19 @@ import communication.message.MessageType;
 import java.net.SocketException;
 
 /**
- * This file implements the control centre server.
+ * This file implements the stable server.
  * @author Daniela Simões, 76771
  */
-public class ControlCentreServer extends ControlCentre implements ServerInterface {
-    
+public class StableInterface extends Stable implements ServerInterface{
     private boolean serverEnded;
     private String name;
     
-    public ControlCentreServer(RacesProxy races) {
+    public StableInterface(RacesStub races) {
         super(races);
-        this.name = "Control Centre Server";
+        this.name = "Stable Server";
         this.serverEnded = false;
     }
-    
+
     /**
     * Method to process and reply.
     * @throws communication.message.MessageException
@@ -34,23 +33,14 @@ public class ControlCentreServer extends ControlCentre implements ServerInterfac
             case TERMINATE:
                 this.serverEnded = true;
                 break;
-            case reportResults:
-                super.reportResults(inMessage.getInteger1());
+            case summonHorsesToPaddock:
+                super.summonHorsesToPaddock(inMessage.getInteger1());
                 break;
-            case proceedToPaddock:
-                super.proceedToPaddock(inMessage.getInteger1());
-                break;
-            case waitForNextRace:
-                super.waitForNextRace(inMessage.getInteger1());
-                break;
-            case goWatchTheRace:
-                super.goWatchTheRace(inMessage.getInteger1());
-                break;
-            case haveIWon:
-                boolean response = super.haveIWon(inMessage.getInteger1(), inMessage.getInteger2());
+            case proceedToStable:
+                int response = super.proceedToStable(inMessage.getInteger1(), inMessage.getInteger2(), inMessage.getInteger3());
                 return new Message(MessageType.ACK, response);
-            case relaxABit:
-                super.relaxABit();
+            case entertainTheGuests:
+                super.entertainTheGuests();
                 break;
         }
         

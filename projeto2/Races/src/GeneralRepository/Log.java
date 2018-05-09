@@ -17,7 +17,7 @@ import communication.message.Message;
 import communication.message.MessageType;
 import java.util.HashMap;
 import settings.NodeSetts;
-import settings.NodeSettsProxy;
+import settings.NodeSettsStub;
 
 /**
  * This file contains the code to generate a log file.
@@ -25,7 +25,7 @@ import settings.NodeSettsProxy;
  */
 public class Log implements ILog{
     
-    private final RacesProxy races = new RacesProxy();
+    private final RacesStub races = new RacesStub();
     
     /**
     * This will be a singleton
@@ -367,7 +367,7 @@ public class Log implements ILog{
     * @return 
     */
     private void sendTerminate(String serverName){
-        NodeSettsProxy proxy = new NodeSettsProxy(); 
+        NodeSettsStub proxy = new NodeSettsStub(); 
         
         Proxy.connect(proxy.SERVER_HOSTS().get(serverName), 
                 proxy.SERVER_PORTS().get(serverName), 

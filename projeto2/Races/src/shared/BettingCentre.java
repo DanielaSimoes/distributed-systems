@@ -1,7 +1,7 @@
 package shared;
 
 import GeneralRepository.Bet;
-import GeneralRepository.RacesProxy;
+import GeneralRepository.RacesStub;
 
 /**
  * This file contains the shared memory region Betting Centre.
@@ -9,9 +9,9 @@ import GeneralRepository.RacesProxy;
  */
 public class BettingCentre implements IBettingCentre {
     
-    private final RacesProxy races;
+    private final RacesStub races;
     
-    public BettingCentre(RacesProxy races){
+    public BettingCentre(RacesStub races){
         this.races = races;
     }
     

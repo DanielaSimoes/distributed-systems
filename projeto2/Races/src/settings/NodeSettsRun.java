@@ -31,7 +31,7 @@ public class NodeSettsRun {
 
         /* estabelecimento do servico */
         
-        NodeSettsServer nodeSettsServer = new NodeSettsServer(json_path);
+        NodeSettsInterface nodeSettsServer = new NodeSettsInterface(json_path);
         
         // criação do canal de escuta e sua associação
         schan = new ServerChannel(nodeSettsServer.SERVER_PORTS.get("NodeSetts"));    

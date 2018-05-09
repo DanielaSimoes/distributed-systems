@@ -1,6 +1,6 @@
 package GeneralRepository;
 
-import communication.Proxy.ClientProxy;
+import communication.Proxy.ClientStub;
 import communication.message.Message;
 import communication.message.MessageType;
 import entities.BrokerState;
@@ -11,12 +11,12 @@ import entities.SpectatorsState;
  * This class implements a log proxy.
  * @author Daniela Simões, 76771
  */
-public class LogProxy extends ClientProxy implements ILog{
+public class LogStub extends ClientStub implements ILog{
     
     /**
     * Constructor to log proxy.
     */
-    public LogProxy(){
+    public LogStub(){
         super("Log");
     }
     

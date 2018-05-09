@@ -6,7 +6,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import settings.NodeSettsProxy;
+import settings.NodeSettsStub;
 
 /**
  * This class implements the main of the races.
@@ -16,7 +16,7 @@ public class RacesRun {
     private static int SERVER_PORT;
     
     public static void main(String[] args) throws SocketException, SocketTimeoutException {
-        NodeSettsProxy proxy = new NodeSettsProxy(); 
+        NodeSettsStub proxy = new NodeSettsStub(); 
         SERVER_PORT = proxy.SERVER_PORTS().get("Races");
         
         // canais de comunicação
@@ -31,7 +31,7 @@ public class RacesRun {
         schan = new ServerChannel(SERVER_PORT);    
         schan.start();
         
-        RacesServer server = new RacesServer();
+        RacesInterface server = new RacesInterface();
         System.out.println("Races service has started!\nServer is listening.");
 
         /* processamento de pedidos */

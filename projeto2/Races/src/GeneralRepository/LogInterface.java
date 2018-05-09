@@ -1,6 +1,5 @@
-package shared;
+package GeneralRepository;
 
-import GeneralRepository.RacesProxy;
 import communication.Proxy.ServerInterface;
 import communication.ServerChannel;
 import communication.message.Message;
@@ -9,17 +8,17 @@ import communication.message.MessageType;
 import java.net.SocketException;
 
 /**
- * This file implements the paddock server.
+ * This file implememts the log server.
  * @author Daniela Simões, 76771
  */
-public class PaddockServer extends Paddock implements ServerInterface{
+public class LogInterface extends Log implements ServerInterface{
     
     private boolean serverEnded;
     private String name;
     
-    public PaddockServer(RacesProxy races) {
-        super(races);
-        this.name = "Paddock Server";
+    public LogInterface() {
+        super("");
+        this.name = "Log Server";
         this.serverEnded = false;
     }
 
@@ -32,19 +31,22 @@ public class PaddockServer extends Paddock implements ServerInterface{
     public Message processAndReply(Message inMessage, ServerChannel scon) throws MessageException, SocketException {
         switch(inMessage.getType()){
             case TERMINATE:
-                this.serverEnded = true;
+                this.serverEnded = super.terminateServers();
                 break;
-            case proceedToPaddock:
-                super.proceedToPaddock(inMessage.getInteger1());
+            case setSpectatorState:
+                super.setSpectatorState(inMessage.getInteger1(), inMessage.getSpectatorState(), inMessage.getInteger2());
                 break;
-            case proceedToStartLine:
-                super.proceedToStartLine(inMessage.getInteger1());
+            case setHorseJockeyState:
+                super.setHorseJockeyState(inMessage.getInteger1(), inMessage.getHorseJockeyState(), inMessage.getInteger2());
                 break;
-            case summonHorsesToPaddock:
-                super.summonHorsesToPaddock(inMessage.getInteger1());
+            case setBrokerState:
+                super.setBrokerState(inMessage.getBrokerState(), inMessage.getInteger1());
                 break;
-            case goCheckHorses:
-                super.goCheckHorses(inMessage.getInteger1());
+            case setSpectatorAmount:
+                super.setSpectatorAmount(inMessage.getInteger1(), inMessage.getInteger2());
+                break;
+            case makeAMove:
+                super.makeAMove(inMessage.getInteger1());
                 break;
         }
         
@@ -59,7 +61,7 @@ public class PaddockServer extends Paddock implements ServerInterface{
     public boolean serviceEnded() {
         return serverEnded;
     }
-    
+
     /**
     * Method to return the service name.
     * @return
@@ -68,4 +70,5 @@ public class PaddockServer extends Paddock implements ServerInterface{
     public String serviceName() {
         return this.name;
     }
+    
 }

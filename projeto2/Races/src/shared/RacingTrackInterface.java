@@ -1,6 +1,6 @@
 package shared;
 
-import GeneralRepository.RacesProxy;
+import GeneralRepository.RacesStub;
 import communication.Proxy.ServerInterface;
 import communication.ServerChannel;
 import communication.message.Message;
@@ -9,16 +9,17 @@ import communication.message.MessageType;
 import java.net.SocketException;
 
 /**
- * This file implements the stable server.
+ * This file contains the racing track server.
  * @author Daniela Simões, 76771
  */
-public class StableServer extends Stable implements ServerInterface{
+public class RacingTrackInterface extends RacingTrack implements ServerInterface{
+
     private boolean serverEnded;
     private String name;
     
-    public StableServer(RacesProxy races) {
+    public RacingTrackInterface(RacesStub races) {
         super(races);
-        this.name = "Stable Server";
+        this.name = "Racing Track Server";
         this.serverEnded = false;
     }
 
@@ -33,14 +34,17 @@ public class StableServer extends Stable implements ServerInterface{
             case TERMINATE:
                 this.serverEnded = true;
                 break;
-            case summonHorsesToPaddock:
-                super.summonHorsesToPaddock(inMessage.getInteger1());
+            case startTheRace:
+                super.startTheRace(inMessage.getInteger1());
                 break;
-            case proceedToStable:
-                int response = super.proceedToStable(inMessage.getInteger1(), inMessage.getInteger2(), inMessage.getInteger3());
+            case proceedToStartLine:
+                super.proceedToStartLine(inMessage.getInteger1(), inMessage.getInteger2());
+                break;
+            case hasFinishLineBeenCrossed:
+                boolean response = super.hasFinishLineBeenCrossed(inMessage.getInteger1(), inMessage.getInteger2());   
                 return new Message(MessageType.ACK, response);
-            case entertainTheGuests:
-                super.entertainTheGuests();
+            case makeAMove:
+                super.makeAMove(inMessage.getInteger1(), inMessage.getInteger2());
                 break;
         }
         

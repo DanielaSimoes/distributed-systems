@@ -1,16 +1,16 @@
 package entities;
 
-import shared.RacingTrackProxy;
+import shared.RacingTrackStub;
 import shared.PaddockStub;
 import shared.ControlCentreStub;
 import shared.BettingCentreStub;
-import shared.StableProxy;
-import GeneralRepository.RacesProxy;
-import GeneralRepository.LogProxy;
+import shared.StableStub;
+import GeneralRepository.RacesStub;
+import GeneralRepository.LogStub;
 import communication.Proxy.Proxy;
 import communication.message.Message;
 import communication.message.MessageType;
-import settings.NodeSettsProxy;
+import settings.NodeSettsStub;
 
 
 /**
@@ -19,18 +19,18 @@ import settings.NodeSettsProxy;
  */
 public class BrokerRun {
     
-    private static StableProxy stable = new StableProxy();
-    private static RacingTrackProxy racingTrack = new RacingTrackProxy();
+    private static StableStub stable = new StableStub();
+    private static RacingTrackStub racingTrack = new RacingTrackStub();
     private static PaddockStub paddock = new PaddockStub();
     private static ControlCentreStub controlCentre = new ControlCentreStub();
     private static BettingCentreStub bettingCentre = new BettingCentreStub();
-    private static RacesProxy races = new RacesProxy();
+    private static RacesStub races = new RacesStub();
     
     private static Broker broker;
     
     public static void main(String [] args) {  
-        LogProxy logProxy = new LogProxy();
-        NodeSettsProxy nodeSettsProxy = new NodeSettsProxy();
+        LogStub logProxy = new LogStub();
+        NodeSettsStub nodeSettsProxy = new NodeSettsStub();
         
         broker = new Broker((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IBettingCentre) bettingCentre, (shared.IRacingTrack) racingTrack, (shared.IPaddock) paddock, logProxy, races);
         

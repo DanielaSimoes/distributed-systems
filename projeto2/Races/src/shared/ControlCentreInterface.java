@@ -1,7 +1,6 @@
 package shared;
 
-import GeneralRepository.Bet;
-import GeneralRepository.RacesProxy;
+import GeneralRepository.RacesStub;
 import communication.Proxy.ServerInterface;
 import communication.ServerChannel;
 import communication.message.Message;
@@ -10,24 +9,20 @@ import communication.message.MessageType;
 import java.net.SocketException;
 
 /**
- * This class implements the server of betting centre.
+ * This file implements the control centre server.
  * @author Daniela Simões, 76771
  */
-public class BettingCentreServer extends BettingCentre implements ServerInterface {
+public class ControlCentreInterface extends ControlCentre implements ServerInterface {
     
     private boolean serverEnded;
-    private final String name;
+    private String name;
     
-    /**
-    * BettingCentreServer constructor.
-    * @param races
-    */
-    public BettingCentreServer(RacesProxy races) {
+    public ControlCentreInterface(RacesStub races) {
         super(races);
-        this.name = "Betting Centre Server";
+        this.name = "Control Centre Server";
         this.serverEnded = false;
     }
-
+    
     /**
     * Method to process and reply.
     * @throws communication.message.MessageException
@@ -39,29 +34,32 @@ public class BettingCentreServer extends BettingCentre implements ServerInterfac
             case TERMINATE:
                 this.serverEnded = true;
                 break;
-            case acceptTheBets:
-                super.acceptTheBets(inMessage.getInteger1());
+            case reportResults:
+                super.reportResults(inMessage.getInteger1());
                 break;
-            case honourTheBets:
-                super.honourTheBets(inMessage.getInteger1());
+            case proceedToPaddock:
+                super.proceedToPaddock(inMessage.getInteger1());
                 break;
-            case areThereAnyWinners:
-                boolean response = super.areThereAnyWinners(inMessage.getInteger1());
+            case waitForNextRace:
+                super.waitForNextRace(inMessage.getInteger1());
+                break;
+            case goWatchTheRace:
+                super.goWatchTheRace(inMessage.getInteger1());
+                break;
+            case haveIWon:
+                boolean response = super.haveIWon(inMessage.getInteger1(), inMessage.getInteger2());
                 return new Message(MessageType.ACK, response);
-            case placeABet:
-                Bet bet = super.placeABet(inMessage.getInteger1(), inMessage.getInteger2(), inMessage.getInteger3(), inMessage.getInteger4());
-                return new Message(MessageType.ACK, bet);
-            case goCollectTheGains:
-                int response_integer = super.goCollectTheGains(inMessage.getInteger1(), inMessage.getInteger2());
-                return new Message(MessageType.ACK, response_integer);
+            case relaxABit:
+                super.relaxABit();
+                break;
         }
         
         return new Message(MessageType.ACK);
     }
 
     /**
-    * Method to return the flag of the service ended.
-    * @return
+    * Method for return the service end flag
+    * @return 
     */
     @Override
     public boolean serviceEnded() {

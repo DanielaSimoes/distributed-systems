@@ -1,6 +1,6 @@
 package shared;
 
-import GeneralRepository.RacesProxy;
+import GeneralRepository.RacesStub;
 
 /**
  * This file contains the shared memory region Paddock.
@@ -8,9 +8,9 @@ import GeneralRepository.RacesProxy;
  */
 public class Paddock implements IPaddock {
     
-    private RacesProxy races;
+    private RacesStub races;
     
-    public Paddock(RacesProxy races){
+    public Paddock(RacesStub races){
         this.races = races;
     }
     

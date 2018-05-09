@@ -1,6 +1,6 @@
 package GeneralRepository;
 
-import communication.Proxy.ClientProxy;
+import communication.Proxy.ClientStub;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.message.MessageWrapper;
@@ -10,9 +10,9 @@ import java.util.LinkedList;
  * This file implements the proxy of Races.
  * @author Daniela Simões, 76771
  */
-public class RacesProxy extends ClientProxy implements IRaces{
+public class RacesStub extends ClientStub implements IRaces{
     
-    public RacesProxy(){
+    public RacesStub(){
         super("Races");
     }
     

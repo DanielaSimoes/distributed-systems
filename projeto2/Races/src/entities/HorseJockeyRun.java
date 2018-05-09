@@ -1,32 +1,32 @@
 package entities;
 
-import shared.RacingTrackProxy;
+import shared.RacingTrackStub;
 import shared.PaddockStub;
 import shared.ControlCentreStub;
-import shared.StableProxy;
-import GeneralRepository.RacesProxy;
-import GeneralRepository.LogProxy;
+import shared.StableStub;
+import GeneralRepository.RacesStub;
+import GeneralRepository.LogStub;
 import communication.Proxy.Proxy;
 import communication.message.Message;
 import communication.message.MessageType;
 import java.util.ArrayList;
-import settings.NodeSettsProxy;
+import settings.NodeSettsStub;
 /**
  * This class implements the main of the entity horse jockey.
  * @author Daniela Simões, 76771
  */
 public class HorseJockeyRun {
-    private static StableProxy stable = new StableProxy();
-    private static RacingTrackProxy racingTrack = new RacingTrackProxy();
+    private static StableStub stable = new StableStub();
+    private static RacingTrackStub racingTrack = new RacingTrackStub();
     private static PaddockStub paddock = new PaddockStub();
     private static ControlCentreStub controlCentre = new ControlCentreStub();
-    private static RacesProxy races = new RacesProxy();
+    private static RacesStub races = new RacesStub();
     
     private static int N_OF_HORSES;
 
     public static void main(String [] args) {
-        LogProxy log = new LogProxy();
-        NodeSettsProxy proxy = new NodeSettsProxy(); 
+        LogStub log = new LogStub();
+        NodeSettsStub proxy = new NodeSettsStub(); 
         
         N_OF_HORSES = proxy.N_OF_HORSES();
         ArrayList<HorseJockey> horseJockey = new ArrayList<>(N_OF_HORSES);

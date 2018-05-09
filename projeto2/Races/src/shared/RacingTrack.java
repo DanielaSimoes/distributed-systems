@@ -1,6 +1,6 @@
 package shared;
 
-import GeneralRepository.RacesProxy;
+import GeneralRepository.RacesStub;
 
 /**
  * This file contains the shared memory region Racing Track.
@@ -8,9 +8,9 @@ import GeneralRepository.RacesProxy;
  */
 public class RacingTrack implements IRacingTrack {
     
-    private final RacesProxy races;
+    private final RacesStub races;
     
-    public RacingTrack(RacesProxy races){
+    public RacingTrack(RacesStub races){
         this.races = races;
     }
     

@@ -7,7 +7,7 @@ import communication.ClientChannel;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.message.MessageWrapper;
-import GeneralRepository.LogProxy;
+import GeneralRepository.LogStub;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,7 +52,7 @@ public class Proxy extends Thread {
         try {
             cp.join(); 
         } catch (InterruptedException ex) {
-            Logger.getLogger(LogProxy.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LogStub.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         if (result.getMessage().getType() != MessageType.ACK) {

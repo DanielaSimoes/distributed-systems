@@ -1,6 +1,6 @@
 package shared;
 
-import GeneralRepository.RacesProxy;
+import GeneralRepository.RacesStub;
 import communication.Proxy.ServerInterface;
 import communication.ServerChannel;
 import communication.message.Message;
@@ -9,17 +9,17 @@ import communication.message.MessageType;
 import java.net.SocketException;
 
 /**
- * This file contains the racing track server.
+ * This file implements the paddock server.
  * @author Daniela Simões, 76771
  */
-public class RacingTrackServer extends RacingTrack implements ServerInterface{
-
+public class PaddockInterface extends Paddock implements ServerInterface{
+    
     private boolean serverEnded;
     private String name;
     
-    public RacingTrackServer(RacesProxy races) {
+    public PaddockInterface(RacesStub races) {
         super(races);
-        this.name = "Racing Track Server";
+        this.name = "Paddock Server";
         this.serverEnded = false;
     }
 
@@ -34,17 +34,17 @@ public class RacingTrackServer extends RacingTrack implements ServerInterface{
             case TERMINATE:
                 this.serverEnded = true;
                 break;
-            case startTheRace:
-                super.startTheRace(inMessage.getInteger1());
+            case proceedToPaddock:
+                super.proceedToPaddock(inMessage.getInteger1());
                 break;
             case proceedToStartLine:
-                super.proceedToStartLine(inMessage.getInteger1(), inMessage.getInteger2());
+                super.proceedToStartLine(inMessage.getInteger1());
                 break;
-            case hasFinishLineBeenCrossed:
-                boolean response = super.hasFinishLineBeenCrossed(inMessage.getInteger1(), inMessage.getInteger2());   
-                return new Message(MessageType.ACK, response);
-            case makeAMove:
-                super.makeAMove(inMessage.getInteger1(), inMessage.getInteger2());
+            case summonHorsesToPaddock:
+                super.summonHorsesToPaddock(inMessage.getInteger1());
+                break;
+            case goCheckHorses:
+                super.goCheckHorses(inMessage.getInteger1());
                 break;
         }
         

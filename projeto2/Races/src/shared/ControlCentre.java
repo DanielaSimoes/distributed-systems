@@ -1,6 +1,6 @@
 package shared;
 
-import GeneralRepository.RacesProxy;
+import GeneralRepository.RacesStub;
 
 /**
  * This file contains the shared memory region Control Centre.
@@ -8,9 +8,9 @@ import GeneralRepository.RacesProxy;
  */
 public class ControlCentre implements IControlCentre {
     
-    private final RacesProxy races;
+    private final RacesStub races;
     
-    public ControlCentre(RacesProxy races){
+    public ControlCentre(RacesStub races){
         this.races = races;
     }
     

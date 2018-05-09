@@ -1,13 +1,13 @@
 package shared;
 
-import GeneralRepository.RacesProxy;
+import GeneralRepository.RacesStub;
 import communication.Proxy.ServerProxy;
 import communication.ServerChannel;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import settings.NodeSettsProxy;
+import settings.NodeSettsStub;
 
 /**
  * This class implements the main of control centre.
@@ -17,7 +17,7 @@ public class ControlCentreRun {
     private static int SERVER_PORT;
     
     public static void main(String[] args) throws SocketException {
-        NodeSettsProxy proxy = new NodeSettsProxy(); 
+        NodeSettsStub proxy = new NodeSettsStub(); 
         SERVER_PORT = proxy.SERVER_PORTS().get("ControlCentre");
         
         // canais de comunicação
@@ -32,9 +32,9 @@ public class ControlCentreRun {
         schan = new ServerChannel(SERVER_PORT);    
         schan.start();
         
-        RacesProxy races = new RacesProxy();
+        RacesStub races = new RacesStub();
         
-        ControlCentreServer controlCentreServer = new ControlCentreServer(races);
+        ControlCentreInterface controlCentreServer = new ControlCentreInterface(races);
         System.out.println("Control Centre service has started!\nServer is listening.");
 
         /* processamento de pedidos */

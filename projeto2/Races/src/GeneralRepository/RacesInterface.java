@@ -12,7 +12,7 @@ import java.util.LinkedList;
  * This class implements the races server.
  * @author Daniela Simões, 76771
  */
-public class RacesServer extends Races implements ServerInterface{
+public class RacesInterface extends Races implements ServerInterface{
     
     private boolean serverEnded;
     private Bet response_bet;
@@ -25,7 +25,7 @@ public class RacesServer extends Races implements ServerInterface{
     /**
     * Constructor of races server.
     */
-    public RacesServer() {
+    public RacesInterface() {
         super();
         this.name = "Races Server";
         this.serverEnded = false;

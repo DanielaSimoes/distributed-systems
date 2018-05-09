@@ -3,7 +3,7 @@
  */
 package shared;
 
-import communication.Proxy.ClientProxy;
+import communication.Proxy.ClientStub;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.message.MessageWrapper;
@@ -16,12 +16,12 @@ import entities.HorseJockeyState;
  * Class that implements stable proxy.
  * @author Daniela Simões, 76771
  */
-public class StableProxy extends ClientProxy implements IStable {
+public class StableStub extends ClientStub implements IStable {
     
     /**
     * Constructor to stable proxy.
     */
-    public StableProxy(){
+    public StableStub(){
         super("Stable");
     }
     

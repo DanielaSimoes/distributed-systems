@@ -10,11 +10,11 @@ import java.util.HashMap;
  * This file implements the proxy of the node settings.
  * @author Daniela Simões, 76771
  */
-public class NodeSettsProxy { /* doesn't extends ClientProxy because is the first to init */
+public class NodeSettsStub { /* doesn't extends ClientProxy because is the first to init */
     private final String SERVER_HOST;
     private final int SERVER_PORT;
     
-    public NodeSettsProxy(){
+    public NodeSettsStub(){
         String json_path = "hosts.json";
         
         if(NodeSetts.DEBUG){

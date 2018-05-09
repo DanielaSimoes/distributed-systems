@@ -3,14 +3,14 @@
  */
 package shared;
 
-import GeneralRepository.RacesProxy;
+import GeneralRepository.RacesStub;
 import communication.Proxy.ServerProxy;
 import communication.ServerChannel;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import settings.NodeSettsProxy;
+import settings.NodeSettsStub;
 
 /**
  * This class implements the main of betting centre.
@@ -21,7 +21,7 @@ public class BettingCentreRun {
     private static int SERVER_PORT;
     
     public static void main(String[] args) throws SocketException {
-        NodeSettsProxy proxy = new NodeSettsProxy(); 
+        NodeSettsStub proxy = new NodeSettsStub(); 
         SERVER_PORT = proxy.SERVER_PORTS().get("BettingCentre");
         
         // canais de comunicação
@@ -36,9 +36,9 @@ public class BettingCentreRun {
         schan = new ServerChannel(SERVER_PORT);    
         schan.start();
         
-        RacesProxy races = new RacesProxy();
+        RacesStub races = new RacesStub();
         
-        BettingCentreServer bettingCentreServer = new BettingCentreServer(races);
+        BettingCentreInterface bettingCentreServer = new BettingCentreInterface(races);
         System.out.println("Betting Centre service has started!\nServer is listening.");
 
         /* processamento de pedidos */

@@ -3,7 +3,7 @@
  */
 package shared;
 
-import communication.Proxy.ClientProxy;
+import communication.Proxy.ClientStub;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.message.MessageWrapper;
@@ -16,12 +16,12 @@ import entities.HorseJockeyState;
  * Class that implements racing track proxy.
  * @author Daniela Simões, 76771
  */
-public class RacingTrackProxy extends ClientProxy implements IRacingTrack {
+public class RacingTrackStub extends ClientStub implements IRacingTrack {
     
     /**
     * Constructor to racing track proxy.
     */
-    public RacingTrackProxy(){
+    public RacingTrackStub(){
         super("RacingTrack");
     }
     

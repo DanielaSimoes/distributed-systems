@@ -11,7 +11,7 @@ import java.net.SocketException;
  *
  * @author Daniela
  */
-public class NodeSettsServer extends NodeSetts implements ServerInterface{
+public class NodeSettsInterface extends NodeSetts implements ServerInterface{
     private boolean serverEnded;
     private String name;
     
@@ -19,7 +19,7 @@ public class NodeSettsServer extends NodeSetts implements ServerInterface{
      * Constructor of node settings server.
      * @param jsonfilepath
      */
-    public NodeSettsServer(String jsonfilepath) {
+    public NodeSettsInterface(String jsonfilepath) {
         super(jsonfilepath);
         this.name = "Node Setts Server";
         this.serverEnded = false;

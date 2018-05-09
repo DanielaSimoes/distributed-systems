@@ -4,7 +4,7 @@
 package shared;
 
 import GeneralRepository.Bet;
-import communication.Proxy.ClientProxy;
+import communication.Proxy.ClientStub;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.message.MessageWrapper;
@@ -17,7 +17,7 @@ import entities.SpectatorsState;
  * Class that implements betting centre proxy.
  * @author Daniela Simões, 76771
  */
-public class BettingCentreStub extends ClientProxy implements IBettingCentre{
+public class BettingCentreStub extends ClientStub implements IBettingCentre{
     
     /**
     * Constructor to betting centre proxy.

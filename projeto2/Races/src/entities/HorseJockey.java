@@ -1,8 +1,8 @@
 package entities;
 
-import GeneralRepository.RacesProxy;
+import GeneralRepository.RacesStub;
 import settings.NodeSetts;
-import GeneralRepository.LogProxy;
+import GeneralRepository.LogStub;
 
 /**
  * This file contains the code that represents the HorseJockey lifecycle.
@@ -20,9 +20,9 @@ public class HorseJockey extends Thread implements IEntity{
     private final shared.IControlCentre cc;
     private final shared.IPaddock paddock;
     private final shared.IRacingTrack rt;
-    private final LogProxy log;
+    private final LogStub log;
     private boolean entertainTheGuests;
-    private RacesProxy races;
+    private RacesStub races;
     private int raceId = 0;
     private final int stepSize;
     
@@ -37,7 +37,7 @@ public class HorseJockey extends Thread implements IEntity{
     * @param stepSize The step size of the horse.
     * @param id The ID of the horse.
     */
-    public HorseJockey(shared.IStable s, shared.IControlCentre cc, shared.IPaddock paddock, shared.IRacingTrack rt, int stepSize, int id, GeneralRepository.RacesProxy races, LogProxy log){
+    public HorseJockey(shared.IStable s, shared.IControlCentre cc, shared.IPaddock paddock, shared.IRacingTrack rt, int stepSize, int id, GeneralRepository.RacesStub races, LogStub log){
         this.stable = s;
         this.cc = cc;
         this.paddock = paddock;

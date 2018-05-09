@@ -5,7 +5,7 @@ package shared;
 
 import communication.message.Message;
 import communication.message.MessageType;
-import communication.Proxy.ClientProxy;
+import communication.Proxy.ClientStub;
 import entities.Broker;
 import entities.BrokerState;
 import entities.HorseJockey;
@@ -18,7 +18,7 @@ import entities.SpectatorsState;
  * This class implements the paddock proxy.
  * @author Daniela Simões, 76771
  */
-public class PaddockStub extends ClientProxy implements IPaddock {
+public class PaddockStub extends ClientStub implements IPaddock {
 
     /**
     * Constructor to paddock proxy.

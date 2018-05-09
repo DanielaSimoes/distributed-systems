@@ -1,8 +1,8 @@
 package entities;
 
-import GeneralRepository.RacesProxy;
+import GeneralRepository.RacesStub;
 import settings.NodeSetts;
-import GeneralRepository.LogProxy;
+import GeneralRepository.LogStub;
 
 /**
  * This file contains the code that represents the broker lifecycle.
@@ -23,9 +23,9 @@ public class Broker extends Thread implements IEntity{
     private final shared.IBettingCentre bc;
     private final shared.IRacingTrack rt;
     private final shared.IPaddock paddock;
-    private final LogProxy log;
+    private final LogStub log;
     private boolean entertainTheGuests = false;
-    private final RacesProxy races;
+    private final RacesStub races;
     private int raceId = 0;
     
     /**
@@ -37,7 +37,7 @@ public class Broker extends Thread implements IEntity{
     * @param paddock The Paddock is a shared memory region where the broker will perform actions.
      * @param log Log
     */
-    public Broker(shared.IStable s, shared.IControlCentre cc, shared.IBettingCentre bc, shared.IRacingTrack rt, shared.IPaddock paddock, LogProxy log, RacesProxy races){
+    public Broker(shared.IStable s, shared.IControlCentre cc, shared.IBettingCentre bc, shared.IRacingTrack rt, shared.IPaddock paddock, LogStub log, RacesStub races){
         this.stable = s;
         this.cc = cc;
         this.bc = bc;
