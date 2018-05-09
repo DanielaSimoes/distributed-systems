@@ -18,12 +18,12 @@ import entities.SpectatorsState;
  * Class that implements control centre proxy.
  * @author Daniela Simões, 76771
  */
-public class ControlCentreProxy extends ClientProxy implements IControlCentre{
+public class ControlCentreStub extends ClientProxy implements IControlCentre{
     
     /**
     * Constructor to control centre proxy.
     */
-    public ControlCentreProxy(){
+    public ControlCentreStub(){
         super("ControlCentre");
     }
     

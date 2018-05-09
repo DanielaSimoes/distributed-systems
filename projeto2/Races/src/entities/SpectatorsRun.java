@@ -1,7 +1,7 @@
 package entities;
 
 import shared.PaddockProxy;
-import shared.ControlCentreProxy;
+import shared.ControlCentreStub;
 import shared.BettingCentreStub;
 import GeneralRepository.RacesProxy;
 import GeneralRepository.LogProxy;
@@ -17,7 +17,7 @@ import settings.NodeSettsProxy;
  */
 public class SpectatorsRun {
     private static PaddockProxy paddock = new PaddockProxy();
-    private static ControlCentreProxy controlCentre = new ControlCentreProxy();
+    private static ControlCentreStub controlCentre = new ControlCentreStub();
     private static BettingCentreStub bettingCentre = new BettingCentreStub();
     private static RacesProxy races = new RacesProxy();
     
@@ -28,7 +28,7 @@ public class SpectatorsRun {
         
         /* init proxies */
         paddock = new PaddockProxy();
-        controlCentre = new ControlCentreProxy();
+        controlCentre = new ControlCentreStub();
         bettingCentre = new BettingCentreStub();
         /* end init proxies */
         

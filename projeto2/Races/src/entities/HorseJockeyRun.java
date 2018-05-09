@@ -2,7 +2,7 @@ package entities;
 
 import shared.RacingTrackProxy;
 import shared.PaddockProxy;
-import shared.ControlCentreProxy;
+import shared.ControlCentreStub;
 import shared.StableProxy;
 import GeneralRepository.RacesProxy;
 import GeneralRepository.LogProxy;
@@ -19,7 +19,7 @@ public class HorseJockeyRun {
     private static StableProxy stable = new StableProxy();
     private static RacingTrackProxy racingTrack = new RacingTrackProxy();
     private static PaddockProxy paddock = new PaddockProxy();
-    private static ControlCentreProxy controlCentre = new ControlCentreProxy();
+    private static ControlCentreStub controlCentre = new ControlCentreStub();
     private static RacesProxy races = new RacesProxy();
     
     private static int N_OF_HORSES;
