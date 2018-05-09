@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * Class that implements the server proxy.
  * @author Daniela Simões, 76771
  */
-public class APC extends Thread{
+public class APS extends Thread{
     
     private static int nProxy;
     private final ServerChannel sconi;
@@ -30,7 +30,7 @@ public class APC extends Thread{
      * @param sInterface
      * @param name
      */
-    public APC(ServerChannel scon, ServerChannel sconi, ServerInterface sInterface, String name) {
+    public APS(ServerChannel scon, ServerChannel sconi, ServerInterface sInterface, String name) {
         super(name);
 
         this.sconi = sconi;
@@ -55,7 +55,7 @@ public class APC extends Thread{
             System.out.println(e.getMessageObject().toString());
             System.exit(1);
         } catch (SocketException ex) {
-            Logger.getLogger(APC.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(APS.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         sconi.writeObject(response);                                // enviar resposta ao cliente

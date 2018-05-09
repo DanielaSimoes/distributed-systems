@@ -36,6 +36,7 @@ public class HorseJockey extends Thread implements IEntity{
      * @param races
     * @param stepSize The step size of the horse.
     * @param id The ID of the horse.
+     * @param log
     */
     public HorseJockey(shared.IStable s, shared.IControlCentre cc, shared.IPaddock paddock, shared.IRacingTrack rt, int stepSize, int id, GeneralRepository.RacesStub races, LogStub log){
         this.stable = s;
@@ -48,9 +49,6 @@ public class HorseJockey extends Thread implements IEntity{
         this.setName("HorseJockey " + id);
         this.entertainTheGuests = false;
         this.races = races;
-        
-        this.races.setHorseJockeyStepSize(id, stepSize);
-        
         this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
     }
     

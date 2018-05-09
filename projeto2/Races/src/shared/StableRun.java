@@ -1,7 +1,7 @@
 package shared;
 
 import GeneralRepository.RacesStub;
-import communication.Proxy.APC;
+import communication.Proxy.APS;
 import communication.ServerChannel;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -24,7 +24,7 @@ public class StableRun {
         ServerChannel schan, schani;
         
         // thread agente prestador do serviço
-        APC apc;                               
+        APS aps;                               
 
         /* estabelecimento do servico */
         
@@ -45,8 +45,8 @@ public class StableRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                apc = new APC(schan, schani, stableServer, "Stable");
-                apc.start();
+                aps = new APS(schan, schani, stableServer, "Stable");
+                aps.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(BettingCentreRun.class.getName()).log(Level.SEVERE, null, ex);
             }

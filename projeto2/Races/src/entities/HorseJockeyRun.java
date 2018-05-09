@@ -32,7 +32,9 @@ public class HorseJockeyRun {
         ArrayList<HorseJockey> horseJockey = new ArrayList<>(N_OF_HORSES);
 
         for(int i = 0; i < N_OF_HORSES; i++){
-            horseJockey.add(new HorseJockey((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IPaddock) paddock, (shared.IRacingTrack) racingTrack, (int) (Math.random() * (proxy.HORSE_MAX_STEP_SIZE() - 1)) + 1, i, races, log));
+            int stepSize = (int) (Math.random() * (proxy.HORSE_MAX_STEP_SIZE() - 1)) + 1;
+            races.setHorseJockeyStepSize(i, stepSize);
+            horseJockey.add(new HorseJockey((shared.IStable) stable, (shared.IControlCentre) controlCentre, (shared.IPaddock) paddock, (shared.IRacingTrack) racingTrack, stepSize, i, races, log));
         }
         
         for (HorseJockey horse : horseJockey)

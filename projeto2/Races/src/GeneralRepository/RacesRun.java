@@ -1,6 +1,6 @@
 package GeneralRepository;
 
-import communication.Proxy.APC;
+import communication.Proxy.APS;
 import communication.ServerChannel;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -23,7 +23,7 @@ public class RacesRun {
         ServerChannel schan, schani;
         
         // thread agente prestador do serviço
-        APC apc;                               
+        APS aps;                               
 
         /* estabelecimento do servico */
         
@@ -42,8 +42,8 @@ public class RacesRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                apc = new APC(schan, schani, server, "Races");
-                apc.start();
+                aps = new APS(schan, schani, server, "Races");
+                aps.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(LogRun.class.getName()).log(Level.SEVERE, null, ex);
             }

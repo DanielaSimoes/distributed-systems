@@ -97,8 +97,6 @@ def number_processes():
 
 
 def run():
-    os.system("cp dist/Races.jar Races.jar")
-
     jars_hosts = sorted(jars, key=lambda jar_host: jar_host["order"])
 
     # run in parallel
@@ -119,7 +117,9 @@ def run():
 
 
 if __name__ == '__main__':
-    N_RUNS = 1
+    os.system("cp dist/Races.jar Races.jar")
+
+    N_RUNS = 10
 
     try:
         for i in range(0, N_RUNS):

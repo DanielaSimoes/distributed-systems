@@ -1,7 +1,7 @@
 package shared;
 
 import GeneralRepository.RacesStub;
-import communication.Proxy.APC;
+import communication.Proxy.APS;
 import communication.ServerChannel;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -24,7 +24,7 @@ public class RacingTrackRun {
         ServerChannel schan, schani;
         
         // thread agente prestador do serviço
-        APC apc;                               
+        APS aps;                               
 
         /* estabelecimento do servico */
         
@@ -45,8 +45,8 @@ public class RacingTrackRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                apc = new APC(schan, schani, racingTrackServer, "RacingTrack");
-                apc.start();
+                aps = new APS(schan, schani, racingTrackServer, "RacingTrack");
+                aps.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(BettingCentreRun.class.getName()).log(Level.SEVERE, null, ex);
             }

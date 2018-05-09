@@ -1,7 +1,7 @@
 package settings;
 
 import communication.ServerChannel;
-import communication.Proxy.APC;
+import communication.Proxy.APS;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.logging.Level;
@@ -27,7 +27,7 @@ public class NodeSettsRun {
         ServerChannel schan, schani;
         
         // thread agente prestador do serviço
-        APC apc;                               
+        APS aps;                               
 
         /* estabelecimento do servico */
         
@@ -47,8 +47,8 @@ public class NodeSettsRun {
                 // entrada em processo de escuta
                 schani = schan.accept();
                 // lançamento do agente prestador do serviço
-                apc = new APC(schan, schani, nodeSettsServer, "NodeSetts");
-                apc.start();
+                aps = new APS(schan, schani, nodeSettsServer, "NodeSetts");
+                aps.start();
             } catch (SocketTimeoutException ex) {
                 Logger.getLogger(NodeSettsRun.class.getName()).log(Level.SEVERE, null, ex);
             }
