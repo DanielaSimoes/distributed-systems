@@ -18,12 +18,12 @@ import entities.SpectatorsState;
  * This class implements the paddock proxy.
  * @author Daniela Simões, 76771
  */
-public class PaddockProxy extends ClientProxy implements IPaddock {
+public class PaddockStub extends ClientProxy implements IPaddock {
 
     /**
     * Constructor to paddock proxy.
     */
-    public PaddockProxy(){
+    public PaddockStub(){
         super("Paddock");
     }
     

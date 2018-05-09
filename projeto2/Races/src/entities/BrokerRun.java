@@ -1,7 +1,7 @@
 package entities;
 
 import shared.RacingTrackProxy;
-import shared.PaddockProxy;
+import shared.PaddockStub;
 import shared.ControlCentreStub;
 import shared.BettingCentreStub;
 import shared.StableProxy;
@@ -21,7 +21,7 @@ public class BrokerRun {
     
     private static StableProxy stable = new StableProxy();
     private static RacingTrackProxy racingTrack = new RacingTrackProxy();
-    private static PaddockProxy paddock = new PaddockProxy();
+    private static PaddockStub paddock = new PaddockStub();
     private static ControlCentreStub controlCentre = new ControlCentreStub();
     private static BettingCentreStub bettingCentre = new BettingCentreStub();
     private static RacesProxy races = new RacesProxy();

@@ -1,7 +1,7 @@
 package entities;
 
 import shared.RacingTrackProxy;
-import shared.PaddockProxy;
+import shared.PaddockStub;
 import shared.ControlCentreStub;
 import shared.StableProxy;
 import GeneralRepository.RacesProxy;
@@ -18,7 +18,7 @@ import settings.NodeSettsProxy;
 public class HorseJockeyRun {
     private static StableProxy stable = new StableProxy();
     private static RacingTrackProxy racingTrack = new RacingTrackProxy();
-    private static PaddockProxy paddock = new PaddockProxy();
+    private static PaddockStub paddock = new PaddockStub();
     private static ControlCentreStub controlCentre = new ControlCentreStub();
     private static RacesProxy races = new RacesProxy();
     
