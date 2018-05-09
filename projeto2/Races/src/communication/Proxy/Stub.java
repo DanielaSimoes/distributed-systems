@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 * Class that implements a proxy.
 * @author Daniela Simões, 76771
 */
-public class Proxy extends Thread {
+public class Stub extends Thread {
     private final String clientProxyServerName;
     private final int toServerPort;
     private final Message outMessage;
@@ -28,7 +28,7 @@ public class Proxy extends Thread {
     * @param result
     * @param outMessage
     */
-    public Proxy(String clientProxyServerName, int toServerPort, MessageWrapper result, Message outMessage){
+    public Stub(String clientProxyServerName, int toServerPort, MessageWrapper result, Message outMessage){
         this.clientProxyServerName = clientProxyServerName;
         this.toServerPort = toServerPort;
         this.outMessage = outMessage;
@@ -45,7 +45,7 @@ public class Proxy extends Thread {
     public static MessageWrapper connect(String logServerName, int logServerPort, Message m){
         MessageWrapper result = new MessageWrapper();
         
-        Proxy cp = new Proxy(logServerName, logServerPort, result, m);
+        Stub cp = new Stub(logServerName, logServerPort, result, m);
         
         cp.start();
         
@@ -87,7 +87,7 @@ public class Proxy extends Thread {
             
             
         } catch (Exception ex) {
-            Logger.getLogger(Proxy.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Stub.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

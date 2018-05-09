@@ -5,7 +5,7 @@ import shared.ControlCentreStub;
 import shared.BettingCentreStub;
 import GeneralRepository.RacesStub;
 import GeneralRepository.LogStub;
-import communication.Proxy.Proxy;
+import communication.Proxy.Stub;
 import communication.message.Message;
 import communication.message.MessageType;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class SpectatorsRun {
         }
                 
         /* SEND TO LOG THAT SPECTATOR HAS FINISHED */
-        Proxy.connect(proxy.SERVER_HOSTS().get("Log"), 
+        Stub.connect(proxy.SERVER_HOSTS().get("Log"), 
                 proxy.SERVER_PORTS().get("Log"), 
                 new Message(MessageType.TERMINATE));
         

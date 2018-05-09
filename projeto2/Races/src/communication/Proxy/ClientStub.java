@@ -33,6 +33,6 @@ public class ClientStub {
     * @return 
     */
     public MessageWrapper communicate(Message m){
-        return Proxy.connect(SERVER_HOST,  SERVER_PORT, m);
+        return Stub.connect(SERVER_HOST,  SERVER_PORT, m);
     }
 }

@@ -12,7 +12,7 @@ import entities.SpectatorsState;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.sun.javafx.binding.Logging;
-import communication.Proxy.Proxy;
+import communication.Proxy.Stub;
 import communication.message.Message;
 import communication.message.MessageType;
 import java.util.HashMap;
@@ -369,7 +369,7 @@ public class Log implements ILog{
     private void sendTerminate(String serverName){
         NodeSettsStub proxy = new NodeSettsStub(); 
         
-        Proxy.connect(proxy.SERVER_HOSTS().get(serverName), 
+        Stub.connect(proxy.SERVER_HOSTS().get(serverName), 
                 proxy.SERVER_PORTS().get(serverName), 
                 new Message(MessageType.TERMINATE));
     }

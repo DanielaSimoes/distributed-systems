@@ -7,7 +7,7 @@ import shared.BettingCentreStub;
 import shared.StableStub;
 import GeneralRepository.RacesStub;
 import GeneralRepository.LogStub;
-import communication.Proxy.Proxy;
+import communication.Proxy.Stub;
 import communication.message.Message;
 import communication.message.MessageType;
 import settings.NodeSettsStub;
@@ -45,7 +45,7 @@ public class BrokerRun {
         }
         
         /* SEND TO LOG THAT BROKER HAS FINISHED */
-        Proxy.connect(nodeSettsProxy.SERVER_HOSTS().get("Log"), 
+        Stub.connect(nodeSettsProxy.SERVER_HOSTS().get("Log"), 
         nodeSettsProxy.SERVER_PORTS().get("Log"), 
         new Message(MessageType.TERMINATE));
     }

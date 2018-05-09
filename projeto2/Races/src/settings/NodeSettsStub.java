@@ -3,7 +3,7 @@ package settings;
 import communication.message.Message;
 import communication.message.MessageType;
 import communication.message.MessageWrapper;
-import communication.Proxy.Proxy;
+import communication.Proxy.Stub;
 import java.util.HashMap;
 
 /**
@@ -31,7 +31,7 @@ public class NodeSettsStub { /* doesn't extends ClientProxy because is the first
     * Method to communicate with the Node Setts server.
     */
     private MessageWrapper communicate(Message m){
-        return Proxy.connect(SERVER_HOST,  SERVER_PORT, m);
+        return Stub.connect(SERVER_HOST,  SERVER_PORT, m);
     }
     
     /**

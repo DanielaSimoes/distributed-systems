@@ -18,7 +18,7 @@ public class NodeSetts {
     protected HashMap<String, Integer> SERVER_PORTS;
     protected HashMap<String, String> SERVER_HOSTS;
     
-    protected static boolean DEBUG = false;
+    protected static boolean DEBUG;
     
     /**
      * Number of races.
@@ -89,5 +89,13 @@ public class NodeSetts {
         SERVER_PORTS.put("Races", 22446);
         SERVER_PORTS.put("NodeSetts", 22447);
         
+    }
+    
+    static{
+        try{
+            DEBUG = System.getenv("DEBUG").equals("true") || System.getenv("DEBUG").equals("True");
+        }catch(java.lang.NullPointerException e){
+            DEBUG = false;
+        }
     }
 }
