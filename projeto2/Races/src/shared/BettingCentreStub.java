@@ -17,12 +17,12 @@ import entities.SpectatorsState;
  * Class that implements betting centre proxy.
  * @author Daniela Simões, 76771
  */
-public class BettingCentreProxy extends ClientProxy implements IBettingCentre{
+public class BettingCentreStub extends ClientProxy implements IBettingCentre{
     
     /**
     * Constructor to betting centre proxy.
     */
-    public BettingCentreProxy(){
+    public BettingCentreStub(){
         super("BettingCentre");
     }
     
