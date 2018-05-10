@@ -1,14 +1,74 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package structures.enumerates;
 
 /**
- *
- * @author Daniela
+ * This file contains an enum with the lifecycle states of the Spectator.
+ * @author Daniela Simões, 76771
  */
-public class SpectatorsState {
+public enum SpectatorsState {
+    /**
+    * WAITING FOR A RACE TO START = WFARTS
+    */
+            
+    WAITING_FOR_A_RACE_TO_START{
+        @Override
+        public String toString(){
+            return "WRS";
+        }
+    },
     
+    /**
+    * APPRAISING THE HORSES = ATH
+    */
+            
+    APPRAISING_THE_HORSES{
+        @Override
+        public String toString(){
+            return "ATH";
+        }
+    },
+    
+    /**
+    * PLACING A BET = PAB
+    */
+        
+    PLACING_A_BET{
+        @Override
+        public String toString(){
+            return "PAB";
+        }
+    },
+    
+    /**
+    * WATCHING A RACE = WAR
+    */
+           
+    WATCHING_A_RACE{
+        @Override
+        public String toString(){
+            return "WAR";
+        }
+    },
+    
+    /**
+    * COLLECTING THE GAINS = CTG
+    */
+            
+    COLLECTING_THE_GAINS{
+        @Override
+        public String toString(){
+            return "CTG";
+        }
+    },
+    
+    /**
+    * CELEBRATING = C
+    */
+    
+    CELEBRATING{
+        @Override
+        public String toString(){
+            return "CBG";
+        }
+    },
 }
+
