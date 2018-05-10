@@ -235,16 +235,19 @@ def upload(wait):
 
     to_file = []
 
+    # list class : host (IP)
     for host in jars_hosts:
         to_file += [{
             host["class"]["class"]: host["host"]["host"]
         }]
 
+    # write in hosts.json the mapping between classes and machines
     with open('hosts.json', 'w') as outfile:
         json.dump(to_file, outfile)
 
     print("Upload hosts.json to all machines")
 
+    # know the machine where the log is, waiting for the log to end
     for log_host in jars_hosts:
         if log_host["class"]["class"] == "Log":
             break
@@ -260,6 +263,7 @@ def upload(wait):
             continue
 
         sftp = ssh.open_sftp()
+        # copy hosts.json written previously to host
         sftp.put(os.getcwd() + "/hosts.json", "hosts.json")
         print("Uploaded to host" + CGREEN + json_host["host"]["host"] + CEND + ".")
 
@@ -281,7 +285,7 @@ def upload(wait):
             exit(1)
             continue
 
-        # run
+        # formatting and running
         print(jars_host["class"]["command"].format(
             jars_host["class"]["package"] + "." + jars_host["class"]["class"] + "Run"))
         stdin, stdout, stderr = ssh.exec_command(
