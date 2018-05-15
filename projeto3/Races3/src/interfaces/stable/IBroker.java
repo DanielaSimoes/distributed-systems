@@ -1,12 +1,13 @@
 package interfaces.stable;
 
+import structures.vectorClock.VectorTimestamp;
+
 /**
  *
  * @author Daniela
  */
 public interface IBroker {
-    
-    public void summonHorsesToPaddock();
-    public void proceedToStable();
-    public void entertainTheGuests();
+    public VectorTimestamp summonHorsesToPaddock(VectorTimestamp vt);
+    public VectorTimestamp proceedToStable(VectorTimestamp vt);
+    public VectorTimestamp entertainTheGuests(VectorTimestamp vt);
 }

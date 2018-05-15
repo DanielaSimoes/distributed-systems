@@ -2,6 +2,7 @@ package entities.broker;
 
 import generalRepository.Races;
 import structures.enumerates.BrokerState;
+import structures.vectorClock.VectorTimestamp;
 
 /**
  * This file contains the code that represents the broker lifecycle.
@@ -27,8 +28,8 @@ public class Broker extends Thread{
     private int raceId = 0;
     private boolean entertainTheGuests = false;
     
-    //private final VectorTimestamp myClock;
-    //private VectorTimestamp receivedClock;
+    private final VectorTimestamp myClock;
+    private VectorTimestamp receivedClock;
     
     /**
     * Broker Constructor
@@ -50,7 +51,7 @@ public class Broker extends Thread{
         this.races = races;
         this.state = BrokerState.OPENING_THE_EVENT;
         this.id = id;
-        //this.myClock = new VectorTimestamp(Constants.N_OF_HORSES+);
+        this.myClock = new VectorTimestamp(4,4);//////??????????????????????????????????
         this.setName("Broker");
     }
 
@@ -69,29 +70,51 @@ public class Broker extends Thread{
             switch(this.state){
 
                 case OPENING_THE_EVENT:
-                    stable.summonHorsesToPaddock();
-                    paddock.summonHorsesToPaddock();
+                    this.myClock.increment();
+                    this.receivedClock = stable.summonHorsesToPaddock(this.myClock.clone());
+                    this.myClock.update(this.receivedClock);
+                    
+                    this.myClock.increment();
+                    this.receivedClock = paddock.summonHorsesToPaddock(this.myClock.clone());
+                    this.myClock.update(this.receivedClock);
+                    
                     break;
 
                 case ANNOUNCING_NEXT_RACE:
-                    bc.acceptTheBets();
+                    this.myClock.increment();
+                    this.receivedClock = bc.acceptTheBets(this.myClock.clone());
+                    this.myClock.update(this.receivedClock);
+                    
                     break;
 
                 case WAITING_FOR_BETS:
-                    rt.startTheRace();
+                    this.myClock.increment();
+                    this.receivedClock = rt.startTheRace(this.myClock.clone());
+                    this.myClock.update(this.receivedClock);
+                    
                     break;
 
                 case SUPERVISING_THE_RACE:
-                    cc.reportResults();
+                    this.myClock.increment();
+                    this.receivedClock = cc.reportResults(this.myClock.clone());
+                    this.myClock.update(this.receivedClock);
                     
-                    if(bc.areThereAnyWinners()){ 
-                        bc.honourTheBets();
+                    if(bc.areThereAnyWinners()){
+                        this.myClock.increment();
+                        this.receivedClock = bc.honourTheBets(this.myClock.clone());
+                        this.myClock.update(this.receivedClock);
                     }
                     
                     if(races.hasMoreRaces()){
                         this.nextRace();
-                        stable.summonHorsesToPaddock();
-                        paddock.summonHorsesToPaddock();
+                        
+                        this.myClock.increment();
+                        this.receivedClock = stable.summonHorsesToPaddock(this.myClock.clone());
+                        this.myClock.update(this.receivedClock);
+                        
+                        this.myClock.increment();
+                        this.receivedClock = paddock.summonHorsesToPaddock(this.myClock.clone());
+                        this.myClock.update(this.receivedClock);
                     }else{
                         this.entertainTheGuests = true;
                     }
@@ -101,8 +124,14 @@ public class Broker extends Thread{
                 case SETTLING_ACCOUNTS:
                     if(races.hasMoreRaces()){
                         this.nextRace();
-                        stable.summonHorsesToPaddock();
-                        paddock.summonHorsesToPaddock();
+                        
+                        this.myClock.increment();
+                        this.receivedClock = stable.summonHorsesToPaddock(this.myClock.clone());
+                        this.myClock.update(this.receivedClock);
+                        
+                        this.myClock.increment();
+                        this.receivedClock = paddock.summonHorsesToPaddock(this.myClock.clone());
+                        this.myClock.update(this.receivedClock);
                     }else{
                         this.entertainTheGuests = true;
                     }
@@ -110,8 +139,10 @@ public class Broker extends Thread{
 
             }
         }
-
-        this.stable.entertainTheGuests();
+        
+        this.myClock.increment();
+        this.receivedClock = this.stable.entertainTheGuests(this.myClock.clone());
+        this.myClock.update(this.receivedClock);
     }
     
     /**

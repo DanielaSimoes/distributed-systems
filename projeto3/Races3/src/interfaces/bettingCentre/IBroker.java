@@ -5,14 +5,16 @@
  */
 package interfaces.bettingCentre;
 
+import structures.vectorClock.VectorTimestamp;
+
 /**
  *
  * @author Daniela
  */
 public interface IBroker {
-    public void acceptTheBets();
-    public void honourTheBets();
+    public VectorTimestamp acceptTheBets(VectorTimestamp vt);
+    public VectorTimestamp honourTheBets(VectorTimestamp vt);
     public boolean areThereAnyWinners();
-    public void placeABet();
-    public void goCollectTheGains();
+    public VectorTimestamp placeABet(VectorTimestamp vt);
+    public VectorTimestamp goCollectTheGains(VectorTimestamp vt);
 }

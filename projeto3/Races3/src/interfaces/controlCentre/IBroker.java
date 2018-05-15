@@ -5,15 +5,17 @@
  */
 package interfaces.controlCentre;
 
+import structures.vectorClock.VectorTimestamp;
+
 /**
  *
  * @author Daniela
  */
 public interface IBroker {
-    public void reportResults();
-    public void proceedToPaddock();
-    public void waitForNextRace();
-    public void goWatchTheRace();
+    public VectorTimestamp reportResults(VectorTimestamp vt);
+    public VectorTimestamp proceedToPaddock(VectorTimestamp vt);
+    public VectorTimestamp waitForNextRace(VectorTimestamp vt);
+    public VectorTimestamp goWatchTheRace(VectorTimestamp vt);
     public boolean haveIWon();
-    public void relaxABit();
+    public VectorTimestamp relaxABit(VectorTimestamp vt);
 }

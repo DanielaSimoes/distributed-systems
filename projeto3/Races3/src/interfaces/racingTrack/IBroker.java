@@ -5,13 +5,15 @@
  */
 package interfaces.racingTrack;
 
+import structures.vectorClock.VectorTimestamp;
+
 /**
  *
  * @author Daniela
  */
 public interface IBroker {
-    public void startTheRace();
-    public void proceedToStartLine();
+    public VectorTimestamp startTheRace(VectorTimestamp vt);
+    public VectorTimestamp proceedToStartLine(VectorTimestamp vt);
     public boolean hasFinishLineBeenCrossed(int horseId);
-    public void makeAMove();
+    public VectorTimestamp makeAMove(VectorTimestamp vt);
 }
