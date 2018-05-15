@@ -5,10 +5,16 @@
  */
 package interfaces.racingTrack;
 
+import java.rmi.RemoteException;
+import structures.vectorClock.VectorTimestamp;
+
 /**
  *
  * @author Daniela
  */
-public class RacingTrackInterface {
-    
+public interface RacingTrackInterface {
+    public VectorTimestamp startTheRace(VectorTimestamp vt) throws RemoteException;
+    public VectorTimestamp proceedToStartLine(VectorTimestamp vt) throws RemoteException;
+    public boolean hasFinishLineBeenCrossed(int horseId) throws RemoteException;
+    public VectorTimestamp makeAMove(VectorTimestamp vt) throws RemoteException;
 }

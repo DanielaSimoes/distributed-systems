@@ -10,5 +10,8 @@ package interfaces.racingTrack;
  * @author Daniela
  */
 public interface IBroker {
-    
+    public void startTheRace();
+    public void proceedToStartLine();
+    public boolean hasFinishLineBeenCrossed(int horseId);
+    public void makeAMove();
 }

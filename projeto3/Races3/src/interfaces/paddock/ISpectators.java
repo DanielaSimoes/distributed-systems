@@ -12,9 +12,6 @@ import structures.vectorClock.VectorTimestamp;
  *
  * @author Daniela
  */
-public interface PaddockInterface {
-    public VectorTimestamp proceedToPaddock(VectorTimestamp vt) throws RemoteException;
-    public VectorTimestamp proceedToStartLine(VectorTimestamp vt) throws RemoteException;
+public interface ISpectators {
     public VectorTimestamp goCheckHorses(VectorTimestamp vt) throws RemoteException;
-    public VectorTimestamp summonHorsesToPaddock(VectorTimestamp vt) throws RemoteException;
 }

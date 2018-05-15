@@ -10,5 +10,5 @@ package interfaces.races;
  * @author Daniela
  */
 public interface IBroker {
-    
+    boolean hasMoreRaces();
 }

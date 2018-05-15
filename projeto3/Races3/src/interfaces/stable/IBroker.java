@@ -6,4 +6,7 @@ package interfaces.stable;
  */
 public interface IBroker {
     
+    public void summonHorsesToPaddock();
+    public void proceedToStable();
+    public void entertainTheGuests();
 }

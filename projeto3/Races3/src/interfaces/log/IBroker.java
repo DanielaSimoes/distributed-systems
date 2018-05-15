@@ -5,10 +5,12 @@
  */
 package interfaces.log;
 
+import structures.enumerates.BrokerState;
+
 /**
  *
  * @author Daniela
  */
 public interface IBroker {
-    
+    void setBrokerState(BrokerState state);
 }

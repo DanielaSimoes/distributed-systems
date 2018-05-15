@@ -9,7 +9,7 @@ package interfaces.bettingCentre;
  *
  * @author Daniela
  */
-public interface IBroker {
+public interface ISpectators {
     public void acceptTheBets();
     public void honourTheBets();
     public boolean areThereAnyWinners();

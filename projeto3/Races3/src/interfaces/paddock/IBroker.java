@@ -10,5 +10,8 @@ package interfaces.paddock;
  * @author Daniela
  */
 public interface IBroker {
-    
+    public void proceedToPaddock();
+    public void proceedToStartLine();
+    public void goCheckHorses();
+    public void summonHorsesToPaddock();
 }
