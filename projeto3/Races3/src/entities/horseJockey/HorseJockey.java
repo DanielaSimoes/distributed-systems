@@ -4,6 +4,7 @@ import generalRepository.Log;
 import generalRepository.Races;
 import structures.enumerates.HorseJockeyState;
 import interfaces.entity.EntityInterface;
+import structures.vectorClock.VectorTimestamp;
 
 /**
  * This file contains the code that represents the HorseJockey lifecycle.
@@ -18,15 +19,17 @@ public class HorseJockey extends Thread implements EntityInterface{
      */
     private final Log log;
     private final int id;
-    private final interfaces.stable.StableInterface stable;
-    private final interfaces.controlCentre.ControlCentreInterface cc;
-    private final interfaces.paddock.PaddockInterface paddock;
-    private final interfaces.racingTrack.RacingTrackInterface rt;
+    private final interfaces.stable.IHorseJockey stable;
+    private final interfaces.controlCentre.IHorseJockey cc;
+    private final interfaces.paddock.IHorseJockey paddock;
+    private final interfaces.racingTrack.IHorseJockey rt;
     private final Races races = Races.getInstace();
     private boolean entertainTheGuests;
     
     private int raceId = 0;
     private final int stepSize;
+    private final VectorTimestamp myClock;
+    private VectorTimestamp receivedClock;
     
     /**
     *
@@ -38,7 +41,7 @@ public class HorseJockey extends Thread implements EntityInterface{
     * @param stepSize The step size of the horse.
     * @param id The ID of the horse.
     */
-    public HorseJockey(interfaces.stable.StableInterface s, interfaces.controlCentre.ControlCentreInterface cc, interfaces.paddock.PaddockInterface paddock, interfaces.racingTrack.RacingTrackInterface rt, int stepSize, int id){
+    public HorseJockey(interfaces.stable.IHorseJockey s, interfaces.controlCentre.IHorseJockey cc, interfaces.paddock.IHorseJockey paddock, interfaces.racingTrack.IHorseJockey rt, int stepSize, int id){
         this.stable = s;
         this.cc = cc;
         this.paddock = paddock;
@@ -48,6 +51,7 @@ public class HorseJockey extends Thread implements EntityInterface{
         this.log = Log.getInstance();
         this.setName("HorseJockey " + id);
         this.entertainTheGuests = false;
+        this.myClock = new VectorTimestamp(4,4);////////////////???????????????????????????
     }
     
     /**
@@ -60,38 +64,60 @@ public class HorseJockey extends Thread implements EntityInterface{
     public void run(){  
         this.races.setHorseJockeyStepSize(id, stepSize);
         this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
-        stable.proceedToStable();
+        this.receivedClock = stable.proceedToStable(this.myClock.clone());
                     
         while(!this.entertainTheGuests){
             switch(this.state){
                 case AT_THE_STABLE:
                     if(races.hasMoreRaces()){
-                        cc.proceedToPaddock();
-                        paddock.proceedToPaddock();
+                        this.myClock.increment();
+                        this.receivedClock = cc.proceedToPaddock(this.myClock.clone());
+                        this.myClock.update(this.receivedClock);
+                        
+                        this.myClock.increment();
+                        this.receivedClock = paddock.proceedToPaddock(this.myClock.clone());
+                        this.myClock.update(this.receivedClock);
                     }else{
                         this.entertainTheGuests = true;
                     }
                     break;
                 case AT_THE_PADDOCK:
-                    paddock.proceedToStartLine();
-                    rt.proceedToStartLine();
+                    this.myClock.increment();
+                    this.receivedClock = paddock.proceedToStartLine(this.myClock.clone());
+                    this.myClock.update(this.receivedClock);
+                    
+                    this.myClock.increment();
+                    this.receivedClock = rt.proceedToStartLine(this.myClock.clone());
+                    this.myClock.update(this.receivedClock);
                     break;
                 case AT_THE_START_LINE:
-                    rt.makeAMove();
+                    this.myClock.increment();
+                    this.receivedClock = rt.makeAMove(this.myClock.clone());
+                    this.myClock.update(this.receivedClock);
+                    
                     this.log.makeAMove();
                     break;
                 case RUNNNING:
                     while(!rt.hasFinishLineBeenCrossed(this.id)){
-                        rt.makeAMove();
+                        this.myClock.increment();
+                        this.receivedClock = rt.makeAMove(this.myClock.clone());
+                        this.myClock.update(this.receivedClock);
+                        
                         this.log.makeAMove();
                     }
                     break;
                 case AT_THE_FINISH_LINE:
                     if(races.hasMoreRaces()){
                         this.nextRace();
-                        stable.proceedToStable();
+                        
+                        this.myClock.increment();
+                        this.receivedClock = stable.proceedToStable(this.myClock.clone());
+                        this.myClock.update(this.receivedClock);
+                        
                     }else{
-                        stable.proceedToStable();
+                        this.myClock.increment();
+                        this.receivedClock = stable.proceedToStable(this.myClock.clone());
+                        this.myClock.update(this.receivedClock);
                     }
                     
                     if(!races.hasMoreRaces()){

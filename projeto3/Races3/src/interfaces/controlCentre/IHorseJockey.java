@@ -3,15 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfaces.paddock;
+package interfaces.controlCentre;
 
-import java.rmi.RemoteException;
 import structures.vectorClock.VectorTimestamp;
 
 /**
  *
  * @author Daniela
  */
-public interface ISpectators {
-    public VectorTimestamp goCheckHorses(VectorTimestamp vt);
+public interface IHorseJockey {
+    public VectorTimestamp proceedToPaddock(VectorTimestamp vt);
 }

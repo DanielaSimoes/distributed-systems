@@ -5,13 +5,13 @@
  */
 package interfaces.paddock;
 
-import java.rmi.RemoteException;
 import structures.vectorClock.VectorTimestamp;
 
 /**
  *
  * @author Daniela
  */
-public interface ISpectators {
-    public VectorTimestamp goCheckHorses(VectorTimestamp vt);
+public interface IHorseJockey {
+    public VectorTimestamp proceedToPaddock(VectorTimestamp vt);
+    public VectorTimestamp proceedToStartLine(VectorTimestamp vt);
 }

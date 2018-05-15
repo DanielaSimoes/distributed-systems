@@ -22,6 +22,7 @@ import structures.constants.RegistryConfigs;
  * @author Daniela
  */
 public class RacingTrackServer {
+    
     public static void main(String[] args) throws NotBoundException, AlreadyBoundException {
         /* obtenção da localização do serviço de registo RMI */
         
