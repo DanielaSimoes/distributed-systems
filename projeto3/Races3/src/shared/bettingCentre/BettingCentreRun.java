@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package shared.racingTrack;
+package shared.bettingCentre;
 
 import interfaces.RegisterInterface;
+import interfaces.IBettingCentre;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -13,29 +14,28 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import interfaces.IRacingTrack;
 import structures.constants.RegistryConfigs;
 
 /**
  *
  * @author Daniela
  */
-public class RacingTrackServer {
-    
+public class BettingCentreRun {
+      
     public static void main(String[] args) throws NotBoundException, AlreadyBoundException {
-        /* obtenção da localização do serviço de registo RMI */
+        /* obtencao da localizacao do servico de registo RMI */
         
-        // nome do sistema onde está localizado o serviço de registos RMI
+        // nome do sistema onde esta localizado o servico de registos RMI
         String rmiRegHostName;
         
-        // port de escuta do serviço
+        // port de escuta do servico
         int rmiRegPortNumb;            
 
         RegistryConfigs rc = new RegistryConfigs("config.ini");
         rmiRegHostName = rc.registryHost();
         rmiRegPortNumb = rc.registryPort();
         
-        /* instanciação e instalação do gestor de segurança */
+        /* instanciacao e instalacao do gestor de seguranca */
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
@@ -58,30 +58,30 @@ public class RacingTrackServer {
             System.exit(1);
         }
          
-        /* instanciação do objecto remoto que representa o RacingTrack e geração de um stub para ele */
-        RacingTrack racing_track = null;
-        IRacingTrack racingTrackInterface = null;
-        racing_track = new RacingTrack(ri);
+        /* instanciacao do objecto remoto que representa o Betting Centre e geracao de um stub para ele */
+        BettingCentre betting_centre = null;
+        IBettingCentre bettingCentreInterface = null;
+        betting_centre = new BettingCentre(ri);
         
         try {
-            racingTrackInterface = (IRacingTrack) UnicastRemoteObject.exportObject((Remote) racing_track, rc.racingTrackPort());
+            bettingCentreInterface = (IBettingCentre) UnicastRemoteObject.exportObject((Remote) betting_centre, rc.bettingCentrePort());
         } catch (RemoteException e) {
-            System.out.println("Excepção na geração do stub para o Racing Track: " + e.getMessage());
+            System.out.println("Excepcao na geracao do stub para o Betting Centre: " + e.getMessage());
             System.exit(1);
         }
         
-        System.out.println("O stub para o RacingTrack site foi gerado!");
+        System.out.println("O stub para o Betting Centre site foi gerado!");
 
-        /* seu registo no serviço de registo RMI */
+        /* seu registo no servico de registo RMI */
         String nameEntryBase = RegistryConfigs.registerHandler;
-        String nameEntryObject = RegistryConfigs.racingTrackNameEntry;
+        String nameEntryObject = RegistryConfigs.bettingCentreNameEntry;
         Registry registry = null;
         RegisterInterface reg = null;
 
         try {
             registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
         } catch (RemoteException e) {
-            System.out.println("Excepção na criação do registo RMI: " + e.getMessage());
+            System.out.println("Excepcao na criacao do registo RMI: " + e.getMessage());
             System.exit(1);
         }
         
@@ -98,15 +98,15 @@ public class RacingTrackServer {
         }
 
         try {
-            reg.bind(nameEntryObject, (Remote) racingTrackInterface);
+            reg.bind(nameEntryObject, (Remote) bettingCentreInterface);
         } catch (RemoteException e) {
-            System.out.println("Excepção no registo do Racing Track site: " + e.getMessage());
+            System.out.println("Excepcao no registo do Betting Centre site: " + e.getMessage());
             System.exit(1);
         } catch (AlreadyBoundException e) {
-            System.out.println("O RacingTrack já está registado: " + e.getMessage());
+            System.out.println("O Betting Centre ja esta registado: " + e.getMessage());
             System.exit(1);
         }
         
-        System.out.println("O Racing Track site foi registado!");
+        System.out.println("O Betting Centre site foi registado!");
     }
 }

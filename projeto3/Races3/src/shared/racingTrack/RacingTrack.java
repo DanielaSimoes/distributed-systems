@@ -14,7 +14,7 @@ import structures.constants.RegistryConfigs;
 
 /**
  * This file contains the shared memory region Racing Track.
- * @author Daniela Simões, 76771
+ * @author Daniela Simes, 76771
  */
 public class RacingTrack implements IRacingTrack {
     

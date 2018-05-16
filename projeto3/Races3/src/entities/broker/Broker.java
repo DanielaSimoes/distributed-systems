@@ -6,7 +6,7 @@ import structures.constants.Constants;
 
 /**
  * This file contains the code that represents the broker lifecycle.
- * @author Daniela Simões, 76771
+ * @author Daniela Simes, 76771
  */
 public class Broker extends Thread implements IEntity{
     

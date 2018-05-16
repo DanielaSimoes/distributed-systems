@@ -27,7 +27,7 @@ import structures.constants.RegistryConfigs;
 
 /**
  * This file contains the code to generate a log file.
- * @author Daniela Simões, 76771
+ * @author Daniela Simes, 76771
  */
 public class Log implements ILog{
     

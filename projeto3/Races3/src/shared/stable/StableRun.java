@@ -1,7 +1,12 @@
-package generalRepository.log;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package shared.stable;
 
 import interfaces.RegisterInterface;
-import interfaces.ILog;
+import interfaces.IStable;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -15,21 +20,22 @@ import structures.constants.RegistryConfigs;
  *
  * @author Daniela
  */
-public class LogServer {
+public class StableRun {
+    
     public static void main(String[] args) throws NotBoundException, AlreadyBoundException {
-        /* obtenção da localização do serviço de registo RMI */
+        /* obtencao da localizacao do servico de registo RMI */
         
-        // nome do sistema onde está localizado o serviço de registos RMI
+        // nome do sistema onde esta localizado o servico de registos RMI
         String rmiRegHostName;
         
-        // port de escuta do serviço
+        // port de escuta do servico
         int rmiRegPortNumb;            
 
         RegistryConfigs rc = new RegistryConfigs("config.ini");
         rmiRegHostName = rc.registryHost();
         rmiRegPortNumb = rc.registryPort();
         
-        /* instanciação e instalação do gestor de segurança */
+        /* instanciacao e instalacao do gestor de seguranca */
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
@@ -51,31 +57,31 @@ public class LogServer {
             System.out.println("Races is not registered: " + e.getMessage () + "!");
             System.exit(1);
         }
-        
-        /* instanciação do objecto remoto que representa o Betting Centre e geração de um stub para ele */
-        Log log = null;
-        ILog logInterface = null;
-        log = new Log("", ri);
+         
+        /* instanciacao do objecto remoto que representa o Stable e geracao de um stub para ele */
+        Stable stable = null;
+        IStable stableInterface = null;
+        stable = new Stable(ri);
         
         try {
-            logInterface = (ILog) UnicastRemoteObject.exportObject((Remote) log, rc.logPort());
+            stableInterface = (IStable) UnicastRemoteObject.exportObject((Remote) stable, rc.stablePort());
         } catch (RemoteException e) {
-            System.out.println("Excepção na geração do stub para o Log: " + e.getMessage());
+            System.out.println("Excepcao na geracao do stub para o Stable: " + e.getMessage());
             System.exit(1);
         }
         
-        System.out.println("O stub para o log foi gerado!");
+        System.out.println("O stub para o Stable site foi gerado!");
 
-        /* seu registo no serviço de registo RMI */
+        /* seu registo no servico de registo RMI */
         String nameEntryBase = RegistryConfigs.registerHandler;
-        String nameEntryObject = RegistryConfigs.logNameEntry;
+        String nameEntryObject = RegistryConfigs.stableNameEntry;
         Registry registry = null;
         RegisterInterface reg = null;
 
         try {
             registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
         } catch (RemoteException e) {
-            System.out.println("Excepção na criação do registo RMI: " + e.getMessage());
+            System.out.println("Excepcao na criacao do registo RMI: " + e.getMessage());
             System.exit(1);
         }
         
@@ -92,15 +98,15 @@ public class LogServer {
         }
 
         try {
-            reg.bind(nameEntryObject, (Remote) logInterface);
+            reg.bind(nameEntryObject, (Remote) stableInterface);
         } catch (RemoteException e) {
-            System.out.println("Excepção no registo do log:  " + e.getMessage());
+            System.out.println("Excepcao no registo do Stable site: " + e.getMessage());
             System.exit(1);
         } catch (AlreadyBoundException e) {
-            System.out.println("O log já está registado: " + e.getMessage());
+            System.out.println("O Stable ja esta registado: " + e.getMessage());
             System.exit(1);
         }
         
-        System.out.println("O log foi registado!");
+        System.out.println("O Stable site foi registado!");
     }
 }

@@ -7,7 +7,7 @@ import structures.constants.Constants;
 
 /**
  * This file contains the code that represents the Spectator lifecycle.
- * @author Daniela Simões, 76771
+ * @author Daniela Simes, 76771
  */
 public class Spectators extends Thread implements IEntity{
     

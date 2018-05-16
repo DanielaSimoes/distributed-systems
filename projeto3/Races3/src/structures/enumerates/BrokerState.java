@@ -2,7 +2,7 @@ package structures.enumerates;
 
 /**
  * This file contains an enum with the lifecycle states of the Broker.
- * @author Daniela Simões, 76771
+ * @author Daniela Simes, 76771
  */
  
 public enum BrokerState {

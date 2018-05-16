@@ -2,7 +2,7 @@ package generalRepository.races;
 
 /**
  * This file describes the set of the Races.
- * @author Daniela Simões, 76771
+ * @author Daniela Simes, 76771
  */
 
 import interfaces.IRaces;
@@ -23,7 +23,7 @@ import structures.constants.RegistryConfigs;
 
 /**
  * This file implements the Races.
- * @author Daniela Simões, 76771.
+ * @author Daniela Simes, 76771.
  */
 public class Races implements IRaces{
     

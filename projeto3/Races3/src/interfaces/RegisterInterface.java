@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 /**
  * This data type defines the operational interface of a remote object of type RegisterRemoteObject.
  * It provides the functionality to register remote objects in the local registry service.
- * @author Daniela Simões, 76771
+ * @author Daniela Simes, 76771
  */
 public interface RegisterInterface extends Remote {
    

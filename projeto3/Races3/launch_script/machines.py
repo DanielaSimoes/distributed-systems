@@ -183,7 +183,7 @@ def upload():
         for cmd in value["class"]["command"]:
             print(Fore.LIGHTGREEN_EX + cmd + Style.RESET_ALL)
             ssh.exec_command(cmd)
-            print(Fore.LIGHTGREEN_EX + 'time.sleep(value["class"]["sleep"])' + Style.RESET_ALL)
+            print(Fore.LIGHTGREEN_EX + 'time.sleep('+str(value["class"]["sleep"])+')' + Style.RESET_ALL)
             time.sleep(value["class"]["sleep"])
 
     print(Fore.GREEN + Style.DIM + "DONE!" + Style.RESET_ALL)
@@ -317,12 +317,12 @@ def parse_config():
     settings.read('configs/config.ini')
 
     lst = OrderedDict(sorted({
-        "Log": {
-            "hostname": settings.get("mapping", "log_host"),
-            "order": 1
-        },
         "Races": {
             "hostname": settings.get("mapping", "races_host"),
+            "order": 1
+        },
+        "Log": {
+            "hostname": settings.get("mapping", "log_host"),
             "order": 2
         },
         "BettingCentre": {

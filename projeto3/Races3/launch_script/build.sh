@@ -8,12 +8,10 @@ rm sources.txt
 rm -rf java
 mkdir -p java
 
-mv bench java/
 mv entities java/
-mv general_info_repo java/
+mv generalRepository java/
+mv shared java/
 mv interfaces java/
-mv playground java/
-mv referee_site java/
 mv registry java/
 mv structures java/
 

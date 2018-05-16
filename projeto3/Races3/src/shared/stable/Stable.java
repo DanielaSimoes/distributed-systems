@@ -15,7 +15,7 @@ import structures.constants.RegistryConfigs;
 
 /**
  * This file contains the shared memory region Stable.
- * @author Daniela Simões, 76771
+ * @author Daniela Simes, 76771
  */
 public class Stable implements IStable {
     

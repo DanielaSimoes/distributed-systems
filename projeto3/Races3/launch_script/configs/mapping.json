@@ -36,7 +36,7 @@
     {
         "class": "Races",
         "path": "dir_serverSide/generalRepository/Races",
-        "package": "generalRepository",
+        "package": "generalRepository.races",
         "type": "server",
         "port": 22446,
         "command": ["cd Public/classes/; source config.bash; ./serverSide_com.sh &> output"],
@@ -45,7 +45,7 @@
     {
         "class": "Log",
         "path": "dir_serverSide/generalRepository/Log",
-        "package": "generalRepository",
+        "package": "generalRepository.log",
         "type": "server",
         "port": 22441,
         "command": ["cd Public/classes/; source config.bash; ./serverSide_com.sh &> output"],

@@ -2,7 +2,7 @@ package structures.constants;
 
 /**
  * This file contains the constants of the race.
- * @author Daniela Simões
+ * @author Daniela Simes
  */
 public class Constants {
     
@@ -11,12 +11,12 @@ public class Constants {
     /**
      * Number of races.
      */
-    public static final int N_OF_RACES = 5;
+    public static final int N_OF_RACES = 1;
 
     /**
      * Number of horses.
      */
-    public static final int N_OF_HORSES = 20;
+    public static final int N_OF_HORSES = 4;
     
     /**
      * Number of horses in the race.

@@ -21,9 +21,9 @@ public class SpectatorsRun {
         
         ArrayList<Spectators> spectators = new ArrayList<>(Constants.N_OF_SPECTATORS);
         
-        // nome do sistema onde está localizado o serviço de registos RMI
+        // nome do sistema onde esta localizado o servico de registos RMI
         String rmiRegHostName;
-        // port de escuta do serviço
+        // port de escuta do servico
         int rmiRegPortNumb;
 
         RegistryConfigs rc = new RegistryConfigs("config.ini");

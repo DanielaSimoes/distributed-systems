@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 /**
  * This file contains the races interface.
- * @author Daniela Simões, 76771
+ * @author Daniela Simes, 76771
  */
 public interface IRaces extends Remote{
     public Bet chooseBet(int raceNumber, int spectatorId, int initialBet, int moneyToBet);

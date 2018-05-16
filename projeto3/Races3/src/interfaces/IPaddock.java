@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 
 /**
  * This file contains the Interface implemented by the shared memory region Paddock.
- * @author Daniela Simões, 76771
+ * @author Daniela Simes, 76771
  */
 public interface IPaddock extends Remote{
     public void proceedToPaddock(int raceNumber);

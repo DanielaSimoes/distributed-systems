@@ -8,7 +8,7 @@ import structures.enumerates.SpectatorsState;
 
 /**
  * This file contains the log interface.
- * @author Daniela Simões, 76771
+ * @author Daniela Simes, 76771
  */
 public interface ILog extends Remote{
     public void setSpectatorState(int id, SpectatorsState state, int raceNumber);

@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package shared.stable;
+package generalRepository.races;
 
+import interfaces.IRaces;
 import interfaces.RegisterInterface;
-import interfaces.IStable;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -20,68 +20,49 @@ import structures.constants.RegistryConfigs;
  *
  * @author Daniela
  */
-public class StableServer {
-    
+public class RacesRun {
     public static void main(String[] args) throws NotBoundException, AlreadyBoundException {
-        /* obtenção da localização do serviço de registo RMI */
+        /* obtencao da localizacao do servico de registo RMI */
         
-        // nome do sistema onde está localizado o serviço de registos RMI
+        // nome do sistema onde esta localizado o servico de registos RMI
         String rmiRegHostName;
         
-        // port de escuta do serviço
+        // port de escuta do servico
         int rmiRegPortNumb;            
 
         RegistryConfigs rc = new RegistryConfigs("config.ini");
         rmiRegHostName = rc.registryHost();
         rmiRegPortNumb = rc.registryPort();
         
-        /* instanciação e instalação do gestor de segurança */
+        /* instanciacao e instalacao do gestor de seguranca */
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
         
-        interfaces.IRaces ri = null;
-        
-        try
-        { 
-            Registry registry = LocateRegistry.getRegistry (rmiRegHostName, rmiRegPortNumb);
-            ri = (interfaces.IRaces) registry.lookup (RegistryConfigs.racesNameEntry);
-        }
-        catch (RemoteException e)
-        { 
-            System.out.println("Exception thrown while locating races: " + e.getMessage () + "!");
-            System.exit (1);
-        }
-        catch (NotBoundException e)
-        { 
-            System.out.println("Races is not registered: " + e.getMessage () + "!");
-            System.exit(1);
-        }
-         
-        /* instanciação do objecto remoto que representa o Stable e geração de um stub para ele */
-        Stable stable = null;
-        IStable stableInterface = null;
-        stable = new Stable(ri);
+        /* instanciacao do objecto remoto que representa o Betting Centre e geracao de um stub para ele */
+        Races races = null;
+        IRaces racesInterface = null;
+        races = new Races();
         
         try {
-            stableInterface = (IStable) UnicastRemoteObject.exportObject((Remote) stable, rc.stablePort());
+            racesInterface = (IRaces) UnicastRemoteObject.exportObject((Remote) races, rc.racesPort());
         } catch (RemoteException e) {
-            System.out.println("Excepção na geração do stub para o Stable: " + e.getMessage());
+            System.out.println("Excepcao na geracao do stub para a races: " + e.getMessage());
             System.exit(1);
         }
         
-        System.out.println("O stub para o Stable site foi gerado!");
+        System.out.println("O stub para a races foi gerado!");
 
-        /* seu registo no serviço de registo RMI */
+        /* seu registo no servico de registo RMI */
         String nameEntryBase = RegistryConfigs.registerHandler;
-        String nameEntryObject = RegistryConfigs.stableNameEntry;
+        String nameEntryObject = RegistryConfigs.racesNameEntry;
         Registry registry = null;
         RegisterInterface reg = null;
 
         try {
             registry = LocateRegistry.getRegistry(rmiRegHostName, rmiRegPortNumb);
         } catch (RemoteException e) {
-            System.out.println("Excepção na criação do registo RMI: " + e.getMessage());
+            System.out.println("Excepcao na criacao do registo RMI: " + e.getMessage());
             System.exit(1);
         }
         
@@ -98,15 +79,15 @@ public class StableServer {
         }
 
         try {
-            reg.bind(nameEntryObject, (Remote) stableInterface);
+            reg.bind(nameEntryObject, (Remote) racesInterface);
         } catch (RemoteException e) {
-            System.out.println("Excepção no registo do Stable site: " + e.getMessage());
+            System.out.println("Excepcao no registo da races:  " + e.getMessage());
             System.exit(1);
         } catch (AlreadyBoundException e) {
-            System.out.println("O Stable já está registado: " + e.getMessage());
+            System.out.println("A races ja esta registado: " + e.getMessage());
             System.exit(1);
         }
         
-        System.out.println("O Stable site foi registado!");
+        System.out.println("A races foi registado!");
     }
 }

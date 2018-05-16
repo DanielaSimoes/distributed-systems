@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * This file describes the bet.
- * @author Daniela Simões, 76771
+ * @author Daniela Simes, 76771
  */
 public class Bet implements Serializable  {
     

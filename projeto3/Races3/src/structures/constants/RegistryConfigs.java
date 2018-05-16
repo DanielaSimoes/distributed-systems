@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 /**
  * This class implements the constants related with Registry.
- * @author Daniela Simões, 76771
+ * @author Daniela Simes, 76771
  */
 public class RegistryConfigs {
     
