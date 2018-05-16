@@ -19,7 +19,7 @@ import java.util.LinkedList;
  *
  * @author Daniela
  */
-public class Races {
+public class Races implements RacesInterface{
     
     /**
      * Number of races.
@@ -77,7 +77,7 @@ public class Races {
     *
     * Races Constructor
     */
-    private Races(){
+    Races(){
         this.spectatorsState = new HashMap<>();
         this.horseJockeysState = new HashMap<>();
         this.spectatorAmmount = new HashMap<>();

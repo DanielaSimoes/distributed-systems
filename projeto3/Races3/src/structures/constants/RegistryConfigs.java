@@ -153,4 +153,12 @@ public class RegistryConfigs {
     public int controlCentrePort() {
         return Integer.parseInt(prop.getProperty("controlCentre_port"));
     }
+    
+    /** 
+     * Loads the parameter RACES_PORT from the configuration file.
+     * @return parameter value
+     */
+    public int racesPort() {
+        return Integer.parseInt(prop.getProperty("races_port"));
+    }
 }

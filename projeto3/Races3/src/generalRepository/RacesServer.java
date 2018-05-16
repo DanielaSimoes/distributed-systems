@@ -1,7 +1,11 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package generalRepository;
 
 import interfaces.RegisterInterface;
-import interfaces.log.LogInterface;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -15,7 +19,7 @@ import structures.constants.RegistryConfigs;
  *
  * @author Daniela
  */
-public class LogServer {
+public class RacesServer {
     public static void main(String[] args) throws NotBoundException, AlreadyBoundException {
         /* obtenção da localização do serviço de registo RMI */
         
@@ -35,22 +39,22 @@ public class LogServer {
         }
         
         /* instanciação do objecto remoto que representa o Betting Centre e geração de um stub para ele */
-        Log log = null;
-        LogInterface logInterface = null;
-        log = new Log();
+        Races races = null;
+        RacesInterface racesInterface = null;
+        races = new Races();
         
         try {
-            logInterface = (LogInterface) UnicastRemoteObject.exportObject((Remote) log, rc.logPort());
+            racesInterface = (RacesInterface) UnicastRemoteObject.exportObject((Remote) races, rc.racesPort());
         } catch (RemoteException e) {
-            System.out.println("Excepção na geração do stub para o Log: " + e.getMessage());
+            System.out.println("Excepção na geração do stub para a races: " + e.getMessage());
             System.exit(1);
         }
         
-        System.out.println("O stub para o log foi gerado!");
+        System.out.println("O stub para a races foi gerado!");
 
         /* seu registo no serviço de registo RMI */
         String nameEntryBase = RegistryConfigs.registerHandler;
-        String nameEntryObject = RegistryConfigs.logNameEntry;
+        String nameEntryObject = RegistryConfigs.racesNameEntry;
         Registry registry = null;
         RegisterInterface reg = null;
 
@@ -74,15 +78,15 @@ public class LogServer {
         }
 
         try {
-            reg.bind(nameEntryObject, (Remote) logInterface);
+            reg.bind(nameEntryObject, (Remote) racesInterface);
         } catch (RemoteException e) {
-            System.out.println("Excepção no registo do log:  " + e.getMessage());
+            System.out.println("Excepção no registo da races:  " + e.getMessage());
             System.exit(1);
         } catch (AlreadyBoundException e) {
-            System.out.println("O log já está registado: " + e.getMessage());
+            System.out.println("A races já está registado: " + e.getMessage());
             System.exit(1);
         }
         
-        System.out.println("O log foi registado!");
+        System.out.println("A races foi registado!");
     }
 }
