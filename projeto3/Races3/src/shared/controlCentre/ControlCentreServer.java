@@ -6,7 +6,7 @@
 package shared.controlCentre;
 
 import interfaces.RegisterInterface;
-import interfaces.controlCentre.ControlCentreInterface;
+import interfaces.IControlCentre;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -40,13 +40,31 @@ public class ControlCentreServer {
             System.setSecurityManager(new SecurityManager());
         }
         
+        interfaces.IRaces ri = null;
+        
+        try
+        { 
+            Registry registry = LocateRegistry.getRegistry (rmiRegHostName, rmiRegPortNumb);
+            ri = (interfaces.IRaces) registry.lookup (RegistryConfigs.racesNameEntry);
+        }
+        catch (RemoteException e)
+        { 
+            System.out.println("Exception thrown while locating races: " + e.getMessage () + "!");
+            System.exit (1);
+        }
+        catch (NotBoundException e)
+        { 
+            System.out.println("Races is not registered: " + e.getMessage () + "!");
+            System.exit(1);
+        }
+         
         /* instanciação do objecto remoto que representa o Control Centre e geração de um stub para ele */
         ControlCentre control_centre = null;
-        ControlCentreInterface controlCentreInterface = null;
-        control_centre = new ControlCentre();
+        IControlCentre controlCentreInterface = null;
+        control_centre = new ControlCentre(ri);
         
         try {
-            controlCentreInterface = (ControlCentreInterface) UnicastRemoteObject.exportObject((Remote) control_centre, rc.controlCentrePort());
+            controlCentreInterface = (IControlCentre) UnicastRemoteObject.exportObject((Remote) control_centre, rc.controlCentrePort());
         } catch (RemoteException e) {
             System.out.println("Excepção na geração do stub para o Control Centre: " + e.getMessage());
             System.exit(1);

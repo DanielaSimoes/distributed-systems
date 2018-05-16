@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package generalRepository;
+package generalRepository.log;
 
 import interfaces.RegisterInterface;
+import interfaces.ILog;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -19,7 +15,7 @@ import structures.constants.RegistryConfigs;
  *
  * @author Daniela
  */
-public class RacesServer {
+public class LogServer {
     public static void main(String[] args) throws NotBoundException, AlreadyBoundException {
         /* obtenção da localização do serviço de registo RMI */
         
@@ -38,23 +34,41 @@ public class RacesServer {
             System.setSecurityManager(new SecurityManager());
         }
         
-        /* instanciação do objecto remoto que representa o Betting Centre e geração de um stub para ele */
-        Races races = null;
-        RacesInterface racesInterface = null;
-        races = new Races();
+        interfaces.IRaces ri = null;
         
-        try {
-            racesInterface = (RacesInterface) UnicastRemoteObject.exportObject((Remote) races, rc.racesPort());
-        } catch (RemoteException e) {
-            System.out.println("Excepção na geração do stub para a races: " + e.getMessage());
+        try
+        { 
+            Registry registry = LocateRegistry.getRegistry (rmiRegHostName, rmiRegPortNumb);
+            ri = (interfaces.IRaces) registry.lookup (RegistryConfigs.racesNameEntry);
+        }
+        catch (RemoteException e)
+        { 
+            System.out.println("Exception thrown while locating races: " + e.getMessage () + "!");
+            System.exit (1);
+        }
+        catch (NotBoundException e)
+        { 
+            System.out.println("Races is not registered: " + e.getMessage () + "!");
             System.exit(1);
         }
         
-        System.out.println("O stub para a races foi gerado!");
+        /* instanciação do objecto remoto que representa o Betting Centre e geração de um stub para ele */
+        Log log = null;
+        ILog logInterface = null;
+        log = new Log("", ri);
+        
+        try {
+            logInterface = (ILog) UnicastRemoteObject.exportObject((Remote) log, rc.logPort());
+        } catch (RemoteException e) {
+            System.out.println("Excepção na geração do stub para o Log: " + e.getMessage());
+            System.exit(1);
+        }
+        
+        System.out.println("O stub para o log foi gerado!");
 
         /* seu registo no serviço de registo RMI */
         String nameEntryBase = RegistryConfigs.registerHandler;
-        String nameEntryObject = RegistryConfigs.racesNameEntry;
+        String nameEntryObject = RegistryConfigs.logNameEntry;
         Registry registry = null;
         RegisterInterface reg = null;
 
@@ -78,15 +92,15 @@ public class RacesServer {
         }
 
         try {
-            reg.bind(nameEntryObject, (Remote) racesInterface);
+            reg.bind(nameEntryObject, (Remote) logInterface);
         } catch (RemoteException e) {
-            System.out.println("Excepção no registo da races:  " + e.getMessage());
+            System.out.println("Excepção no registo do log:  " + e.getMessage());
             System.exit(1);
         } catch (AlreadyBoundException e) {
-            System.out.println("A races já está registado: " + e.getMessage());
+            System.out.println("O log já está registado: " + e.getMessage());
             System.exit(1);
         }
         
-        System.out.println("A races foi registado!");
+        System.out.println("O log foi registado!");
     }
 }

@@ -6,7 +6,7 @@
 package shared.bettingCentre;
 
 import interfaces.RegisterInterface;
-import interfaces.bettingCentre.BettingCentreInterface;
+import interfaces.IBettingCentre;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -40,13 +40,31 @@ public class BettingCentreServer {
             System.setSecurityManager(new SecurityManager());
         }
         
+        interfaces.IRaces ri = null;
+        
+        try
+        { 
+            Registry registry = LocateRegistry.getRegistry (rmiRegHostName, rmiRegPortNumb);
+            ri = (interfaces.IRaces) registry.lookup (RegistryConfigs.racesNameEntry);
+        }
+        catch (RemoteException e)
+        { 
+            System.out.println("Exception thrown while locating races: " + e.getMessage () + "!");
+            System.exit (1);
+        }
+        catch (NotBoundException e)
+        { 
+            System.out.println("Races is not registered: " + e.getMessage () + "!");
+            System.exit(1);
+        }
+         
         /* instanciação do objecto remoto que representa o Betting Centre e geração de um stub para ele */
         BettingCentre betting_centre = null;
-        BettingCentreInterface bettingCentreInterface = null;
-        betting_centre = new BettingCentre();
+        IBettingCentre bettingCentreInterface = null;
+        betting_centre = new BettingCentre(ri);
         
         try {
-            bettingCentreInterface = (BettingCentreInterface) UnicastRemoteObject.exportObject((Remote) betting_centre, rc.bettingCentrePort());
+            bettingCentreInterface = (IBettingCentre) UnicastRemoteObject.exportObject((Remote) betting_centre, rc.bettingCentrePort());
         } catch (RemoteException e) {
             System.out.println("Excepção na geração do stub para o Betting Centre: " + e.getMessage());
             System.exit(1);

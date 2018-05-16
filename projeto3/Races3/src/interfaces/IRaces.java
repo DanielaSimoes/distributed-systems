@@ -1,16 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package generalRepository;
+package interfaces;
+
+import generalRepository.races.Bet;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.LinkedList;
 
 /**
- *
- * @author Daniela
+ * This file contains the races interface.
+ * @author Daniela Simões, 76771
  */
-public interface RacesInterface {
+public interface IRaces extends Remote{
     public Bet chooseBet(int raceNumber, int spectatorId, int initialBet, int moneyToBet);
     public boolean horseHasBeenSelectedToRace(int horseJockeyID, int horseStepSize, int raceNumber);
     public void setHorseJockeyStepSize(int id, int stepSize);
@@ -58,4 +57,5 @@ public interface RacesInterface {
     public double getHorseOdd(int horseId, int raceNumber);
     public int getHorsePosition(int horseId, int raceNumber);
     public int selectedHorseId(int raceId, int horseRaceId);
+    public void signalShutdown() throws RemoteException;
 }

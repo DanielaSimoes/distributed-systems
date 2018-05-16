@@ -6,7 +6,7 @@
 package shared.paddock;
 
 import interfaces.RegisterInterface;
-import interfaces.paddock.PaddockInterface;
+import interfaces.IPaddock;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -14,7 +14,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import shared.paddock.Paddock;
 import structures.constants.RegistryConfigs;
 
 /**
@@ -41,13 +40,31 @@ public class PaddockServer {
             System.setSecurityManager(new SecurityManager());
         }
         
+        interfaces.IRaces ri = null;
+        
+        try
+        { 
+            Registry registry = LocateRegistry.getRegistry (rmiRegHostName, rmiRegPortNumb);
+            ri = (interfaces.IRaces) registry.lookup (RegistryConfigs.racesNameEntry);
+        }
+        catch (RemoteException e)
+        { 
+            System.out.println("Exception thrown while locating races: " + e.getMessage () + "!");
+            System.exit (1);
+        }
+        catch (NotBoundException e)
+        { 
+            System.out.println("Races is not registered: " + e.getMessage () + "!");
+            System.exit(1);
+        }
+         
         /* instanciação do objecto remoto que representa o Paddock e geração de um stub para ele */
         Paddock paddock = null;
-        PaddockInterface paddockInterface = null;
-        paddock = new Paddock();
+        IPaddock paddockInterface = null;
+        paddock = new Paddock(ri);
         
         try {
-            paddockInterface = (PaddockInterface) UnicastRemoteObject.exportObject((Remote) paddock, rc.paddockPort());
+            paddockInterface = (IPaddock) UnicastRemoteObject.exportObject((Remote) paddock, rc.paddockPort());
         } catch (RemoteException e) {
             System.out.println("Excepção na geração do stub para o Paddock: " + e.getMessage());
             System.exit(1);

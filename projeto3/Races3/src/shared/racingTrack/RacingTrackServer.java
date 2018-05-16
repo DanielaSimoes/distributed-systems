@@ -6,7 +6,6 @@
 package shared.racingTrack;
 
 import interfaces.RegisterInterface;
-import interfaces.racingTrack.RacingTrackInterface;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -14,7 +13,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import shared.racingTrack.RacingTrack;
+import interfaces.IRacingTrack;
 import structures.constants.RegistryConfigs;
 
 /**
@@ -41,13 +40,31 @@ public class RacingTrackServer {
             System.setSecurityManager(new SecurityManager());
         }
         
+        interfaces.IRaces ri = null;
+        
+        try
+        { 
+            Registry registry = LocateRegistry.getRegistry (rmiRegHostName, rmiRegPortNumb);
+            ri = (interfaces.IRaces) registry.lookup (RegistryConfigs.racesNameEntry);
+        }
+        catch (RemoteException e)
+        { 
+            System.out.println("Exception thrown while locating races: " + e.getMessage () + "!");
+            System.exit (1);
+        }
+        catch (NotBoundException e)
+        { 
+            System.out.println("Races is not registered: " + e.getMessage () + "!");
+            System.exit(1);
+        }
+         
         /* instanciação do objecto remoto que representa o RacingTrack e geração de um stub para ele */
         RacingTrack racing_track = null;
-        RacingTrackInterface racingTrackInterface = null;
-        racing_track = new RacingTrack();
+        IRacingTrack racingTrackInterface = null;
+        racing_track = new RacingTrack(ri);
         
         try {
-            racingTrackInterface = (RacingTrackInterface) UnicastRemoteObject.exportObject((Remote) racing_track, rc.racingTrackPort());
+            racingTrackInterface = (IRacingTrack) UnicastRemoteObject.exportObject((Remote) racing_track, rc.racingTrackPort());
         } catch (RemoteException e) {
             System.out.println("Excepção na geração do stub para o Racing Track: " + e.getMessage());
             System.exit(1);

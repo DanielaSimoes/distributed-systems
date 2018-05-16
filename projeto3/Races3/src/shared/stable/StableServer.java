@@ -6,7 +6,7 @@
 package shared.stable;
 
 import interfaces.RegisterInterface;
-import interfaces.stable.StableInterface;
+import interfaces.IStable;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -40,13 +40,31 @@ public class StableServer {
             System.setSecurityManager(new SecurityManager());
         }
         
+        interfaces.IRaces ri = null;
+        
+        try
+        { 
+            Registry registry = LocateRegistry.getRegistry (rmiRegHostName, rmiRegPortNumb);
+            ri = (interfaces.IRaces) registry.lookup (RegistryConfigs.racesNameEntry);
+        }
+        catch (RemoteException e)
+        { 
+            System.out.println("Exception thrown while locating races: " + e.getMessage () + "!");
+            System.exit (1);
+        }
+        catch (NotBoundException e)
+        { 
+            System.out.println("Races is not registered: " + e.getMessage () + "!");
+            System.exit(1);
+        }
+         
         /* instanciação do objecto remoto que representa o Stable e geração de um stub para ele */
         Stable stable = null;
-        StableInterface stableInterface = null;
-        stable = new Stable();
+        IStable stableInterface = null;
+        stable = new Stable(ri);
         
         try {
-            stableInterface = (StableInterface) UnicastRemoteObject.exportObject((Remote) stable, rc.stablePort());
+            stableInterface = (IStable) UnicastRemoteObject.exportObject((Remote) stable, rc.stablePort());
         } catch (RemoteException e) {
             System.out.println("Excepção na geração do stub para o Stable: " + e.getMessage());
             System.exit(1);
