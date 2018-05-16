@@ -5,6 +5,7 @@
  */
 package interfaces.log;
 
+import java.rmi.RemoteException;
 import structures.enumerates.BrokerState;
 
 /**
@@ -13,4 +14,5 @@ import structures.enumerates.BrokerState;
  */
 public interface IBroker {
     void setBrokerState(BrokerState state);
+    public void finished() throws RemoteException;
 }

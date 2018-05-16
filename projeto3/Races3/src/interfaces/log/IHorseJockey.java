@@ -3,12 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfaces.races;
+package interfaces.log;
+
+import java.rmi.RemoteException;
 
 /**
  *
  * @author Daniela
  */
-public interface IBroker {
-    boolean hasMoreRaces();
+public interface IHorseJockey {
+
+    public void finished() throws RemoteException;
+    
 }

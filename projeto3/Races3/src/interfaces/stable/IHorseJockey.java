@@ -5,6 +5,7 @@
  */
 package interfaces.stable;
 
+import java.rmi.RemoteException;
 import structures.vectorClock.VectorTimestamp;
 
 /**
@@ -12,5 +13,5 @@ import structures.vectorClock.VectorTimestamp;
  * @author Daniela
  */
 public interface IHorseJockey {
-    public VectorTimestamp proceedToStable(VectorTimestamp vt);
+    public VectorTimestamp proceedToStable(VectorTimestamp vt) throws RemoteException;
 }

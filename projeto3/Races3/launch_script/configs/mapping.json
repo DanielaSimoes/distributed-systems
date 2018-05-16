@@ -1,0 +1,99 @@
+[
+    {
+        "class": "Broker",
+        "path": "dir_clientSide/broker",
+        "package": "entities.broker",
+        "type": "client",
+        "command": ["cd Public/classes/; source config.bash; ./clientSide_com.sh &> output"],
+        "sleep": 0
+    },
+    {
+        "class": "HorseJockey",
+        "path": "dir_clientSide/horseJockey",
+        "package": "entities.horseJockey",
+        "type": "client",
+        "command": ["cd Public/classes/; source config.bash; ./clientSide_com.sh &> output"],
+        "sleep": 0
+    },
+    {
+        "class": "Spectators",
+        "path": "dir_clientSide/spectators",
+        "package": "entities.spectators",
+        "type": "client",
+        "command": ["cd Public/classes/; source config.bash; ./clientSide_com.sh &> output"],
+        "sleep": 0
+    },
+    {
+        "class": "Registry",
+        "path": "dir_registry",
+        "package": "registry",
+        "type": "registry",
+        "port": 22447,
+        "command": ["cd Public/classes/; source config.bash; ./set_rmiregistry.sh $registry_port &> output_set_rmiregistry",
+                    "cd Public/classes/; source config.bash; ./registry_com.sh &> output"],
+        "sleep": 4
+    },
+    {
+        "class": "Races",
+        "path": "dir_serverSide/generalRepository/Races",
+        "package": "generalRepository",
+        "type": "server",
+        "port": 22446,
+        "command": ["cd Public/classes/; source config.bash; ./serverSide_com.sh &> output"],
+        "sleep": 4
+    },
+    {
+        "class": "Log",
+        "path": "dir_serverSide/generalRepository/Log",
+        "package": "generalRepository",
+        "type": "server",
+        "port": 22441,
+        "command": ["cd Public/classes/; source config.bash; ./serverSide_com.sh &> output"],
+        "sleep": 4
+    },
+    {
+        "class": "BettingCentre",
+        "path": "dir_serverSide/bettingCentre",
+        "package": "shared.bettingCentre",
+        "type": "server",
+        "port": 22440,
+        "command": ["cd Public/classes/; source config.bash; ./serverSide_com.sh &> output"],
+        "sleep": 4
+    },
+    {
+        "class": "ControlCentre",
+        "path": "dir_serverSide/controlCentre",
+        "package": "shared.controlCentre",
+        "type": "server",
+        "port": 22443,
+        "command": ["cd Public/classes/; source config.bash; ./serverSide_com.sh &> output"],
+        "sleep": 4
+    },
+    {
+        "class": "Paddock",
+        "path": "dir_serverSide/paddock",
+        "package": "shared.paddock",
+        "type": "server",
+        "port": 22444,
+        "command": ["cd Public/classes/; source config.bash; ./serverSide_com.sh &> output"],
+        "sleep": 4
+    },
+    {
+        "class": "RacingTrack",
+        "path": "dir_serverSide/racingTrack",
+        "package": "shared.racingTrack",
+        "type": "server",
+        "port": 22442,
+        "command": ["cd Public/classes/; source config.bash; ./serverSide_com.sh &> output"],
+        "sleep": 4
+    },
+    {
+        "class": "Stable",
+        "path": "dir_serverSide/stable",
+        "package": "shared.stable",
+        "type": "server",
+        "port": 22448,
+        "command": ["cd Public/classes/; source config.bash; ./serverSide_com.sh &> output"],
+        "sleep": 4
+    }
+]

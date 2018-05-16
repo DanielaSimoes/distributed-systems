@@ -54,6 +54,11 @@ public class RegistryConfigs {
     public static String controlCentreNameEntry = "ControlCentreInt";
     
     /**
+     * Races name entry on the registry.
+     */
+    public static String racesNameEntry = "RacesInt";
+    
+    /**
      * Constructor that receives the file with the configurations.
      * @param filename path for the configuration file
      */

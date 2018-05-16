@@ -1,6 +1,9 @@
 package entities.broker;
 
 import generalRepository.Races;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import structures.enumerates.BrokerState;
 import structures.vectorClock.VectorTimestamp;
 
@@ -14,7 +17,6 @@ public class Broker extends Thread{
     * State of the broker
     */
     private BrokerState state;
-    private final int id;
     /**
      *   Shared zones in which broker has actions
      */
@@ -24,9 +26,9 @@ public class Broker extends Thread{
     private final interfaces.racingTrack.IBroker rt;
     private final interfaces.paddock.IBroker paddock;
     private final interfaces.log.IBroker log;
-    private final interfaces.races.IBroker races;
     private int raceId = 0;
     private boolean entertainTheGuests = false;
+    private static Races races; 
     
     private final VectorTimestamp myClock;
     private VectorTimestamp receivedClock;
@@ -41,16 +43,14 @@ public class Broker extends Thread{
     * @param log Log
     * @param races
     */
-    public Broker(int id, interfaces.stable.IBroker s, interfaces.controlCentre.IBroker cc, interfaces.bettingCentre.IBroker bc, interfaces.racingTrack.IBroker rt, interfaces.paddock.IBroker paddock, interfaces.log.IBroker log, interfaces.races.IBroker races){
+    public Broker(interfaces.stable.IBroker s, interfaces.controlCentre.IBroker cc, interfaces.bettingCentre.IBroker bc, interfaces.racingTrack.IBroker rt, interfaces.paddock.IBroker paddock, interfaces.log.IBroker log){
         this.stable = s;
         this.cc = cc;
         this.bc = bc;
         this.rt = rt;
         this.paddock = paddock;
         this.log = log;
-        this.races = races;
         this.state = BrokerState.OPENING_THE_EVENT;
-        this.id = id;
         this.myClock = new VectorTimestamp(4,4);//////??????????????????????????????????
         this.setName("Broker");
     }
@@ -63,86 +63,90 @@ public class Broker extends Thread{
     */
     @Override
     public void run(){
-        this.setBrokerState(BrokerState.OPENING_THE_EVENT);
-        
-        while(!this.entertainTheGuests){
+        try {
+            this.setBrokerState(BrokerState.OPENING_THE_EVENT);
 
-            switch(this.state){
+            while(!this.entertainTheGuests){
 
-                case OPENING_THE_EVENT:
-                    this.myClock.increment();
-                    this.receivedClock = stable.summonHorsesToPaddock(this.myClock.clone());
-                    this.myClock.update(this.receivedClock);
-                    
-                    this.myClock.increment();
-                    this.receivedClock = paddock.summonHorsesToPaddock(this.myClock.clone());
-                    this.myClock.update(this.receivedClock);
-                    
-                    break;
+                switch(this.state){
 
-                case ANNOUNCING_NEXT_RACE:
-                    this.myClock.increment();
-                    this.receivedClock = bc.acceptTheBets(this.myClock.clone());
-                    this.myClock.update(this.receivedClock);
-                    
-                    break;
-
-                case WAITING_FOR_BETS:
-                    this.myClock.increment();
-                    this.receivedClock = rt.startTheRace(this.myClock.clone());
-                    this.myClock.update(this.receivedClock);
-                    
-                    break;
-
-                case SUPERVISING_THE_RACE:
-                    this.myClock.increment();
-                    this.receivedClock = cc.reportResults(this.myClock.clone());
-                    this.myClock.update(this.receivedClock);
-                    
-                    if(bc.areThereAnyWinners()){
-                        this.myClock.increment();
-                        this.receivedClock = bc.honourTheBets(this.myClock.clone());
-                        this.myClock.update(this.receivedClock);
-                    }
-                    
-                    if(races.hasMoreRaces()){
-                        this.nextRace();
-                        
+                    case OPENING_THE_EVENT:
                         this.myClock.increment();
                         this.receivedClock = stable.summonHorsesToPaddock(this.myClock.clone());
                         this.myClock.update(this.receivedClock);
-                        
+
                         this.myClock.increment();
                         this.receivedClock = paddock.summonHorsesToPaddock(this.myClock.clone());
                         this.myClock.update(this.receivedClock);
-                    }else{
-                        this.entertainTheGuests = true;
-                    }
 
-                    break;
+                        break;
 
-                case SETTLING_ACCOUNTS:
-                    if(races.hasMoreRaces()){
-                        this.nextRace();
-                        
+                    case ANNOUNCING_NEXT_RACE:
                         this.myClock.increment();
-                        this.receivedClock = stable.summonHorsesToPaddock(this.myClock.clone());
+                        this.receivedClock = bc.acceptTheBets(this.myClock.clone());
                         this.myClock.update(this.receivedClock);
-                        
-                        this.myClock.increment();
-                        this.receivedClock = paddock.summonHorsesToPaddock(this.myClock.clone());
-                        this.myClock.update(this.receivedClock);
-                    }else{
-                        this.entertainTheGuests = true;
-                    }
-                    break;
 
+                        break;
+
+                    case WAITING_FOR_BETS:
+                        this.myClock.increment();
+                        this.receivedClock = rt.startTheRace(this.myClock.clone());
+                        this.myClock.update(this.receivedClock);
+
+                        break;
+
+                    case SUPERVISING_THE_RACE:
+                        this.myClock.increment();
+                        this.receivedClock = cc.reportResults(this.myClock.clone());
+                        this.myClock.update(this.receivedClock);
+
+                        if(bc.areThereAnyWinners()){
+                            this.myClock.increment();
+                            this.receivedClock = bc.honourTheBets(this.myClock.clone());
+                            this.myClock.update(this.receivedClock);
+                        }
+
+                        if(races.hasMoreRaces()){
+                            this.nextRace();
+
+                            this.myClock.increment();
+                            this.receivedClock = stable.summonHorsesToPaddock(this.myClock.clone());
+                            this.myClock.update(this.receivedClock);
+
+                            this.myClock.increment();
+                            this.receivedClock = paddock.summonHorsesToPaddock(this.myClock.clone());
+                            this.myClock.update(this.receivedClock);
+                        }else{
+                            this.entertainTheGuests = true;
+                        }
+
+                        break;
+
+                    case SETTLING_ACCOUNTS:
+                        if(races.hasMoreRaces()){
+                            this.nextRace();
+
+                            this.myClock.increment();
+                            this.receivedClock = stable.summonHorsesToPaddock(this.myClock.clone());
+                            this.myClock.update(this.receivedClock);
+
+                            this.myClock.increment();
+                            this.receivedClock = paddock.summonHorsesToPaddock(this.myClock.clone());
+                            this.myClock.update(this.receivedClock);
+                        }else{
+                            this.entertainTheGuests = true;
+                        }
+                        break;
+
+                }
             }
+
+            this.myClock.increment();
+            this.receivedClock = this.stable.entertainTheGuests(this.myClock.clone());
+            this.myClock.update(this.receivedClock);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Broker.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        this.myClock.increment();
-        this.receivedClock = this.stable.entertainTheGuests(this.myClock.clone());
-        this.myClock.update(this.receivedClock);
     }
     
     /**

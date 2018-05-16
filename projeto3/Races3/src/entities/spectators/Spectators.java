@@ -3,6 +3,9 @@ package entities.spectators;
 import generalRepository.Log;
 import generalRepository.Races;
 import interfaces.entity.EntityInterface;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import structures.enumerates.SpectatorsState;
 import structures.vectorClock.VectorTimestamp;
 
@@ -61,73 +64,77 @@ public class Spectators extends Thread implements EntityInterface{
     */
     @Override
     public void run(){ 
-        this.setSpectatorsState(SpectatorsState.WAITING_FOR_A_RACE_TO_START);
-        
-        while(!this.relaxABit){
-            switch(this.state){
+        try {
+            this.setSpectatorsState(SpectatorsState.WAITING_FOR_A_RACE_TO_START);
 
-                case WAITING_FOR_A_RACE_TO_START:
-                    this.myClock.increment();
-                    this.receivedClock = cc.waitForNextRace(this.myClock.clone());
-                    this.myClock.update(this.receivedClock);
-                    
-                    this.myClock.increment();
-                    this.receivedClock =paddock.goCheckHorses(this.myClock.clone());
-                    this.myClock.update(this.receivedClock);
-                    
-                    break;
+            while(!this.relaxABit){
+                switch(this.state){
 
-                case APPRAISING_THE_HORSES:
-                    bc.placeABet();
-                    break;
-
-                case PLACING_A_BET:
-                    this.myClock.increment();
-                    this.receivedClock = cc.goWatchTheRace(this.myClock.clone());
-                    this.myClock.update(this.receivedClock);
-                    
-                    break;
-
-                case WATCHING_A_RACE:
-                    if(cc.haveIWon()){
-                        bc.goCollectTheGains();
-                    }
-                    
-                    if(races.hasMoreRaces()){
-                        this.nextRace();
+                    case WAITING_FOR_A_RACE_TO_START:
                         this.myClock.increment();
                         this.receivedClock = cc.waitForNextRace(this.myClock.clone());
                         this.myClock.update(this.receivedClock);
-                        
-                        this.myClock.increment();
-                        this.receivedClock = paddock.goCheckHorses(this.myClock.clone());
-                        this.myClock.update(this.receivedClock);
-                    }else{
-                        this.relaxABit = true;
-                    }
-                    break;
 
-                case COLLECTING_THE_GAINS:
-                    if(races.hasMoreRaces()){
-                        this.nextRace();
-                        
                         this.myClock.increment();
-                        this.receivedClock = cc.waitForNextRace(this.myClock.clone());
+                        this.receivedClock =paddock.goCheckHorses(this.myClock.clone());
                         this.myClock.update(this.receivedClock);
-                        
+
+                        break;
+
+                    case APPRAISING_THE_HORSES:
+                        bc.placeABet();
+                        break;
+
+                    case PLACING_A_BET:
                         this.myClock.increment();
-                        this.receivedClock = paddock.goCheckHorses(this.myClock.clone());
+                        this.receivedClock = cc.goWatchTheRace(this.myClock.clone());
                         this.myClock.update(this.receivedClock);
-                    }else{
-                        this.relaxABit = true;
-                    }
-                    break;
-            }   
+
+                        break;
+
+                    case WATCHING_A_RACE:
+                        if(cc.haveIWon()){
+                            bc.goCollectTheGains();
+                        }
+
+                        if(races.hasMoreRaces()){
+                            this.nextRace();
+                            this.myClock.increment();
+                            this.receivedClock = cc.waitForNextRace(this.myClock.clone());
+                            this.myClock.update(this.receivedClock);
+
+                            this.myClock.increment();
+                            this.receivedClock = paddock.goCheckHorses(this.myClock.clone());
+                            this.myClock.update(this.receivedClock);
+                        }else{
+                            this.relaxABit = true;
+                        }
+                        break;
+
+                    case COLLECTING_THE_GAINS:
+                        if(races.hasMoreRaces()){
+                            this.nextRace();
+
+                            this.myClock.increment();
+                            this.receivedClock = cc.waitForNextRace(this.myClock.clone());
+                            this.myClock.update(this.receivedClock);
+
+                            this.myClock.increment();
+                            this.receivedClock = paddock.goCheckHorses(this.myClock.clone());
+                            this.myClock.update(this.receivedClock);
+                        }else{
+                            this.relaxABit = true;
+                        }
+                        break;
+                }   
+            }
+
+            this.myClock.increment();
+            this.receivedClock = cc.relaxABit(this.myClock.clone());
+            this.myClock.update(this.receivedClock);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Spectators.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        this.myClock.increment();
-        this.receivedClock = cc.relaxABit(this.myClock.clone());
-        this.myClock.update(this.receivedClock);
     }
     
     /**

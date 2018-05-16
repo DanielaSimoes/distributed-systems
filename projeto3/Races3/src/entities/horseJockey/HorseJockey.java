@@ -4,6 +4,10 @@ import generalRepository.Log;
 import generalRepository.Races;
 import structures.enumerates.HorseJockeyState;
 import interfaces.entity.EntityInterface;
+import interfaces.stable.IBroker;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import structures.vectorClock.VectorTimestamp;
 
 /**
@@ -62,70 +66,74 @@ public class HorseJockey extends Thread implements EntityInterface{
     */
     @Override
     public void run(){  
-        this.races.setHorseJockeyStepSize(id, stepSize);
-        this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
-        this.receivedClock = stable.proceedToStable(this.myClock.clone());
-                    
-        while(!this.entertainTheGuests){
-            switch(this.state){
-                case AT_THE_STABLE:
-                    if(races.hasMoreRaces()){
+        try {
+            this.races.setHorseJockeyStepSize(id, stepSize);
+            this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
+            this.receivedClock = stable.proceedToStable(this.myClock.clone());
+
+            while(!this.entertainTheGuests){
+                switch(this.state){
+                    case AT_THE_STABLE:
+                        if(races.hasMoreRaces()){
+                            this.myClock.increment();
+                            this.receivedClock = cc.proceedToPaddock(this.myClock.clone());
+                            this.myClock.update(this.receivedClock);
+
+                            this.myClock.increment();
+                            this.receivedClock = paddock.proceedToPaddock(this.myClock.clone());
+                            this.myClock.update(this.receivedClock);
+                        }else{
+                            this.entertainTheGuests = true;
+                        }
+                        break;
+                    case AT_THE_PADDOCK:
                         this.myClock.increment();
-                        this.receivedClock = cc.proceedToPaddock(this.myClock.clone());
+                        this.receivedClock = paddock.proceedToStartLine(this.myClock.clone());
                         this.myClock.update(this.receivedClock);
-                        
+
                         this.myClock.increment();
-                        this.receivedClock = paddock.proceedToPaddock(this.myClock.clone());
+                        this.receivedClock = rt.proceedToStartLine(this.myClock.clone());
                         this.myClock.update(this.receivedClock);
-                    }else{
-                        this.entertainTheGuests = true;
-                    }
-                    break;
-                case AT_THE_PADDOCK:
-                    this.myClock.increment();
-                    this.receivedClock = paddock.proceedToStartLine(this.myClock.clone());
-                    this.myClock.update(this.receivedClock);
-                    
-                    this.myClock.increment();
-                    this.receivedClock = rt.proceedToStartLine(this.myClock.clone());
-                    this.myClock.update(this.receivedClock);
-                    break;
-                case AT_THE_START_LINE:
-                    this.myClock.increment();
-                    this.receivedClock = rt.makeAMove(this.myClock.clone());
-                    this.myClock.update(this.receivedClock);
-                    
-                    this.log.makeAMove();
-                    break;
-                case RUNNNING:
-                    while(!rt.hasFinishLineBeenCrossed(this.id)){
+                        break;
+                    case AT_THE_START_LINE:
                         this.myClock.increment();
                         this.receivedClock = rt.makeAMove(this.myClock.clone());
                         this.myClock.update(this.receivedClock);
-                        
-                        this.log.makeAMove();
-                    }
-                    break;
-                case AT_THE_FINISH_LINE:
-                    if(races.hasMoreRaces()){
-                        this.nextRace();
-                        
-                        this.myClock.increment();
-                        this.receivedClock = stable.proceedToStable(this.myClock.clone());
-                        this.myClock.update(this.receivedClock);
-                        
-                    }else{
-                        this.myClock.increment();
-                        this.receivedClock = stable.proceedToStable(this.myClock.clone());
-                        this.myClock.update(this.receivedClock);
-                    }
-                    
-                    if(!races.hasMoreRaces()){
-                        this.entertainTheGuests = true;
-                    }
-                    break;
 
+                        this.log.makeAMove();
+                        break;
+                    case RUNNNING:
+                        while(!rt.hasFinishLineBeenCrossed(this.id)){
+                            this.myClock.increment();
+                            this.receivedClock = rt.makeAMove(this.myClock.clone());
+                            this.myClock.update(this.receivedClock);
+
+                            this.log.makeAMove();
+                        }
+                        break;
+                    case AT_THE_FINISH_LINE:
+                        if(races.hasMoreRaces()){
+                            this.nextRace();
+
+                            this.myClock.increment();
+                            this.receivedClock = stable.proceedToStable(this.myClock.clone());
+                            this.myClock.update(this.receivedClock);
+
+                        }else{
+                            this.myClock.increment();
+                            this.receivedClock = stable.proceedToStable(this.myClock.clone());
+                            this.myClock.update(this.receivedClock);
+                        }
+
+                        if(!races.hasMoreRaces()){
+                            this.entertainTheGuests = true;
+                        }
+                        break;
+
+                }
             }
+        } catch (RemoteException ex) {
+            Logger.getLogger(HorseJockey.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

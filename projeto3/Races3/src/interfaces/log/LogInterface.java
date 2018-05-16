@@ -5,10 +5,13 @@
  */
 package interfaces.log;
 
+import java.rmi.RemoteException;
+
 /**
  *
  * @author Daniela
  */
-public class LogInterface {
+public interface LogInterface {
+    public void finished() throws RemoteException;
     
 }

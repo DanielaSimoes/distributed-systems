@@ -5,6 +5,7 @@
  */
 package interfaces.bettingCentre;
 
+import java.rmi.RemoteException;
 import structures.vectorClock.VectorTimestamp;
 
 /**
@@ -12,9 +13,9 @@ import structures.vectorClock.VectorTimestamp;
  * @author Daniela
  */
 public interface IBroker {
-    public VectorTimestamp acceptTheBets(VectorTimestamp vt);
-    public VectorTimestamp honourTheBets(VectorTimestamp vt);
-    public boolean areThereAnyWinners();
-    public VectorTimestamp placeABet(VectorTimestamp vt);
-    public VectorTimestamp goCollectTheGains(VectorTimestamp vt);
+    public VectorTimestamp acceptTheBets(VectorTimestamp vt) throws RemoteException;
+    public VectorTimestamp honourTheBets(VectorTimestamp vt) throws RemoteException;
+    public boolean areThereAnyWinners() throws RemoteException;
+    public VectorTimestamp placeABet(VectorTimestamp vt) throws RemoteException;
+    public VectorTimestamp goCollectTheGains(VectorTimestamp vt) throws RemoteException;
 }

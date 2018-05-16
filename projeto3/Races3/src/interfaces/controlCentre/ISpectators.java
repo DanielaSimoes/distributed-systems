@@ -13,8 +13,8 @@ import structures.vectorClock.VectorTimestamp;
  * @author Daniela
  */
 public interface ISpectators {
-    public VectorTimestamp waitForNextRace(VectorTimestamp vt);
-    public VectorTimestamp goWatchTheRace(VectorTimestamp vt);
-    public VectorTimestamp relaxABit(VectorTimestamp vt);
-    public boolean haveIWon();
+    public VectorTimestamp waitForNextRace(VectorTimestamp vt) throws RemoteException;
+    public VectorTimestamp goWatchTheRace(VectorTimestamp vt) throws RemoteException;
+    public VectorTimestamp relaxABit(VectorTimestamp vt) throws RemoteException;
+    public boolean haveIWon() throws RemoteException;
 }
