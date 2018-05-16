@@ -33,7 +33,7 @@ public class Stable implements IStable {
      * @param raceNumber
     */
     @Override
-    public synchronized void summonHorsesToPaddock(int raceNumber){
+    public synchronized void summonHorsesToPaddock(int raceNumber) throws RemoteException{
         this.races.setAnnouncedNextRace(true, raceNumber);
         notifyAll();
     };
@@ -47,7 +47,7 @@ public class Stable implements IStable {
      * @return 
     */
     @Override
-    public synchronized int proceedToStable(int raceNumber, int horseID, int horseStepSize){
+    public synchronized int proceedToStable(int raceNumber, int horseID, int horseStepSize) throws RemoteException{
         while(!((races.getAnnouncedNextRace(raceNumber) && this.races.getWakedHorsesToPaddock(raceNumber)!=races.getNRunningHorses(raceNumber) && races.horseHasBeenSelectedToRace(horseID, horseStepSize, raceNumber)) || wakeEntertainTheGuests)){
             try{
                 wait();

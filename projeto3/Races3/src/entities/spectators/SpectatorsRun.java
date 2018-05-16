@@ -17,7 +17,7 @@ import structures.constants.RegistryConfigs;
 public class SpectatorsRun {
     
     
-    public static void main(String [] args) {   
+    public static void main(String [] args) throws RemoteException {   
         
         ArrayList<Spectators> spectators = new ArrayList<>(Constants.N_OF_SPECTATORS);
         

@@ -3,6 +3,9 @@ package entities.spectators;
 import structures.enumerates.SpectatorsState;
 import generalRepository.races.Bet;
 import interfaces.IEntity;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import structures.constants.Constants;
 
 /**
@@ -37,7 +40,7 @@ public class Spectators extends Thread implements IEntity{
     * @param id The ID of the spectator.
      * @param log
     */
-    public Spectators(interfaces.IControlCentre cc, interfaces.IBettingCentre bc, interfaces.IPaddock paddock, int moneyToBet, int id, interfaces.IRaces races, interfaces.ILog log){
+    public Spectators(interfaces.IControlCentre cc, interfaces.IBettingCentre bc, interfaces.IPaddock paddock, int moneyToBet, int id, interfaces.IRaces races, interfaces.ILog log) throws RemoteException{
         this.id = id;
         this.cc = cc;
         this.bc = bc;
@@ -60,67 +63,71 @@ public class Spectators extends Thread implements IEntity{
     */
     @Override
     public void run(){ 
-        System.out.printf("Spectator %d started!\n", this.id); 
-        
-        while(!this.relaxABit){
-            switch(this.state){
+        try{
+            System.out.printf("Spectator %d started!\n", this.id); 
 
-                case WAITING_FOR_A_RACE_TO_START:
-                    this.setSpectatorsState(SpectatorsState.WAITING_FOR_A_RACE_TO_START);
-                    cc.waitForNextRace(raceId);
-                    
-                    this.setSpectatorsState(SpectatorsState.APPRAISING_THE_HORSES);
-                    paddock.goCheckHorses(raceId);
-                    break;
+            while(!this.relaxABit){
+                switch(this.state){
 
-                case APPRAISING_THE_HORSES:
-                    this.setSpectatorsState(SpectatorsState.PLACING_A_BET);
-                    Bet bet = bc.placeABet(raceId, this.id, this.initialMoney, this.moneyToBet);
-                    this.subtractMoneyToBet(bet.getAmount());
-                    break;
-
-                case PLACING_A_BET:
-                    this.setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
-                    cc.goWatchTheRace(raceId);
-                    break;
-
-                case WATCHING_A_RACE:
-                    this.setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
-                    if(cc.haveIWon(raceId, this.id)){
-                        this.setSpectatorsState(SpectatorsState.COLLECTING_THE_GAINS);
-                        int gains = bc.goCollectTheGains(raceId, this.id);
-                        this.addMoneyToBet(gains);
-                    }
-                    
-                    if(races.hasMoreRaces()){
-                        this.nextRace();
+                    case WAITING_FOR_A_RACE_TO_START:
                         this.setSpectatorsState(SpectatorsState.WAITING_FOR_A_RACE_TO_START);
                         cc.waitForNextRace(raceId);
-                        
-                        this.setSpectatorsState(SpectatorsState.APPRAISING_THE_HORSES);
-                        paddock.goCheckHorses(raceId);
-                    }else{
-                        this.relaxABit = true;
-                    }
-                    break;
 
-                case COLLECTING_THE_GAINS:
-                    if(races.hasMoreRaces()){
-                        this.nextRace();
-                        this.setSpectatorsState(SpectatorsState.WAITING_FOR_A_RACE_TO_START);
-                        cc.waitForNextRace(raceId);
-                        
                         this.setSpectatorsState(SpectatorsState.APPRAISING_THE_HORSES);
                         paddock.goCheckHorses(raceId);
-                    }else{
-                        this.relaxABit = true;
-                    }
-                    break;
+                        break;
+
+                    case APPRAISING_THE_HORSES:
+                        this.setSpectatorsState(SpectatorsState.PLACING_A_BET);
+                        Bet bet = bc.placeABet(raceId, this.id, this.initialMoney, this.moneyToBet);
+                        this.subtractMoneyToBet(bet.getAmount());
+                        break;
+
+                    case PLACING_A_BET:
+                        this.setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
+                        cc.goWatchTheRace(raceId);
+                        break;
+
+                    case WATCHING_A_RACE:
+                        this.setSpectatorsState(SpectatorsState.WATCHING_A_RACE);
+                        if(cc.haveIWon(raceId, this.id)){
+                            this.setSpectatorsState(SpectatorsState.COLLECTING_THE_GAINS);
+                            int gains = bc.goCollectTheGains(raceId, this.id);
+                            this.addMoneyToBet(gains);
+                        }
+
+                        if(races.hasMoreRaces()){
+                            this.nextRace();
+                            this.setSpectatorsState(SpectatorsState.WAITING_FOR_A_RACE_TO_START);
+                            cc.waitForNextRace(raceId);
+
+                            this.setSpectatorsState(SpectatorsState.APPRAISING_THE_HORSES);
+                            paddock.goCheckHorses(raceId);
+                        }else{
+                            this.relaxABit = true;
+                        }
+                        break;
+
+                    case COLLECTING_THE_GAINS:
+                        if(races.hasMoreRaces()){
+                            this.nextRace();
+                            this.setSpectatorsState(SpectatorsState.WAITING_FOR_A_RACE_TO_START);
+                            cc.waitForNextRace(raceId);
+
+                            this.setSpectatorsState(SpectatorsState.APPRAISING_THE_HORSES);
+                            paddock.goCheckHorses(raceId);
+                        }else{
+                            this.relaxABit = true;
+                        }
+                        break;
+                }
             }
+
+            this.setSpectatorsState(SpectatorsState.CELEBRATING);
+            cc.relaxABit();
+        } catch (RemoteException ex) {
+            Logger.getLogger(Spectators.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        this.setSpectatorsState(SpectatorsState.CELEBRATING);
-        cc.relaxABit();
     }
     
     /**
@@ -140,7 +147,7 @@ public class Spectators extends Thread implements IEntity{
     * Method to set the state of the Spectator.
     * @param state The state to be assigned to the Spectator.
     */
-    public void setSpectatorsState(SpectatorsState state){
+    public void setSpectatorsState(SpectatorsState state) throws RemoteException{
         if(state==this.state){
             return;
         }
@@ -180,7 +187,7 @@ public class Spectators extends Thread implements IEntity{
     *
     * Method to subtract spectators money in case of loss.
     */
-    public void subtractMoneyToBet(int money){
+    public void subtractMoneyToBet(int money) throws RemoteException{
         this.moneyToBet -= money;
         this.log.setSpectatorAmount(id, moneyToBet);
     }
@@ -189,7 +196,7 @@ public class Spectators extends Thread implements IEntity{
     *
     * Method to add spectators money in case of winning.
     */
-    public void addMoneyToBet(int money){
+    public void addMoneyToBet(int money) throws RemoteException{
         this.moneyToBet += money;
         this.log.setSpectatorAmount(id, moneyToBet);
     }

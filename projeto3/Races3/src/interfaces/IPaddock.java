@@ -8,9 +8,9 @@ import java.rmi.RemoteException;
  * @author Daniela Simes, 76771
  */
 public interface IPaddock extends Remote{
-    public void proceedToPaddock(int raceNumber);
-    public void proceedToStartLine(int raceNumber);
-    public void goCheckHorses(int raceNumber);
-    public void summonHorsesToPaddock(int raceNumber);
+    public void proceedToPaddock(int raceNumber)  throws RemoteException;
+    public void proceedToStartLine(int raceNumber)  throws RemoteException;
+    public void goCheckHorses(int raceNumber)  throws RemoteException;
+    public void summonHorsesToPaddock(int raceNumber) throws RemoteException;
     public void signalShutdown() throws RemoteException;
 }

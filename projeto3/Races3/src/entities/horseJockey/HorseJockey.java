@@ -2,6 +2,9 @@ package entities.horseJockey;
 
 import structures.enumerates.HorseJockeyState;
 import interfaces.IEntity;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import structures.constants.Constants;
 
 /**
@@ -49,7 +52,6 @@ public class HorseJockey extends Thread implements IEntity{
         this.setName("HorseJockey " + id);
         this.entertainTheGuests = false;
         this.races = races;
-        this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
     }
     
     /**
@@ -59,79 +61,84 @@ public class HorseJockey extends Thread implements IEntity{
     * This method runs until there are no more races to happen.
     */
     @Override
-    public void run(){  
-        System.out.printf("Horse Jockey %d started!\n", this.id);
-        
-        this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
-        this.raceId = stable.proceedToStable(raceId, this.id, this.stepSize);
-                    
-        while(!this.entertainTheGuests){
-            switch(this.state){
-                case AT_THE_STABLE:
-                    if(races.hasMoreRaces()){
-                        this.setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
-                        cc.proceedToPaddock(raceId);
-                        
-                        this.setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
-                        paddock.proceedToPaddock(raceId);
-                    }else{
-                        this.entertainTheGuests = true;
-                    }
-                    break;
-                case AT_THE_PADDOCK:
-                    while(races.horsesFinished(raceId)){
-                        this.nextRace();
+    public void run(){ 
+        try{
+            this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
+            System.out.printf("Horse Jockey %d started!\n", this.id);
 
-                        if(!races.hasMoreRaces() && races.horsesFinished(raceId)){
-                            break;
+            this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
+            this.raceId = stable.proceedToStable(raceId, this.id, this.stepSize);
+
+            while(!this.entertainTheGuests){
+                switch(this.state){
+                    case AT_THE_STABLE:
+                        if(races.hasMoreRaces()){
+                            this.setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
+                            cc.proceedToPaddock(raceId);
+
+                            this.setHorseJockeyState(HorseJockeyState.AT_THE_PADDOCK);
+                            paddock.proceedToPaddock(raceId);
+                        }else{
+                            this.entertainTheGuests = true;
                         }
-                    }
-                    
-                    this.setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
-                    paddock.proceedToStartLine(raceId);
-                    
-                    this.setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
-                    rt.proceedToStartLine(raceId, this.id);
-                    break;
-                case AT_THE_START_LINE:
-                    rt.makeAMove(raceId, this.id);
+                        break;
+                    case AT_THE_PADDOCK:
+                        while(races.horsesFinished(raceId)){
+                            this.nextRace();
 
-                    if(rt.hasFinishLineBeenCrossed(this.id, raceId)){
-                        this.setHorseJockeyState(HorseJockeyState.AT_THE_FINISH_LINE);
-                    }else{
-                        this.setHorseJockeyState(HorseJockeyState.RUNNNING);
-                    }
+                            if(!races.hasMoreRaces() && races.horsesFinished(raceId)){
+                                break;
+                            }
+                        }
 
-                    this.log.makeAMove(this.raceId);
-                    break;
-                case RUNNNING:
-                    while(!rt.hasFinishLineBeenCrossed(this.id, raceId)){
+                        this.setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
+                        paddock.proceedToStartLine(raceId);
+
+                        this.setHorseJockeyState(HorseJockeyState.AT_THE_START_LINE);
+                        rt.proceedToStartLine(raceId, this.id);
+                        break;
+                    case AT_THE_START_LINE:
                         rt.makeAMove(raceId, this.id);
-                        
+
                         if(rt.hasFinishLineBeenCrossed(this.id, raceId)){
                             this.setHorseJockeyState(HorseJockeyState.AT_THE_FINISH_LINE);
                         }else{
                             this.setHorseJockeyState(HorseJockeyState.RUNNNING);
                         }
-                        this.log.makeAMove(this.raceId);
-                    }
-                    break;
-                case AT_THE_FINISH_LINE:
-                    if(races.hasMoreRaces()){
-                        this.nextRace();
-                        this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
-                        this.raceId = stable.proceedToStable(raceId, this.id, this.stepSize);
-                    }else{
-                        this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
-                        this.raceId = stable.proceedToStable(raceId, this.id, this.stepSize);
-                    }
-                    
-                    if(!races.hasMoreRaces()){
-                        this.entertainTheGuests = true;
-                    }
-                    break;
 
+                        this.log.makeAMove(this.raceId);
+                        break;
+                    case RUNNNING:
+                        while(!rt.hasFinishLineBeenCrossed(this.id, raceId)){
+                            rt.makeAMove(raceId, this.id);
+
+                            if(rt.hasFinishLineBeenCrossed(this.id, raceId)){
+                                this.setHorseJockeyState(HorseJockeyState.AT_THE_FINISH_LINE);
+                            }else{
+                                this.setHorseJockeyState(HorseJockeyState.RUNNNING);
+                            }
+                            this.log.makeAMove(this.raceId);
+                        }
+                        break;
+                    case AT_THE_FINISH_LINE:
+                        if(races.hasMoreRaces()){
+                            this.nextRace();
+                            this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
+                            this.raceId = stable.proceedToStable(raceId, this.id, this.stepSize);
+                        }else{
+                            this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
+                            this.raceId = stable.proceedToStable(raceId, this.id, this.stepSize);
+                        }
+
+                        if(!races.hasMoreRaces()){
+                            this.entertainTheGuests = true;
+                        }
+                        break;
+
+                }
             }
+        } catch (RemoteException ex) {
+            Logger.getLogger(HorseJockey.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -161,7 +168,7 @@ public class HorseJockey extends Thread implements IEntity{
     * Method to set the state of the HorseJockey.
     * @param state The state to be assigned to the HorseJockey.
     */
-    public void setHorseJockeyState(HorseJockeyState state){
+    public void setHorseJockeyState(HorseJockeyState state) throws RemoteException{
         if(state==this.state){
             return;
         }

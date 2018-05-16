@@ -2,6 +2,9 @@ package entities.broker;
 
 import structures.enumerates.BrokerState;
 import interfaces.IEntity;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import structures.constants.Constants;
 
 /**
@@ -55,72 +58,76 @@ public class Broker extends Thread implements IEntity{
     */
     @Override
     public void run(){
-        this.setBrokerState(BrokerState.OPENING_THE_EVENT);
-        
-        while(!this.entertainTheGuests){
+        try{
+            this.setBrokerState(BrokerState.OPENING_THE_EVENT);
 
-            switch(this.state){
+            while(!this.entertainTheGuests){
 
-                case OPENING_THE_EVENT:
-                    this.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
-                    stable.summonHorsesToPaddock(raceId);
-                    
-                    this.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
-                    paddock.summonHorsesToPaddock(raceId);
-                    break;
+                switch(this.state){
 
-                case ANNOUNCING_NEXT_RACE:
-                    this.setBrokerState(BrokerState.WAITING_FOR_BETS);
-                    bc.acceptTheBets(raceId);
-                    break;
-
-                case WAITING_FOR_BETS:
-                    this.setBrokerState(BrokerState.SUPERVISING_THE_RACE);
-                    rt.startTheRace(raceId);
-                    break;
-
-                case SUPERVISING_THE_RACE:
-                    this.setBrokerState(BrokerState.SUPERVISING_THE_RACE);
-                    cc.reportResults(raceId);
-                    
-                    this.setBrokerState(BrokerState.SUPERVISING_THE_RACE);
-      
-                    if(bc.areThereAnyWinners(raceId)){ 
-                        this.setBrokerState(BrokerState.SETTLING_ACCOUNTS);
-                        bc.honourTheBets(raceId);
-                    }
-                    
-                    if(races.hasMoreRaces()){
-                        this.nextRace();
+                    case OPENING_THE_EVENT:
                         this.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
                         stable.summonHorsesToPaddock(raceId);
-                        
+
                         this.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
                         paddock.summonHorsesToPaddock(raceId);
-                    }else{
-                        this.entertainTheGuests = true;
-                    }
+                        break;
 
-                    break;
+                    case ANNOUNCING_NEXT_RACE:
+                        this.setBrokerState(BrokerState.WAITING_FOR_BETS);
+                        bc.acceptTheBets(raceId);
+                        break;
 
-                case SETTLING_ACCOUNTS:
-                    if(races.hasMoreRaces()){
-                        this.nextRace();
-                        this.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
-                        stable.summonHorsesToPaddock(raceId);
-                        
-                        this.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
-                        paddock.summonHorsesToPaddock(raceId);
-                    }else{
-                        this.entertainTheGuests = true;
-                    }
-                    break;
+                    case WAITING_FOR_BETS:
+                        this.setBrokerState(BrokerState.SUPERVISING_THE_RACE);
+                        rt.startTheRace(raceId);
+                        break;
 
+                    case SUPERVISING_THE_RACE:
+                        this.setBrokerState(BrokerState.SUPERVISING_THE_RACE);
+                        cc.reportResults(raceId);
+
+                        this.setBrokerState(BrokerState.SUPERVISING_THE_RACE);
+
+                        if(bc.areThereAnyWinners(raceId)){ 
+                            this.setBrokerState(BrokerState.SETTLING_ACCOUNTS);
+                            bc.honourTheBets(raceId);
+                        }
+
+                        if(races.hasMoreRaces()){
+                            this.nextRace();
+                            this.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
+                            stable.summonHorsesToPaddock(raceId);
+
+                            this.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
+                            paddock.summonHorsesToPaddock(raceId);
+                        }else{
+                            this.entertainTheGuests = true;
+                        }
+
+                        break;
+
+                    case SETTLING_ACCOUNTS:
+                        if(races.hasMoreRaces()){
+                            this.nextRace();
+                            this.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
+                            stable.summonHorsesToPaddock(raceId);
+
+                            this.setBrokerState(BrokerState.ANNOUNCING_NEXT_RACE);
+                            paddock.summonHorsesToPaddock(raceId);
+                        }else{
+                            this.entertainTheGuests = true;
+                        }
+                        break;
+
+                }
             }
-        }
 
-        this.setBrokerState(BrokerState.PLAYING_HOST_AT_THE_BAR);
-        this.stable.entertainTheGuests();
+            this.setBrokerState(BrokerState.PLAYING_HOST_AT_THE_BAR);
+            this.stable.entertainTheGuests();
+        } catch (RemoteException ex) {
+            Logger.getLogger(Broker.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**
@@ -140,7 +147,7 @@ public class Broker extends Thread implements IEntity{
     * Method to set the state of the broker.
     * @param state The state to be assigned to the broker.
     */
-    public void setBrokerState(BrokerState state){
+    public void setBrokerState(BrokerState state) throws RemoteException{
         if(state==this.state){
             return;
         }

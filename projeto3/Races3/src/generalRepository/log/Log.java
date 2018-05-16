@@ -133,7 +133,7 @@ public class Log implements ILog{
     * @param raceNumber
      * @param call_timestamp
     */
-    public void writeLine(int raceNumber, long call_timestamp){
+    public void writeLine(int raceNumber, long call_timestamp) throws RemoteException{
         if(call_timestamp < this.last_wr_timestamp){
             return;
         }
@@ -246,7 +246,7 @@ public class Log implements ILog{
     * @param raceNumber
     */
     @Override
-    public void setBrokerState(BrokerState state, int raceNumber){
+    public void setBrokerState(BrokerState state, int raceNumber) throws RemoteException{
         this.brokerState = state;
         
         if(state==BrokerState.OPENING_THE_EVENT){
@@ -266,7 +266,7 @@ public class Log implements ILog{
     * @param raceNumber
     */
     @Override
-    public void makeAMove(int raceNumber){
+    public void makeAMove(int raceNumber) throws RemoteException{
         this.writeLine(raceNumber, System.currentTimeMillis());
     }
     
@@ -277,7 +277,7 @@ public class Log implements ILog{
     * @param raceNumber
     */
     @Override
-    public void setHorseJockeyState(int id, HorseJockeyState state, int raceNumber){
+    public void setHorseJockeyState(int id, HorseJockeyState state, int raceNumber) throws RemoteException{
         if(this.horseJockeysState.containsKey(id)){
             this.horseJockeysState.replace(id, state);
         }else{
@@ -303,7 +303,7 @@ public class Log implements ILog{
     * @param raceNumber
     */
     @Override
-    public void setSpectatorState(int id, SpectatorsState state, int raceNumber){
+    public void setSpectatorState(int id, SpectatorsState state, int raceNumber) throws RemoteException{
         if(this.spectatorsState.containsKey(id)){
             this.spectatorsState.replace(id, state);
         }else{

@@ -8,11 +8,11 @@ import java.rmi.RemoteException;
  * @author Daniela Simes, 76771
  */
 public interface IControlCentre extends Remote{
-    public void reportResults(int raceNumber);
-    public void proceedToPaddock(int raceNumber);
-    public void waitForNextRace(int raceNumber);
-    public void goWatchTheRace(int raceNumber);
-    public boolean haveIWon(int raceNumber, int spectatorId);
-    public void relaxABit();
+    public void reportResults(int raceNumber) throws RemoteException;
+    public void proceedToPaddock(int raceNumber) throws RemoteException;
+    public void waitForNextRace(int raceNumber) throws RemoteException;
+    public void goWatchTheRace(int raceNumber) throws RemoteException;
+    public boolean haveIWon(int raceNumber, int spectatorId) throws RemoteException;
+    public void relaxABit() throws RemoteException;
     public void signalShutdown() throws RemoteException;
 }

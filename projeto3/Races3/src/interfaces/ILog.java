@@ -11,10 +11,10 @@ import structures.enumerates.SpectatorsState;
  * @author Daniela Simes, 76771
  */
 public interface ILog extends Remote{
-    public void setSpectatorState(int id, SpectatorsState state, int raceNumber);
-    public void setHorseJockeyState(int id, HorseJockeyState state, int raceNumber);
-    public void setBrokerState(BrokerState state, int raceNumber);
-    public void makeAMove(int raceNumber);
-    public void setSpectatorAmount(int spectatorId, int amount);
+    public void setSpectatorState(int id, SpectatorsState state, int raceNumber)  throws RemoteException;
+    public void setHorseJockeyState(int id, HorseJockeyState state, int raceNumber)  throws RemoteException;
+    public void setBrokerState(BrokerState state, int raceNumber)  throws RemoteException;
+    public void makeAMove(int raceNumber)  throws RemoteException;
+    public void setSpectatorAmount(int spectatorId, int amount)  throws RemoteException;
     public void finished() throws RemoteException;
 }

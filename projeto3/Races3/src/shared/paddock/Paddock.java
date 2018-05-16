@@ -30,7 +30,7 @@ public class Paddock implements IPaddock {
      * @param raceNumber
     */
     @Override
-    public synchronized void proceedToPaddock(int raceNumber){
+    public synchronized void proceedToPaddock(int raceNumber) throws RemoteException{
         while(!this.races.allSpectatorsArrivedAtPaddock(raceNumber)){
             try{
                 wait();
@@ -46,7 +46,7 @@ public class Paddock implements IPaddock {
      * @param raceNumber
     */
     @Override
-    public synchronized void proceedToStartLine(int raceNumber){
+    public synchronized void proceedToStartLine(int raceNumber) throws RemoteException{
         this.races.addNHorseJockeyLeftThePadock(raceNumber);
         
         if(this.races.allHorseJockeyLeftThePadock(raceNumber)){
@@ -60,7 +60,7 @@ public class Paddock implements IPaddock {
      * @param raceNumber
     */
     @Override
-    public synchronized void summonHorsesToPaddock(int raceNumber){
+    public synchronized void summonHorsesToPaddock(int raceNumber) throws RemoteException{
         while(!this.races.allSpectatorsArrivedAtPaddock(raceNumber)){
             try{
                 wait();
@@ -76,7 +76,7 @@ public class Paddock implements IPaddock {
      * @param raceNumber
     */
     @Override
-    public synchronized void goCheckHorses(int raceNumber){
+    public synchronized void goCheckHorses(int raceNumber) throws RemoteException{
         this.races.addNSpectatorsArrivedAtPaddock(raceNumber);
         notifyAll();
     

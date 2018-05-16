@@ -30,7 +30,7 @@ public class RacingTrack implements IRacingTrack {
      * @param raceNumber
     */
     @Override
-    public synchronized void startTheRace(int raceNumber){
+    public synchronized void startTheRace(int raceNumber) throws RemoteException{
         races.setStartTheRace(true, raceNumber);
         notifyAll();
         
@@ -52,7 +52,7 @@ public class RacingTrack implements IRacingTrack {
      * @param horseId
     */
     @Override
-    public synchronized void proceedToStartLine(int raceNumber, int horseId){
+    public synchronized void proceedToStartLine(int raceNumber, int horseId) throws RemoteException{
         while(!(races.getStartTheRace(raceNumber) || !this.races.nextMovingHorse(horseId, raceNumber))){
             try{
                 wait();
@@ -72,7 +72,7 @@ public class RacingTrack implements IRacingTrack {
      * @return 
     */
     @Override
-    public synchronized boolean hasFinishLineBeenCrossed(int horseId, int raceNumber){  
+    public synchronized boolean hasFinishLineBeenCrossed(int horseId, int raceNumber) throws RemoteException{  
         return races.horseFinished(horseId, raceNumber);
     };
     
@@ -83,7 +83,7 @@ public class RacingTrack implements IRacingTrack {
      * @param horseId
     */
     @Override
-    public synchronized void makeAMove(int raceNumber, int horseId){
+    public synchronized void makeAMove(int raceNumber, int horseId) throws RemoteException{
         while(!this.races.nextMovingHorse(horseId, raceNumber)){
             try{
                 wait();

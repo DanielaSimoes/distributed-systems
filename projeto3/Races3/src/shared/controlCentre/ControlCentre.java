@@ -30,7 +30,7 @@ public class ControlCentre implements IControlCentre {
      * @param raceNumber
     */
     @Override
-    public synchronized void reportResults(int raceNumber){
+    public synchronized void reportResults(int raceNumber) throws RemoteException{
         this.races.setReportResults(true, raceNumber);
         notifyAll();
     };
@@ -41,7 +41,7 @@ public class ControlCentre implements IControlCentre {
      * @param raceNumber
     */
     @Override
-    public synchronized void proceedToPaddock(int raceNumber){
+    public synchronized void proceedToPaddock(int raceNumber) throws RemoteException{
         this.races.addNHorsesInPaddock(raceNumber);
         
         if (this.races.allNHorsesInPaddock(raceNumber)){
@@ -57,7 +57,7 @@ public class ControlCentre implements IControlCentre {
      * @param raceNumber
     */
     @Override
-    public synchronized void waitForNextRace(int raceNumber){
+    public synchronized void waitForNextRace(int raceNumber) throws RemoteException{
         while(!this.races.getProceedToPaddock(raceNumber) || this.races.horsesFinished(raceNumber)){
             try{
                 wait();
@@ -73,7 +73,7 @@ public class ControlCentre implements IControlCentre {
      * @param raceNumber
     */
     @Override
-    public synchronized void goWatchTheRace(int raceNumber){
+    public synchronized void goWatchTheRace(int raceNumber) throws RemoteException{
         while(!this.races.getReportResults(raceNumber)){
             try{
                 wait();
@@ -91,7 +91,7 @@ public class ControlCentre implements IControlCentre {
      * @return 
     */
     @Override
-    public synchronized boolean haveIWon(int raceNumber, int spectatorId){
+    public synchronized boolean haveIWon(int raceNumber, int spectatorId) throws RemoteException{
         return this.races.haveIWon(raceNumber, spectatorId);
     };
    

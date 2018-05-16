@@ -8,9 +8,9 @@ import java.rmi.RemoteException;
  * @author Daniela Simes, 76771
  */
 public interface IRacingTrack extends Remote{
-    public void startTheRace(int raceNumber);
-    public void proceedToStartLine(int raceNumber, int horseId);
-    public boolean hasFinishLineBeenCrossed(int horseId, int raceNumber);
-    public void makeAMove(int raceNumber, int horseId);
+    public void startTheRace(int raceNumber) throws RemoteException;
+    public void proceedToStartLine(int raceNumber, int horseId) throws RemoteException;
+    public boolean hasFinishLineBeenCrossed(int horseId, int raceNumber) throws RemoteException;
+    public void makeAMove(int raceNumber, int horseId) throws RemoteException;
     public void signalShutdown() throws RemoteException;
 }

@@ -32,7 +32,7 @@ public class BettingCentre implements IBettingCentre {
      * @param raceNumber
     */
     @Override
-    public void acceptTheBets(int raceNumber){
+    public void acceptTheBets(int raceNumber) throws RemoteException{
         while(true){
             Integer spectatorId = this.races.waitAddedBet(raceNumber);
 
@@ -52,7 +52,7 @@ public class BettingCentre implements IBettingCentre {
      * @param raceNumber
     */
     @Override
-    public synchronized void honourTheBets(int raceNumber){
+    public synchronized void honourTheBets(int raceNumber) throws RemoteException{
         Integer spectatorId;
         
         while(true){
@@ -83,7 +83,7 @@ public class BettingCentre implements IBettingCentre {
      * @return 
     */
     @Override
-    public synchronized boolean areThereAnyWinners(int raceNumber){
+    public synchronized boolean areThereAnyWinners(int raceNumber) throws RemoteException{
         return this.races.areThereAnyWinners(raceNumber);
     };
     
@@ -97,7 +97,7 @@ public class BettingCentre implements IBettingCentre {
      * @return 
     */
     @Override
-    public Bet placeABet(int raceNumber, int spectatorId, int initialBet, int moneyToBet){
+    public Bet placeABet(int raceNumber, int spectatorId, int initialBet, int moneyToBet) throws RemoteException{
         Bet spectator_bet = this.races.chooseBet(raceNumber, spectatorId, initialBet, moneyToBet);
         this.races.addBetOfSpectator(spectator_bet, raceNumber, spectatorId);
 
@@ -113,7 +113,7 @@ public class BettingCentre implements IBettingCentre {
      * @return 
     */
     @Override
-    public synchronized int goCollectTheGains(int raceNumber, int spectatorId){
+    public synchronized int goCollectTheGains(int raceNumber, int spectatorId) throws RemoteException{
         this.races.addWaitingToBePaidSpectator(spectatorId, raceNumber);
         
         // wake broker because spectator is waiting to be Paid
