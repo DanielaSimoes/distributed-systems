@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  * @author Daniela
  */
 public class BrokerRun {
-    public static void main(String [] args) {   
+    public static void main(String [] args) throws RemoteException {   
         
         // nome do sistema onde esta localizado o servico de registos RMI
         String rmiRegHostName;

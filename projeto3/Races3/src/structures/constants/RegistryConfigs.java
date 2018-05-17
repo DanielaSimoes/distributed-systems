@@ -135,7 +135,7 @@ public class RegistryConfigs {
      * @return parameter value
      */
     public int racingTrackPort() {
-        return Integer.parseInt(prop.getProperty("racingTrack_port"));
+        return Integer.parseInt(prop.getProperty("racingtrack_port"));
     }
     
     /** 
@@ -143,7 +143,7 @@ public class RegistryConfigs {
      * @return parameter value
      */
     public int bettingCentrePort() {
-        return Integer.parseInt(prop.getProperty("bettingCentre_port"));
+        return Integer.parseInt(prop.getProperty("bettingcentre_port"));
     }
     
     /** 
@@ -151,7 +151,7 @@ public class RegistryConfigs {
      * @return parameter value
      */
     public int controlCentrePort() {
-        return Integer.parseInt(prop.getProperty("controlCentre_port"));
+        return Integer.parseInt(prop.getProperty("controlcentre_port"));
     }
     
     /** 

@@ -4,7 +4,7 @@ import sys
 import json
 import paramiko
 from configparser import ConfigParser, RawConfigParser
-from scp import SCPClient
+from scp import SCPClient, SCPException
 from subprocess import call, check_call
 import time
 import socket
@@ -55,20 +55,40 @@ def generate_config():
             if jar_i == len(jars):
                 break
     else:
-        for host in hosts:
-            jars_hosts += [{
-                "class": jars[jar_i],
-                "host": host
-            }]
-            jar_i += 1
-            if jar_i == len(jars):
+        client_jars = []
+
+        host_i = 0
+
+        # fill one server to one host
+
+        for jar in jars:
+            if jar["type"] == "server" or jar["type"] == "registry":
+                jars_hosts += [{
+                    "class": jar,
+                    "host": hosts[host_i]
+                }]
+
+                host_i += 1
+
+            if host_i == len(hosts):
                 break
 
-        for i in range(len(hosts) - 1, len(jars)):
-            jars_hosts += [{
-                "class": jars[i],
-                "host": hosts[len(hosts) - 1]
-            }]
+        if host_i >= len(hosts):
+            print(Fore.RED + "No hosts available for this architecture." + Style.RESET_ALL)
+            exit(1)
+
+        for jar in jars:
+            if jar["type"] == "client":
+                jars_hosts += [{
+                    "class": jar,
+                    "host": hosts[host_i]
+                }]
+
+                # len = 9
+                # i = 8
+
+                if host_i < len(hosts) - 1:
+                    host_i += 1
 
     print(Fore.GREEN + "Save the hosts in a config file! OK :D" + Style.RESET_ALL)
 
@@ -81,7 +101,7 @@ def generate_config():
             config.set("mapping", jars_host["class"]["class"] + "_PORT", jars_host["class"]["port"])
 
     config.set("mapping", "RegistryObject", 22449)
-    config.set("mapping", "group", "sd0102")
+    config.set("mapping", "group", "sd0405")
 
     with open('configs/config.ini', 'w') as configfile:
         config.write(configfile)
@@ -129,20 +149,25 @@ def upload():
     print(Style.DIM + Fore.BLUE + "Upload folders on the remote server" + Style.RESET_ALL)
 
     for key, value in lst.items():
-        ssh.connect(value["host"]["host"], username=value["host"]["user"], password=value["host"]["password"])
+        while True:
+            try:
+                ssh.connect(value["host"]["host"], username=value["host"]["user"], password=value["host"]["password"])
 
-        print(Style.DIM + value["host"]["host"] + Style.RESET_ALL + " - " + Fore.LIGHTGREEN_EX + key + Style.RESET_ALL)
+                print(Style.DIM + value["host"]["host"] + Style.RESET_ALL + " - " + Fore.LIGHTGREEN_EX + key + Style.RESET_ALL)
 
-        scp = SCPClient(ssh.get_transport())
+                scp = SCPClient(ssh.get_transport())
 
-        ssh.exec_command("mkdir -p Public/classes/"+value["class"]["path"]+"/")
+                ssh.exec_command("mkdir -p Public/classes/"+value["class"]["path"]+"/")
 
-        for file_up in [f for f in os.listdir("javas/"+value["class"]["path"])
-                        if os.path.isfile(os.path.join("javas/"+value["class"]["path"], f))]:
-            print(Fore.LIGHTGREEN_EX + os.path.join("javas/"+value["class"]["path"], file_up) + Style.RESET_ALL)
-            scp.put(files=os.path.join("javas/"+value["class"]["path"], file_up),
-                    remote_path="Public/classes/"+file_up,
-                    recursive=True)
+                for file_up in [f for f in os.listdir("javas/"+value["class"]["path"])
+                                if os.path.isfile(os.path.join("javas/"+value["class"]["path"], f))]:
+                    print(Fore.LIGHTGREEN_EX + os.path.join("javas/"+value["class"]["path"], file_up) + Style.RESET_ALL)
+                    scp.put(files=os.path.join("javas/"+value["class"]["path"], file_up),
+                            remote_path="Public/classes/"+file_up,
+                            recursive=True)
+            except SCPException:
+                continue
+            break
 
         print(Fore.LIGHTGREEN_EX + "Public/classes/java.zip" + Style.RESET_ALL)
         scp.put(files="java.zip",
@@ -267,7 +292,13 @@ def show_logs(command="tail"):
 
     print(Style.BRIGHT + "\nSHOW LOGS\n" + Style.RESET_ALL)
 
+    last_host = ""
+
     for key, value in lst.items():
+        if value["host"]["host"] == last_host:
+            print(Style.DIM + "...[same machine] " + value["host"]["host"] + Style.RESET_ALL + " - " + Fore.LIGHTGREEN_EX + key + Style.RESET_ALL)
+            continue
+
         try:
             ssh.connect(value["host"]["host"], username=value["host"]["user"], password=value["host"]["password"])
 
@@ -280,12 +311,13 @@ def show_logs(command="tail"):
 
         print(Style.DIM + value["host"]["host"] + Style.RESET_ALL + " - " + Fore.LIGHTGREEN_EX + key + Style.RESET_ALL)
 
-        output = str(stdout.readlines())
+        for line in stdout.readlines():
+            if "exception" in line.lower() or "not" in line.lower() or "no" in line.lower():
+                print(Fore.RED + line + Style.RESET_ALL, end='', flush=True)
+            else:
+                print(Fore.GREEN + line + Style.RESET_ALL, end='', flush=True)
 
-        if "exception" in output.lower() or "not" in output.lower() or "no" in output.lower():
-            print(Fore.RED + output + Style.RESET_ALL)
-        else:
-            print(Fore.GREEN + output + Style.RESET_ALL)
+        last_host = value["host"]["host"]
 
 
 def command(command_to="tail"):
@@ -317,45 +349,50 @@ def parse_config():
     settings.read('configs/config.ini')
 
     lst = OrderedDict(sorted({
+        "Registry": {
+            "hostname": settings.get("mapping", "registry_host"),
+            "port": settings.get("mapping", "registry_port"),
+            "order": 1
+        },
         "Races": {
             "hostname": settings.get("mapping", "races_host"),
-            "order": 1
+            "order": 2
         },
         "Log": {
             "hostname": settings.get("mapping", "log_host"),
-            "order": 2
+            "order": 3
         },
         "BettingCentre": {
             "hostname": settings.get("mapping", "bettingcentre_host"),
-            "order": 3
+            "order": 4
         },
         "ControlCentre": {
             "hostname": settings.get("mapping", "controlcentre_host"),
-            "order": 4
+            "order": 5
         },
         "Paddock": {
             "hostname": settings.get("mapping", "paddock_host"),
-            "order": 5
+            "order": 6
         },
         "RacingTrack": {
             "hostname": settings.get("mapping", "racingtrack_host"),
-            "order": 6
+            "order": 7
         },
         "Stable": {
             "hostname": settings.get("mapping", "stable_host"),
-            "order": 7
+            "order": 8
         },
         "HorseJockey": {
             "hostname": settings.get("mapping", "horsejockey_host"),
-            "order": 8
+            "order": 9
         },
         "Spectators": {
             "hostname": settings.get("mapping", "spectators_host"),
-            "order": 9
+            "order": 10
         },
         "Broker": {
             "hostname": settings.get("mapping", "broker_host"),
-            "order": 10
+            "order": 11
         }
     }.items(), key=lambda x: x[1]["order"]))
 

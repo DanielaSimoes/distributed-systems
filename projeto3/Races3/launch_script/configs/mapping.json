@@ -4,7 +4,7 @@
         "path": "dir_clientSide/broker",
         "package": "entities.broker",
         "type": "client",
-        "command": ["cd Public/classes/; source config.bash; ./clientSide_com.sh &> output"],
+        "command": ["cd Public/classes/; source config.bash; ./brokerClientSide_com.sh &> output_broker"],
         "sleep": 0
     },
     {
@@ -12,7 +12,7 @@
         "path": "dir_clientSide/horseJockey",
         "package": "entities.horseJockey",
         "type": "client",
-        "command": ["cd Public/classes/; source config.bash; ./clientSide_com.sh &> output"],
+        "command": ["cd Public/classes/; source config.bash; ./horseJockeyClientSide_com.sh &> output_horseJockey"],
         "sleep": 0
     },
     {
@@ -20,7 +20,7 @@
         "path": "dir_clientSide/spectators",
         "package": "entities.spectators",
         "type": "client",
-        "command": ["cd Public/classes/; source config.bash; ./clientSide_com.sh &> output"],
+        "command": ["cd Public/classes/; source config.bash; ./spectatorsClientSide_com.sh &> output_spectators"],
         "sleep": 0
     },
     {

@@ -99,6 +99,8 @@ public class RacingTrack implements IRacingTrack {
 
     @Override
     public void signalShutdown() throws RemoteException {
+        System.out.println("Racing Track received signal shutdown.");
+        
         RegisterInterface reg = null;
         Registry registry = null;
 

@@ -79,6 +79,7 @@ public class Stable implements IStable {
 
     @Override
     public void signalShutdown() throws RemoteException {
+        System.out.println("Stable received signal shutdown.");
         RegisterInterface reg = null;
         Registry registry = null;
 

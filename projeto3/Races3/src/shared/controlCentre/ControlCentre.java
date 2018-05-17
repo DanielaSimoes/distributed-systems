@@ -104,6 +104,8 @@ public class ControlCentre implements IControlCentre {
 
     @Override
     public void signalShutdown() throws RemoteException {
+        System.out.println("Control Centre received signal shutdown.");
+        
         RegisterInterface reg = null;
         Registry registry = null;
 

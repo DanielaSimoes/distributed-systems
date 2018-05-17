@@ -40,7 +40,7 @@ public class Broker extends Thread implements IEntity{
     * @param paddock The Paddock is a shared memory region where the broker will perform actions.
      * @param log Log
     */
-    public Broker(interfaces.IStable s, interfaces.IControlCentre cc, interfaces.IBettingCentre bc, interfaces.IRacingTrack rt, interfaces.IPaddock paddock, interfaces.ILog log, interfaces.IRaces races){
+    public Broker(interfaces.IStable s, interfaces.IControlCentre cc, interfaces.IBettingCentre bc, interfaces.IRacingTrack rt, interfaces.IPaddock paddock, interfaces.ILog log, interfaces.IRaces races) throws RemoteException{
         this.stable = s;
         this.cc = cc;
         this.bc = bc;
@@ -49,6 +49,7 @@ public class Broker extends Thread implements IEntity{
         this.log = log;
         this.races = races;
         this.setName("Broker");
+        this.setBrokerState(BrokerState.OPENING_THE_EVENT);
     }
     
     /**
@@ -59,8 +60,6 @@ public class Broker extends Thread implements IEntity{
     @Override
     public void run(){
         try{
-            this.setBrokerState(BrokerState.OPENING_THE_EVENT);
-
             while(!this.entertainTheGuests){
 
                 switch(this.state){

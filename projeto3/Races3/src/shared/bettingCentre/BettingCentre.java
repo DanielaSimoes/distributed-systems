@@ -137,6 +137,8 @@ public class BettingCentre implements IBettingCentre {
 
     @Override
     public void signalShutdown() throws RemoteException {
+        System.out.println("Betting Centre received signal shutdown.");
+        
         RegisterInterface reg = null;
         Registry registry = null;
 

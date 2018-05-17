@@ -32,17 +32,13 @@ import structures.constants.RegistryConfigs;
 public class Log implements ILog{
     
     private final IRaces races;
-    /**
-    * This will be a singleton
-    */
-    private static Log instance = null;
     
     /**
     *  File where the log will be saved
     */
     private final File log;
     
-    private static PrintWriter pw;
+    private PrintWriter pw;
     private boolean event_opened = false;
     private boolean announced_next_race = false;
     
@@ -61,6 +57,7 @@ public class Log implements ILog{
     /**
     * Constructor of Log.
      * @param filename
+     * @param races
     */
     public Log(String filename, IRaces races){
         if(filename.length()==0){
@@ -78,7 +75,7 @@ public class Log implements ILog{
         }
         
         this.races = races;
-        instance.writeInit();
+        this.writeInit();
     }
     
     /**
@@ -132,8 +129,11 @@ public class Log implements ILog{
     * Method to write the status line of the log.
     * @param raceNumber
      * @param call_timestamp
+     * @throws java.rmi.RemoteException
     */
     public void writeLine(int raceNumber, long call_timestamp) throws RemoteException{
+        return;
+        /*
         if(call_timestamp < this.last_wr_timestamp){
             return;
         }
@@ -228,15 +228,17 @@ public class Log implements ILog{
         pw.println(head);
 
         pw.flush();
+        */
     }
     
     /**
     * Method to set the spectator amount to bet.
     * @param spectatorId
     * @param amount
+     * @throws java.rmi.RemoteException
     */
     @Override
-    public void setSpectatorAmount(int spectatorId, int amount){
+    public void setSpectatorAmount(int spectatorId, int amount)  throws RemoteException{
         this.spectatorAmounts[spectatorId] = amount;
     }
 
@@ -244,6 +246,7 @@ public class Log implements ILog{
     * Method to set the broker state.
     * @param state
     * @param raceNumber
+     * @throws java.rmi.RemoteException
     */
     @Override
     public void setBrokerState(BrokerState state, int raceNumber) throws RemoteException{
@@ -264,6 +267,7 @@ public class Log implements ILog{
     /**
     * Method to allow the horse to make a move.
     * @param raceNumber
+     * @throws java.rmi.RemoteException
     */
     @Override
     public void makeAMove(int raceNumber) throws RemoteException{
@@ -275,6 +279,7 @@ public class Log implements ILog{
     * @param id
     * @param state The state to be assigned.
     * @param raceNumber
+    * @throws java.rmi.RemoteException
     */
     @Override
     public void setHorseJockeyState(int id, HorseJockeyState state, int raceNumber) throws RemoteException{
@@ -301,6 +306,7 @@ public class Log implements ILog{
     * @param id
     * @param state The state to be assigned.
     * @param raceNumber
+     * @throws java.rmi.RemoteException
     */
     @Override
     public void setSpectatorState(int id, SpectatorsState state, int raceNumber) throws RemoteException{
@@ -327,6 +333,8 @@ public class Log implements ILog{
     * @return 
     */
     public void terminateServers(){
+        System.out.printf("Send terminate!\n %d", nTerminates);
+            
         RegisterInterface reg = null;
         Registry registry = null;
         
@@ -355,6 +363,8 @@ public class Log implements ILog{
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, e);
         }
 
+        System.out.println("Betting Centre signal shutdown sent!");
+            
         // RacingTrack
         try{
             interfaces.IRacingTrack rt = (interfaces.IRacingTrack) registry.lookup (RegistryConfigs.racingTrackNameEntry);
@@ -367,6 +377,8 @@ public class Log implements ILog{
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, e);
         }
 
+        System.out.println("Racing Track signal shutdown sent!");
+        
         // ControlCentre
         try{
             interfaces.IControlCentre cc = (interfaces.IControlCentre) registry.lookup (RegistryConfigs.controlCentreNameEntry);
@@ -379,6 +391,8 @@ public class Log implements ILog{
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, e);
         }
 
+        System.out.println("Control Centre signal shutdown sent!");
+        
         // Paddock
         try{
             interfaces.IPaddock pdck = (interfaces.IPaddock) registry.lookup (RegistryConfigs.paddockNameEntry);
@@ -391,6 +405,8 @@ public class Log implements ILog{
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, e);
         }
 
+        System.out.println("Paddock signal shutdown sent!");
+        
         // Stable
         try{
             interfaces.IStable stable = (interfaces.IStable) registry.lookup (RegistryConfigs.stableNameEntry);
@@ -403,10 +419,12 @@ public class Log implements ILog{
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, e);
         }
 
+        System.out.println("Stable signal shutdown sent!");
+        
         // Races
         try{
-            interfaces.IRaces stable = (interfaces.IRaces) registry.lookup (RegistryConfigs.racesNameEntry);
-            stable.signalShutdown();
+            interfaces.IRaces races = (interfaces.IRaces) registry.lookup (RegistryConfigs.racesNameEntry);
+            races.signalShutdown();
         }catch (RemoteException e){ 
             System.out.println("Exception thrown while locating races: " + e.getMessage () + "!");
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, e);
@@ -415,9 +433,9 @@ public class Log implements ILog{
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, e);
         }
         
+        System.out.println("Races signal shutdown sent!");
+        
         // shutdown log
-        
-        
         try {
             reg = (RegisterInterface) registry.lookup(nameEntryBase);
         } catch (RemoteException e) {
@@ -454,7 +472,7 @@ public class Log implements ILog{
         nTerminates++;
         
         if(nTerminates==3){
-            this.finished();
+            this.terminateServers();
         }
     }
     
