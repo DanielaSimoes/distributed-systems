@@ -41,7 +41,7 @@ public class HorseJockey extends Thread implements IEntity{
     * @param id The ID of the horse.
      * @param log
     */
-    public HorseJockey(interfaces.IStable s, interfaces.IControlCentre cc, interfaces.IPaddock paddock, interfaces.IRacingTrack rt, int stepSize, int id, interfaces.IRaces races, interfaces.ILog log){
+    public HorseJockey(interfaces.IStable s, interfaces.IControlCentre cc, interfaces.IPaddock paddock, interfaces.IRacingTrack rt, int stepSize, int id, interfaces.IRaces races, interfaces.ILog log) throws RemoteException{
         this.stable = s;
         this.cc = cc;
         this.paddock = paddock;
@@ -52,6 +52,7 @@ public class HorseJockey extends Thread implements IEntity{
         this.setName("HorseJockey " + id);
         this.entertainTheGuests = false;
         this.races = races;
+        this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
     }
     
     /**
@@ -63,7 +64,6 @@ public class HorseJockey extends Thread implements IEntity{
     @Override
     public void run(){ 
         try{
-            this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);
             System.out.printf("Horse Jockey %d started!\n", this.id);
 
             this.setHorseJockeyState(HorseJockeyState.AT_THE_STABLE);

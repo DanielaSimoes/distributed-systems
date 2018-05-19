@@ -18,7 +18,7 @@ public class HorseJockeyRun {
     
     private static int N_HORSEJOKEY;
     
-    public static void main(String [] args) {   
+    public static void main(String [] args) throws RemoteException {   
         N_HORSEJOKEY = Constants.N_OF_HORSES;
         
         ArrayList<HorseJockey> horses = new ArrayList<>(N_HORSEJOKEY);
@@ -137,7 +137,9 @@ public class HorseJockeyRun {
         }
          
         for (int i = 0; i < N_HORSEJOKEY; i++){
-            horses.add(new HorseJockey(si, cci, pi, rti, (int) (Math.random() * (Constants.HORSE_MAX_STEP_SIZE - 1)) + 1, i, ri, li));
+            int stepSize = (int) (Math.random() * (Constants.HORSE_MAX_STEP_SIZE - 1)) + 1;
+            ri.setHorseJockeyStepSize(i, stepSize);
+            horses.add(new HorseJockey(si, cci, pi, rti, stepSize, i, ri, li));
         }
                 
         System.out.println("Number of horses: " + horses.size());

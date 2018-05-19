@@ -132,8 +132,6 @@ public class Log implements ILog{
      * @throws java.rmi.RemoteException
     */
     public void writeLine(int raceNumber, long call_timestamp) throws RemoteException{
-        return;
-        /*
         if(call_timestamp < this.last_wr_timestamp){
             return;
         }
@@ -169,7 +167,7 @@ public class Log implements ILog{
         }
 
         head += String.format("\n   %d  %2d  ", raceNumber+1, races.getCurrentRaceDistance(raceNumber));
-
+        
         for(int i=0; i<Constants.N_OF_SPECTATORS; i++){
             try{
                 head += String.format("  %d  %4d", this.races.getSpectatorBet(i, raceNumber).getHorseRaceId(), this.races.getSpectatorBet(i,raceNumber).getAmount());
@@ -228,7 +226,6 @@ public class Log implements ILog{
         pw.println(head);
 
         pw.flush();
-        */
     }
     
     /**
